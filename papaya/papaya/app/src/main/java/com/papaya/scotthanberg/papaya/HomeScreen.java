@@ -83,7 +83,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
      //    LatLng sydney = new LatLng(42, 40);
      //   mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
      //   mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(20));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         enableMyLocation();
     }
 
