@@ -15,16 +15,27 @@
 
         />
 
+    <ImageButton
+        android:id="@+id/addNewSessionButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="bottom|right"
+        android:background="@drawable/add_study_session"
+        android:contentDescription="Add New Study Session"
+        android:layout_above="@+id/button2"
+        android:layout_alignEnd="@+id/button2"
+        android:elevation="0dp"
+        android:alpha=".8" />
+
     <Button
         android:text="Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginEnd="11dp"
-        android:layout_marginBottom="11dp" />
-
+        android:layout_marginBottom="11dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>
