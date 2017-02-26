@@ -1,0 +1,24 @@
+1. Clone git repo from github through command line
+2. Import through "Import Project (Eclipse, ADT, Gradle etc.)
+3. Copy pasteing the folling chunk of code
+buildscript {
+    repositories {
+            jcenter()
+        }
+    dependencies {
+            classpath 'com.android.tools.build:gradle:2.2.3'
+        }
+}
+
+allprojects {
+    repositories {
+            jcenter()
+        }
+}
+
+4. Click "Try Again" for the gradle sync
+5. Wait about 15 minutes
+6. It will prompt to update Gradle.  Click yes.
+7. Go to VCS -> enable Version Control Integration.
+8. Choose "Git".
+9. Success!
