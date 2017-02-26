@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -170,5 +171,14 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     protected void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+    }
+
+
+
+    /**
+     * TODO: ADD BUTTON METHODS HERE
+     */
+    public void addStudySession(View view) {
+        System.out.println("hi");
     }
 }
