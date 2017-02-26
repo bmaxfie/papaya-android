@@ -176,7 +176,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
 
     /**
-     * TODO: ADD BUTTON METHODSa HERE
+     * TODO: ADD BUTTON METHODS HERE
      */
     public void addStudySession(View view) {
         System.out.println("hi");
