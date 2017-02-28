@@ -9,7 +9,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,8 +41,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private LocationRequest locationRequest;
     private Double myLatitude;
     private Double myLongitude;
+    /*
     private TextView latitudeText;
     private TextView longitudeText;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +80,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-     //    LatLng sydney = new LatLng(42, 40);
-     //   mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-     //   mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         enableMyLocation();
     }
