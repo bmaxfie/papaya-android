@@ -21,6 +21,10 @@ public class StudySession {
 
     }
 
+    public StudySession(LatLng Location) {
+        this.Location = Location;
+    }
+
     public List<Student> getStudents() {
         return Students;
     }

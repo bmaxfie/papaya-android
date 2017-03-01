@@ -21,6 +21,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -46,6 +51,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private TextView longitudeText;
     */
 
+    ArrayList<StudySession> Sessions;
+    Timer oneMinute;
+    TimerTask markStudySessions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +74,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         locationRequest.setInterval(60 * 1000); // This pulls once every minute
         locationRequest.setFastestInterval(15 * 1000); // This is the fastest interval
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        Sessions = new ArrayList<StudySession>();
+        oneMinute = new Timer();
     }
 
 
@@ -147,6 +158,21 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        markStudySessions = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable()
+                {
+                    public void run() {
+                    for (StudySession s : Sessions) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(s.getLocation()));
+                    }
+                }
+                });
+            }
+        };
+        oneMinute.schedule(markStudySessions,0, 6000);
     }
 
     @Override
@@ -177,5 +203,15 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void addStudySession(View view) {
         //this is where we will call
         System.out.println("hi");
+
+        /*
+        StudySession Triangle = new StudySession( new LatLng(40.425611, -86.916916));
+        StudySession Beering = new StudySession( new LatLng(40.425885, -86.915894));
+        StudySession Honors = new StudySession( new LatLng(40.427173, -86.919783));
+
+        Sessions.add(Triangle);
+        Sessions.add(Beering);
+        Sessions.add(Honors);
+        */
     }
 }
