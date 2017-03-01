@@ -13,6 +13,14 @@ public class Class {
     private List<StudySession> activeStudySessions;
     private String classID;
 
+    public Class() {
+
+    }
+
+    public Class(String classID) {
+        this.classID = classID;
+    }
+
     public List<Student> getListOfStudents() {
         return listOfStudents;
     }

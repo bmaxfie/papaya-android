@@ -10,6 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -22,6 +26,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -50,10 +57,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private TextView latitudeText;
     private TextView longitudeText;
     */
-
-    ArrayList<StudySession> Sessions;
-    Timer oneMinute;
-    TimerTask markStudySessions;
+    private ArrayList<StudySession> Sessions;
+    private Timer oneMinute;
+    private TimerTask markStudySessions;
+    String url = "google.com";
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,11 +157,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         longitudeText.setText("Longitude :" + String.valueOf(myLongitude));
         */
         // Change the camera to follow you!
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude,myLongitude)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude, myLongitude)));
 
 
     }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -161,18 +168,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         markStudySessions = new TimerTask() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable()
-                {
+                runOnUiThread(new Runnable() {
                     public void run() {
-                    for (StudySession s : Sessions) {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(s.getLocation()));
+                        for (StudySession s : Sessions) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(s.getLocation()));
+                        }
                     }
-                }
                 });
             }
         };
-        oneMinute.schedule(markStudySessions,0, 6000);
+        oneMinute.schedule(markStudySessions, 0, 6000);
     }
 
     @Override
@@ -196,7 +202,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
 
-
     /**
      * TODO: ADD BUTTON METHODS HERE
      */
@@ -204,6 +209,46 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         //this is where we will call
         System.out.println("hi");
 
+        // Instantiate the RequestQueue.
+        /* Replace Beta with /class/id/sessions or something like that
+        *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
+        *  */
+
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/class/45digitid/sessions";
+        final JSONObject newJSONStudySession = new JSONObject();
+        try {
+            newJSONStudySession.put("UserID_Host", "thiswillbeauserid");
+            newJSONStudySession.put("Duration", 0.0);
+            newJSONStudySession.put("Location", myLatitude.toString() + "," + myLongitude.toString());
+            newJSONStudySession.put("Description", "This will be a description");
+            newJSONStudySession.put("Sponsored", true);
+        } catch (JSONException e) {
+            System.out.println("LOL you got a JSONException");
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            Sessions.add(new StudySession(newJSONStudySession.get("UserID_Host").toString(), newJSONStudySession.get("Duration").toString()
+                            , newJSONStudySession.get("Location").toString(), newJSONStudySession.get("Description").toString(), newJSONStudySession.get("Sponsored").toString()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
         /*
         StudySession Triangle = new StudySession( new LatLng(40.425611, -86.916916));
         StudySession Beering = new StudySession( new LatLng(40.425885, -86.915894));

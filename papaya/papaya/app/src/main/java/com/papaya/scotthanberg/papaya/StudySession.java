@@ -11,18 +11,22 @@ import java.util.List;
 public class StudySession {
     private List<Student> Students;
     private LatLng Location;
-    private Double duration;
+    private String duration;
     private String Description;
     /*  List<Post> Posts; */
     private String SessionID;
-    private Boolean Sponsored;
+    private String Sponsored;
 
     public StudySession() {
 
     }
 
-    public StudySession(LatLng Location) {
-        this.Location = Location;
+    public StudySession(String SessionID, String duration, String Location, String Description, String Sponsored) {
+       // this.Location = Location;  Parse it into the correct format
+        this.SessionID = SessionID;
+        this.duration = duration;
+        this.Description = Description;
+        this.Sponsored = Sponsored;
     }
 
     public List<Student> getStudents() {
@@ -33,7 +37,7 @@ public class StudySession {
         return Location;
     }
 
-    public Double getDuration() {
+    public String getDuration() {
         return duration;
     }
 
@@ -45,7 +49,7 @@ public class StudySession {
         return SessionID;
     }
 
-    public Boolean getSponsored() {
+    public String getSponsored() {
         return Sponsored;
     }
 }
