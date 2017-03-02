@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -81,6 +82,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
 
     }
+
 
     public void loadMap(View view) {
         Intent intent = new Intent(this.getActivity(), HomeScreen.class);
@@ -165,14 +167,20 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            acct = result.getSignInAccount();
-            personName = acct.getDisplayName();
-            personGivenName = acct.getGivenName();
-            personFamilyName = acct.getFamilyName();
-            personEmail = acct.getEmail();
-            personId = acct.getId();
-            personPhoto = acct.getPhotoUrl();
-            idToken = acct.getIdToken();
+            if (result.isSuccess()) {
+                acct = result.getSignInAccount();
+                personName = acct.getDisplayName();
+                personGivenName = acct.getGivenName();
+                personFamilyName = acct.getFamilyName();
+                personEmail = acct.getEmail();
+                personId = acct.getId();
+                personPhoto = acct.getPhotoUrl();
+                idToken = acct.getIdToken();
+            } else {
+                Toast.makeText(getContext(), "Authentication Failed",
+                        Toast.LENGTH_SHORT).show();
+                System.out.println("HAHA FAILED");
+            }
             handleSignInResult(result);
         }
     }
@@ -204,6 +212,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             signInButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
             continue_to_papaya.setVisibility(View.VISIBLE);
+          //  Intent toy = new Intent(this.getActivity(), HomeScreen.class);
         } else {
             mStatusTextView.setText(R.string.signed_out);
             Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.user_default);
