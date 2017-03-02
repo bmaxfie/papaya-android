@@ -22,11 +22,106 @@
         android:alpha="1"
         android:layout_height="40dp"
         android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
         android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:onClick="addStudySession"
         />
+
+    <!-- for naviagtion bar/ drawer thingy
+        Also check out the native "spinner" which is in the category "widgets"
+        https://developer.android.com/training/implementing-navigation/nav-drawer.html
+    -->
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="120px"
+        android:background="@android:color/white"></View>
+
+    <Button
+        android:text="Menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="papaya"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:fontFamily="sans-serif"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignRight="@+id/addNewSessionButton"
+        android:layout_alignEnd="@+id/addNewSessionButton" />
+
+    <!--  This could be used for scrollable menu-->
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="120px"
+        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="69dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
 
 
 </RelativeLayout>
