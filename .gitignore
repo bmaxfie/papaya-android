@@ -3,6 +3,7 @@
 
 #local changes
 papaya/papaya/app/google-services.json
+*.DS_Store
 
 # Built application files
 *.apk
