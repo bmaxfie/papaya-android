@@ -103,7 +103,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-        mMap.setPadding(0, 225, 0, 0); //padding left:0, top:200px, right: 0, bottom:0
+        mMap.setPadding(0, dp_to_pixels(112), 0, 0); //padding left:0, top:112dp, right: 0, bottom:0
         enableMyLocation();
 
         if (mapView != null &&
@@ -116,13 +116,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             // position on right bottom
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-
-            int padding_in_dp = 17; //dps
-            final float scale = getResources().getDisplayMetrics().density;
-            int bottom = (int) (padding_in_dp * scale + 0.5f);
-            padding_in_dp = 63; //dps
-            int right = (int) (padding_in_dp * scale + 0.5f);
-            layoutParams.setMargins(0, 0, bottom, right);
+            layoutParams.setMargins(0, 0, dp_to_pixels(17), dp_to_pixels(63));
         }
     }
 
@@ -281,5 +275,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Sessions.add(Beering);
         Sessions.add(Honors);
         */
+    }
+
+    public int dp_to_pixels(int dp){
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 }
