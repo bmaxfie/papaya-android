@@ -61,7 +61,16 @@
         android:layout_alignEnd="@+id/addNewSessionButton" />
 
 
-    <!--scrollable menu-->
+    <!--scrollable menu for classes-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/view"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/darker_gray"
+        android:alpha=".7"
+        />
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="55dp"
@@ -69,12 +78,12 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         >
+        <!--For alpha background-->
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="@android:color/darker_gray"
             android:gravity="center_vertical">
 
 
