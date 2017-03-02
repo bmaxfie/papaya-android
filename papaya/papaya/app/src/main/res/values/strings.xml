@@ -53,4 +53,5 @@
     <string name="no_place_selected">&lt;No place selected&gt;</string>
     <string name="pick_seattle_place">Pick a Seattle Place</string>
     <string name="exception">Exception: %1$s</string>
+    <string name="preference_file_key">com.papaya.PREFERENCE_FILE_KEY</string>
 </resources>
