@@ -86,7 +86,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private String personId;
     private Uri personPhoto;
     private String idToken;
-
+    private ImageView papayaPic;
 
     //Facebook Login Variables
     private LoginButton loginButton;
@@ -186,6 +186,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                         profilePicImageView.setVisibility(View.VISIBLE);
                         continue_to_papaya.setVisibility(View.VISIBLE);
                         Profile p = Profile.getCurrentProfile();
+                        papayaPic.setVisibility(View.GONE);
                         new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200,200).toString());
                         updateUI();
                     }
@@ -193,6 +194,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     @Override
                     public void onCancel() {
                         // App code
+                        papayaPic.setVisibility(View.VISIBLE);
                         loginButton.setVisibility(View.VISIBLE);
                         signInButton.setVisibility(View.VISIBLE);
                         profilePicImageView.setVisibility(View.GONE);
@@ -202,6 +204,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
                     @Override
                     public void onError(FacebookException exception) {
+                        papayaPic.setVisibility(View.VISIBLE);
                         profilePicImageView.setVisibility(View.GONE);
                         loginButton.setVisibility(View.VISIBLE);
                         signInButton.setVisibility(View.VISIBLE);
@@ -218,6 +221,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
             }
         });
+
+        papayaPic = (ImageView) v.findViewById(R.id.papaya_picture);
 
         // Google Handling
         signInButton = (SignInButton) v.findViewById(R.id.sign_in_button);
@@ -322,6 +327,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             continue_to_papaya.setVisibility(View.VISIBLE);
             imgProfilePic.setVisibility(View.VISIBLE);
             profilePicImageView.setVisibility(View.GONE);
+            papayaPic.setVisibility(View.GONE);
           //  Intent toy = new Intent(this.getActivity(), HomeScreen.class);
         } else {
            // mStatusTextView.setText(R.string.signed_out);
@@ -333,6 +339,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             profilePicImageView.setVisibility(View.GONE);
             signOutButton.setVisibility(View.GONE);
             continue_to_papaya.setVisibility(View.GONE);
+            papayaPic.setVisibility(View.VISIBLE);
         }
     }
 
