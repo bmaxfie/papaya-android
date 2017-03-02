@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -84,10 +83,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     }
 
 
-    public void loadMap(View view) {
-        Intent intent = new Intent(this.getActivity(), HomeScreen.class);
-        startActivity(intent);
-    }
+
 
     @Override
     public void onStart() {
@@ -167,7 +163,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
+          //  if (result.isSuccess()) {
                 acct = result.getSignInAccount();
                 personName = acct.getDisplayName();
                 personGivenName = acct.getGivenName();
@@ -176,11 +172,9 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 personId = acct.getId();
                 personPhoto = acct.getPhotoUrl();
                 idToken = acct.getIdToken();
-            } else {
-                Toast.makeText(getContext(), "Authentication Failed",
+               /* Toast.makeText(getContext(), "Authentication Failed",
                         Toast.LENGTH_SHORT).show();
-                System.out.println("HAHA FAILED");
-            }
+                System.out.println("HAHA FAILED");*/
             handleSignInResult(result);
         }
     }
