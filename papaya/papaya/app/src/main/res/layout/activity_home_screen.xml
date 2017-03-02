@@ -60,20 +60,23 @@
         android:layout_alignRight="@+id/addNewSessionButton"
         android:layout_alignEnd="@+id/addNewSessionButton" />
 
-    <!--  This could be used for scrollable menu-->
 
+    <!--scrollable menu-->
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignTop="@+id/view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp">
+        android:layout_height="55dp"
+        android:layout_below="@+id/view"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:background="@android:color/darker_gray"
+            android:gravity="center_vertical">
+
 
 
 
@@ -81,7 +84,8 @@
                 android:id="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="All"
+                />
 
             <Button
                 android:id="@+id/button5"
@@ -121,7 +125,6 @@
 
         </LinearLayout>
     </HorizontalScrollView>
-
 
 
 </RelativeLayout>
