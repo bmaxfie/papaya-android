@@ -100,6 +100,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.setPadding(0, 120, 0, 0); //padding left:0, top:200px, right: 0, bottom:0
         enableMyLocation();
     }
 

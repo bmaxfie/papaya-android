@@ -3,15 +3,6 @@
 
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-25.2.0_1a74e0d563926abe6fbeb7eb7d70500ff0edbecb/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -48,30 +39,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="ca82d5800780b1d53f0f9ab43678d8634a34cddc">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-impl-10.2.0_2ec2cd4823e6956e8337b9ce02450e5bd6e90569/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="7d14fe9bd2283b2eb7fcab08458aa0357917e138">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-nearby-10.2.0_db43e085a92e60d9afbf6aba42fd5f872c702369/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="4e01b82d664e1a8253b2b9658e74b5da35c8771d">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-base-10.2.0_047719eb43a22dc223a4d67f62f19d043e03c0a2/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -120,24 +93,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="a3f7595ca32e614b454ceb7b7e241bb037a28e86">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-10.2.0_8afc245429e34fd09c5714487dd2c6c3d287aedd/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="68485f21eeb5d6c9ed82c445d520b9fc81c87108">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-10.2.0_6398b26f20abe729cad355c010dda6e28203a20f/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/palette-v7/24.0.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -180,15 +135,6 @@
         revision="25.0.2"
         sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-25.2.0_7ce5ced4d8d56ed709d0e79b0dc808038efbb20e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-auth/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="48532a016bb0dfbe7970c147ce784598a515406b">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-auth-10.2.0_fd4134d6429a9822a4751359a66853e9a4f84950/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -237,48 +183,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tagmanager/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="a9493f008850469ed3fab9b28658919562882aed">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tagmanager-10.2.0_291ebea4684d5ba9b54eface4a06f4e98c36651e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gass/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="857ce7350acf811749c8fd0254d3d39b02aa71f5">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gass-10.2.0_ad21de4647817b4419ab8be492383379237c69ae/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-25.2.0_d62a73ee2e5b2f438cfa7954369601146575d7f6/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-storage/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="8e1d31656bc9f1889283836e025e6cb703acd38a">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-storage-10.2.0_32dab0dcf4763a5a31d701c2f1999bab906750d6/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-database/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="94fca868854457ede6df15c902938468c71d579e">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-database-10.2.0_e14629a1eacb04a026825106e9de6ba1711402e6/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -300,48 +210,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="3d6951cb416ebf8c66a32b9480808ca247b68344">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-iid-10.2.0_bc32d77cc63a66f656e4984bdb3cdcb917963f47/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="a61e7010aa7be5da53cd1bc5279630510c9a4912">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-10.2.0_83747b36071b4e8cc20259920cac33695657d246/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-25.2.0_cfacc26f8372d377cfcb3b15c140d8792b36b9b4/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="a272cff33f1a36cc17bbb6287b522d98face80e1">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_f2fbe625941ea4428250444a99363649113e1e36/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast-framework/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="8fd2e9eadc9d214966ee7f60d6c5a17a335d7533">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-framework-10.2.0_e796cbf445d4e8cf64a681a1bdbe617324813bf3/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -372,21 +246,210 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="ce9112e08a027c8620ae693983e38cdbb9f6371b">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-impl-10.2.0_11a735db95796e1b078313bf0211466aaf4f31e6/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="ea03bbfaed89818f233ee9918fac493f2b63895a">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-10.2.0_0203653aa786dad4508450c7a6cb8522e0a6a503/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="702d339bc0a81d21354cd7e2cf2b67225fa4a16c">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-25.2.0_8179a9accffcbc6217dd291b8f340a6fb04e8843/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-clearcut/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3f4483afd050f3be12db7838422309446a45daa1">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-clearcut-10.2.0_a7b42604f6dd618adebf579f9a31cea2d5df7f88/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4ef2d91da513c4d7e773ae438fe04d0e4c135957">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-lite-10.2.0_0c0ba3feb028d56dba3030b28a150d7898be69fd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-messaging/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="75575883f0348fc5d2be85f23bd10b050095cf17">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-messaging-10.2.0_b131ffaeae316e80748fd4519ce69a1fe2b4a89d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/24.0.0/jars/libs/internal_impl-24.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b6763651ec29b4c95e7bbe63fc393ffcc8c4c2c5">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.0.0_eb282446cc91ffd2226748ba7977014c668fff55/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="db48dfabe8ecc46681ceca418d6bd61a5339f818">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-identity-10.2.0_97d1736b7cad188cea6fd87d002db8ae5ddae3cd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="444f9de23145e8caba7bf1c1772acad142ea6013">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-vision-10.2.0_4a9ee9c76c03e18b33fb8f079adb05a39e84bb8b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-25.2.0_1a74e0d563926abe6fbeb7eb7d70500ff0edbecb/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ca82d5800780b1d53f0f9ab43678d8634a34cddc">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-impl-10.2.0_2ec2cd4823e6956e8337b9ce02450e5bd6e90569/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4e01b82d664e1a8253b2b9658e74b5da35c8771d">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-base-10.2.0_047719eb43a22dc223a4d67f62f19d043e03c0a2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="a3f7595ca32e614b454ceb7b7e241bb037a28e86">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-10.2.0_8afc245429e34fd09c5714487dd2c6c3d287aedd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="68485f21eeb5d6c9ed82c445d520b9fc81c87108">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-10.2.0_6398b26f20abe729cad355c010dda6e28203a20f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-auth/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="48532a016bb0dfbe7970c147ce784598a515406b">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-auth-10.2.0_fd4134d6429a9822a4751359a66853e9a4f84950/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tagmanager/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="a9493f008850469ed3fab9b28658919562882aed">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tagmanager-10.2.0_291ebea4684d5ba9b54eface4a06f4e98c36651e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gass/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="857ce7350acf811749c8fd0254d3d39b02aa71f5">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gass-10.2.0_ad21de4647817b4419ab8be492383379237c69ae/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-25.2.0_d62a73ee2e5b2f438cfa7954369601146575d7f6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-database/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="94fca868854457ede6df15c902938468c71d579e">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-database-10.2.0_e14629a1eacb04a026825106e9de6ba1711402e6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3d6951cb416ebf8c66a32b9480808ca247b68344">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-iid-10.2.0_bc32d77cc63a66f656e4984bdb3cdcb917963f47/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-25.2.0_cfacc26f8372d377cfcb3b15c140d8792b36b9b4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e4ec3b71fa6d8a885d9fb77e089304e2fc0a1e7b">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_f2fbe625941ea4428250444a99363649113e1e36/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast-framework/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8fd2e9eadc9d214966ee7f60d6c5a17a335d7533">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-framework-10.2.0_e796cbf445d4e8cf64a681a1bdbe617324813bf3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/10.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ce9112e08a027c8620ae693983e38cdbb9f6371b">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-impl-10.2.0_11a735db95796e1b078313bf0211466aaf4f31e6/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -426,15 +489,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="702d339bc0a81d21354cd7e2cf2b67225fa4a16c">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-25.2.0_8179a9accffcbc6217dd291b8f340a6fb04e8843/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -462,15 +516,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-clearcut/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="3f4483afd050f3be12db7838422309446a45daa1">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-clearcut-10.2.0_a7b42604f6dd618adebf579f9a31cea2d5df7f88/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tagmanager-v4-impl/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -484,26 +529,8 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="5e814cac75316aa8443fe0d11f8886281be3d96e">
+        sha1="a424dbe082bf8dce6745592a38f9438660589bdd">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_5c5e7f35bcb0956eee7feaa58ba3f6aa3208a477/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="4ef2d91da513c4d7e773ae438fe04d0e4c135957">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-lite-10.2.0_0c0ba3feb028d56dba3030b28a150d7898be69fd/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.firebase/firebase-messaging/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="75575883f0348fc5d2be85f23bd10b050095cf17">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-messaging-10.2.0_b131ffaeae316e80748fd4519ce69a1fe2b4a89d/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -525,30 +552,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/24.0.0/jars/libs/internal_impl-24.0.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="b6763651ec29b4c95e7bbe63fc393ffcc8c4c2c5">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.0.0_eb282446cc91ffd2226748ba7977014c668fff55/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="101393e975eaf36e3ff40b277ee9a019e077afef">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wearable-10.2.0_171eff3243b11d856a83b4e147e78f7a90a5d0a2/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="db48dfabe8ecc46681ceca418d6bd61a5339f818">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-identity-10.2.0_97d1736b7cad188cea6fd87d002db8ae5ddae3cd/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -567,15 +576,6 @@
         revision="25.0.2"
         sha1="2cd4b982617e544728de0782d718a58ce1b06e3f">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.volley-volley-1.0.0_b03e639beb45b51228be9d24d80f7a4f7e0312c4/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/10.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="444f9de23145e8caba7bf1c1772acad142ea6013">
-        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-vision-10.2.0_4a9ee9c76c03e18b33fb8f079adb05a39e84bb8b/classes.dex" />
     </item>
 
 </items>
