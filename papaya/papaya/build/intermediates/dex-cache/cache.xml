@@ -102,6 +102,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/calebflynn/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-applinks/1.4.0/8ad21bf21784dacce5f2043afb97218cc377e835/bolts-applinks-1.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8ad21bf21784dacce5f2043afb97218cc377e835">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-applinks-1.4.0_92bee9092ad96442903435b18b8a2b2886e08537/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -111,12 +120,30 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/25.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8a372c4191f80489770a231f7be4820b204b886a">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-25.0.0_a832a45a21904acdb9c2ed69abef7ffcf819989a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-instantapps/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="423fb69e69759d8b726fa4a4fb6a1ea9fc86d1cd">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-instantapps-10.2.0_a69396887c49859f4a5c54401e1d2304503778dd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-tasks-1.4.0_b90ffff207ff518b07adc0e8823a859728bc474c/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -273,6 +300,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.20.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cb2ef781533c3f11c4e80341cbaebad275c66586">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.android-facebook-android-sdk-4.20.0_a4d0fa8653c1d6159495dd81f2e2e2cb97cc8763/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/10.2.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -342,6 +378,15 @@
         revision="25.0.2"
         sha1="4e01b82d664e1a8253b2b9658e74b5da35c8771d">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-base-10.2.0_047719eb43a22dc223a4d67f62f19d043e03c0a2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/exploded-aar/com.android.support/customtabs/25.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="94ba691efc31bf53264db0716d9c9ec03843ea31">
+        <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-customtabs-25.0.0_90430920d5f62470039132012ade0f9935bb8e0c/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -430,7 +475,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="e4ec3b71fa6d8a885d9fb77e089304e2fc0a1e7b">
+        sha1="bdb3a9a138a3e324e75df3c586a8468b912b3e77">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_f2fbe625941ea4428250444a99363649113e1e36/classes.dex" />
     </item>
     <item
@@ -529,7 +574,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="a424dbe082bf8dce6745592a38f9438660589bdd">
+        sha1="f8e62f85186156ec8ff2d82da27e9107fdb5ffce">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_5c5e7f35bcb0956eee7feaa58ba3f6aa3208a477/classes.dex" />
     </item>
     <item
