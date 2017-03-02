@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "285788031388",
-    "project_id": "papaya-android-1487393776048"
+    "project_number": "687105205766",
+    "project_id": "papaya-3c3bb"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:285788031388:android:e20275097302b415",
+        "mobilesdk_app_id": "1:687105205766:android:e20275097302b415",
         "android_client_info": {
           "package_name": "com.papaya.scotthanberg.papaya"
         }
       },
       "oauth_client": [
         {
-          "client_id": "285788031388-teamk3s5nhhe1v43gdk62m6lihq7bct3.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "285788031388-ej0fknhh682rrcsh48aakrbhafd9gsrd.apps.googleusercontent.com",
+          "client_id": "687105205766-47q74tuktf07utdfns8qavktgkhoirf1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.papaya.scotthanberg.papaya",
-            "certificate_hash": "3c006ce309a2c8ed229fc936668737e1968e7250"
+            "certificate_hash": "4189c86cd220cdb29f5dc79a0672991e2a6f2612"
           }
+        },
+        {
+          "client_id": "687105205766-bcb8blefespq10t24jdtm59id3a7lbrv.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAr83DAEiOR2X8MyOkCr4S29_sYY99EY_s"
+          "current_key": "AIzaSyCNqxTfWX9Hrax5j9x79tbJxfERfAgSU4M"
         }
       ],
       "services": {
