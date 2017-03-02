@@ -116,7 +116,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             // position on right bottom
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            layoutParams.setMargins(0, 0, 34, 130);
+
+            int padding_in_dp = 17; //dps
+            final float scale = getResources().getDisplayMetrics().density;
+            int bottom = (int) (padding_in_dp * scale + 0.5f);
+            padding_in_dp = 63; //dps
+            int right = (int) (padding_in_dp * scale + 0.5f);
+            layoutParams.setMargins(0, 0, bottom, right);
         }
     }
 
