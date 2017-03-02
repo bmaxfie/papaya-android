@@ -4,6 +4,7 @@
 #local changes
 papaya/papaya/app/google-services.json
 *.DS_Store
+papaya/papaya/build/intermediates/dex-cache/cache.xml
 
 # Built application files
 *.apk
