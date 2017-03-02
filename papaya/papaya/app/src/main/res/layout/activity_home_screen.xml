@@ -64,14 +64,14 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="120px"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignTop="@+id/view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="69dp">
+        android:layout_marginTop="60dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal" >
 
