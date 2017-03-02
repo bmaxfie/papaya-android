@@ -1,6 +1,9 @@
 #https://github.com/github/gitignore/blob/master/Android.gitignore
 # (github's .gitignore for android studio)
 
+#local changes to .gitignore
+papaya/papaya/app/google-services.json
+
 # Built application files
 *.apk
 *.ap_
