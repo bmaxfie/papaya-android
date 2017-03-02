@@ -1,9 +1,11 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -20,5 +22,10 @@ public class LoginActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    public void loadMap(View view) {
+        Intent homeScreen = new Intent(this, HomeScreen.class);
+        startActivity(homeScreen);
     }
 }
