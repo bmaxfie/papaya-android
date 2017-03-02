@@ -17,7 +17,38 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.facebook.login.widget.ProfilePictureView;
+import com.facebook.share.ShareApi;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
+import com.facebook.FacebookSdk;
 
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,8 +59,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-
-import java.io.InputStream;
 import java.net.URL;
 
 
@@ -59,11 +88,36 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private String idToken;
 
 
+    //Facebook Login Variables
+    private LoginButton loginButton;
+    private ImageView profilePicImageView;
+    private CallbackManager callbackManager;
+    private ProfileTracker profileTracker;
+    
+    private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
+        @Override
+        public void onSuccess(Sharer.Result result) {
+            Log.d("GPlusFragment", "Success!");
+        }
+
+        @Override
+        public void onCancel() {
+            Log.d("GPlusFragment", "Cancelled");
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            Log.d("GPlusFragment", String.format("Error: %s", error.toString()));
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        //Facebook SDK init..
+        FacebookSdk.sdkInitialize(getActivity());
+
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -115,15 +169,63 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        // Facebook Handling
         View v = inflater.inflate(R.layout.fragment_gplus, parent, false);
+        loginButton = (LoginButton) v.findViewById(R.id.loginButton);
+        loginButton.setFragment(this);
+        callbackManager = CallbackManager.Factory.create();
+        // Facebook Callback Registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Toast toast = Toast.makeText(getActivity(), "Logged In", Toast.LENGTH_SHORT);
+                        toast.show();
+                        loginButton.setVisibility(View.GONE);
+                        signInButton.setVisibility(View.GONE);
+                        signOutButton.setVisibility(View.GONE);
+                        profilePicImageView.setVisibility(View.VISIBLE);
+                        continue_to_papaya.setVisibility(View.VISIBLE);
+                        Profile p = Profile.getCurrentProfile();
+                        new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200,200).toString());
+                        updateUI();
+                    }
 
+                    @Override
+                    public void onCancel() {
+                        // App code
+                        loginButton.setVisibility(View.VISIBLE);
+                        signInButton.setVisibility(View.VISIBLE);
+                        profilePicImageView.setVisibility(View.GONE);
+                        continue_to_papaya.setVisibility(View.GONE);
+                        updateUI();
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        profilePicImageView.setVisibility(View.GONE);
+                        loginButton.setVisibility(View.VISIBLE);
+                        signInButton.setVisibility(View.VISIBLE);
+                        continue_to_papaya.setVisibility(View.VISIBLE);
+                        updateUI();
+                    }
+        });
+
+        profilePicImageView = (ImageView) v.findViewById(R.id.profilePicture);
+        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.user_default);
+        profilePicImageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),icon, 200, 200, 200, false, false,false, false));
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
+            }
+        });
+
+        // Google Handling
         signInButton = (SignInButton) v.findViewById(R.id.sign_in_button);
         signOutButton = (Button) v.findViewById(R.id.sign_out_button);
         continue_to_papaya = (Button) v.findViewById(R.id.continue_to_papaya);
         imgProfilePic = (ImageView) v.findViewById(R.id.img_profile_pic);
 
-        mStatusTextView = (TextView) v.findViewById(R.id.status);
-        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.user_default);
+       // mStatusTextView = (TextView) v.findViewById(R.id.status);
         imgProfilePic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),icon, 200, 200, 200, false, false, false, false));
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,12 +261,14 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //Facebook Callback..
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
           //  if (result.isSuccess()) {
-                acct = result.getSignInAccount();
+             /*   acct = result.getSignInAccount();
                 personName = acct.getDisplayName();
                 personGivenName = acct.getGivenName();
                 personFamilyName = acct.getFamilyName();
@@ -185,7 +289,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+      //      mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //Similarly you can get the email and photourl using acct.getEmail() and  acct.getPhotoUrl()
 
             if(acct.getPhotoUrl() != null)
@@ -199,19 +303,34 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     }
 
 
-
+    private void updateUI() {
+        boolean enableButtons = AccessToken.getCurrentAccessToken() != null;
+        Profile profile = Profile.getCurrentProfile();
+        if (enableButtons && profile != null) {
+            new LoadProfileImage(profilePicImageView).execute(profile.getProfilePictureUri(200,200).toString());
+        } else {
+            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.user_default);
+            profilePicImageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(), icon, 200, 200, 200, false, false, false, false));
+        }
+    }
 
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             signInButton.setVisibility(View.GONE);
+            loginButton.setVisibility(View.GONE);
             signOutButton.setVisibility(View.VISIBLE);
             continue_to_papaya.setVisibility(View.VISIBLE);
+            imgProfilePic.setVisibility(View.VISIBLE);
+            profilePicImageView.setVisibility(View.GONE);
           //  Intent toy = new Intent(this.getActivity(), HomeScreen.class);
         } else {
-            mStatusTextView.setText(R.string.signed_out);
+           // mStatusTextView.setText(R.string.signed_out);
             Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.user_default);
             imgProfilePic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),icon, 200, 200, 200, false, false, false, false));
             signInButton.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
+            imgProfilePic.setVisibility(View.GONE);
+            profilePicImageView.setVisibility(View.GONE);
             signOutButton.setVisibility(View.GONE);
             continue_to_papaya.setVisibility(View.GONE);
         }
