@@ -430,7 +430,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="63f419914c005bb40a05fca73f79f8dfd4912e68">
+        sha1="a272cff33f1a36cc17bbb6287b522d98face80e1">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_f2fbe625941ea4428250444a99363649113e1e36/classes.dex" />
     </item>
     <item
@@ -529,7 +529,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="3f5cb96a3aaf5f5b51c2f9284e9cf63b732554c5">
+        sha1="d508253cdd808e8e12c633e92577790a943a4205">
         <dex dex="/Users/calebflynn/papaya/papaya-android/papaya/papaya/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_5c5e7f35bcb0956eee7feaa58ba3f6aa3208a477/classes.dex" />
     </item>
     <item
