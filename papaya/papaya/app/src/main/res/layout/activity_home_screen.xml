@@ -17,10 +17,10 @@
     <!-- add New Study Session Button-->
     <Button
         android:id="@+id/addNewSessionButton"
-        android:layout_width="40dp"
+        android:layout_width="42dp"
         android:background="@drawable/study_session_button"
         android:alpha="1"
-        android:layout_height="40dp"
+        android:layout_height="42dp"
         android:layout_marginEnd="17dp"
         android:layout_marginRight="17dp"
         android:layout_marginBottom="15dp"
