@@ -107,10 +107,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         createClassButtons();
     }
 
-    public void addStudySession(View view) {
+/*    public void addStudySession(View view) {
         Intent studySession = new Intent(this, CreateNewSession.class);
         startActivity(studySession);
     }
+ */
 
     public void openMenu(View view) {
         if (dropDown.getVisibility()==View.VISIBLE) {
@@ -306,7 +307,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     /**
      * TODO: ADD BUTTON METHODS HERE
      */
-   // public void addStudySession(View view) {
+    public void addStudySession(View view) {
         //this is where we will call
       //  System.out.println("hi");
 
@@ -369,7 +370,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Sessions.add(Beering);
         Sessions.add(Honors);
         */
-    //}
+    }
 
     public int dp_to_pixels(int dp) {
         final float scale = getResources().getDisplayMetrics().density;
