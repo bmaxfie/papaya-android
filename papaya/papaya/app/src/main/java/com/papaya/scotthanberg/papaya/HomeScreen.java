@@ -68,6 +68,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     */
     private boolean shouldMove; //whether or not the map will snap back to the location of the user on location update
     private static ArrayList<StudySession> Sessions;
+    private static ArrayList<StudySession> filtered;
     private Timer oneMinute;
     private TimerTask markStudySessions;
     String url = "google.com";
@@ -104,6 +105,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         locationRequest.setFastestInterval(15 * 1000); // This is the fastest interval
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         Sessions = new ArrayList<StudySession>();
+        filtered = new ArrayList<StudySession>();
         oneMinute = new Timer();
 
         dropDown = (RelativeLayout) findViewById(R.id.dropDown);
@@ -116,9 +118,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
         createClassButtons();
-        Sessions.add(new StudySession("1145", "2 hours", "40.425611, -86.916916", "descrip","false"));
-        Sessions.add(new StudySession("15814", "2 hours", "40.425885, -86.915894", "disctipno","false"));
-        Sessions.add(new StudySession("25135", "2 hours", "40.427173, -86.919783", "more workds","false"));
+        Sessions.add(new StudySession("1145", "2 hours", "40.425611, -86.916916", "Class0","false"));
+        Sessions.add(new StudySession("15814", "2 hours", "40.425885, -86.915894", "Class1","false"));
+        Sessions.add(new StudySession("25135", "2 hours", "40.427173, -86.919783", "Class2","false"));
+        //set filtered
+        for (StudySession s : Sessions) {
+            filtered.add(s);
+        }
 
 
     }
@@ -157,11 +163,23 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        Button all = new Button(this);
+        all.setText("All");
+        all.setTag("all_button");
+        all.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                filtered.clear();
+                for (StudySession s: Sessions){
+                    filtered.add(s);
+                }
+            }
+        });
+        ll.addView(all, lp);
         for (int i = 0; i < 4; i++) {
             Button myButton = new Button(this);
             //TODO:change this to getString method accessing Lambda sending it index: i
-            myButton.setText("BUTTON " + i);
-            myButton.setTag("class_button" + i);
+            myButton.setText("Class" + i);
+            myButton.setTag("Class" + i);
             myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Object x = v.getTag();
@@ -174,7 +192,24 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public void filterClass(Object x) {
         //TODO: lambda stuff goes here
-        System.out.println("x = " + x);
+        filtered.clear();
+        mMap.clear();
+        for (StudySession s: Sessions){
+            if(s.getDescription().equals(x)){
+                filtered.add(s);
+                if (s.getLocation() != null) {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(s.getLocation()));
+                }
+            }
+        }
+        if (filtered.isEmpty()) {
+            //todo:toast it
+            for (StudySession s: Sessions){
+                filtered.add(s);
+
+            }
+        }
     }
 
 
@@ -307,7 +342,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                         */
-                        for (StudySession s : Sessions) {
+                        for (StudySession s : filtered) {
                             if (s != null)
                                 if (s.getLocation() != null) {
                                     mMap.addMarker(new MarkerOptions()
