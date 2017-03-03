@@ -64,6 +64,7 @@ public class CreateNewSession extends AppCompatActivity {
     public void openMenu(View view) {
         if (dropDown.getVisibility()==View.VISIBLE) {
             dropDown.setVisibility(View.GONE);
+            System.out.println("THIS IS WORKING");
          //   horizontalScroll.setVisibility(View.VISIBLE);
           //  backdrop.setVisibility(View.VISIBLE);
             newStudySession.setVisibility(View.GONE);
