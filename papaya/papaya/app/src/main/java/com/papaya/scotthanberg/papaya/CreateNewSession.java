@@ -149,11 +149,7 @@ public class CreateNewSession extends AppCompatActivity {
         toast.show();
         startActivity(sessionCreated);
     }
-
-    public void openMenu(View view) {
-        Toast toast = Toast.makeText(this, "Already creating session", Toast.LENGTH_SHORT);
-        toast.show();
-    }
+    
 
 
 }
