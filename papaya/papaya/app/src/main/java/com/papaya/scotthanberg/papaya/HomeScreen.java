@@ -9,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
@@ -87,6 +89,20 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         Sessions = new ArrayList<StudySession>();
         oneMinute = new Timer();
+
+        createClassButtons();
+    }
+    private void createClassButtons() {
+        LinearLayout ll = (LinearLayout)findViewById(R.id.scrollContainer);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        for (int i = 0; i < 4; i++) {
+            Button myButton = new Button(this);
+            //TODO:change this to getString method accessing Lambda sending it index: i
+            myButton.setText("BUTTON "+i);
+            ll.addView(myButton, lp);
+        }
+
     }
 
 
