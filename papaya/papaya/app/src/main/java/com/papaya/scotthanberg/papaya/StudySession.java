@@ -22,7 +22,7 @@ public class StudySession {
     }
 
     public StudySession(String SessionID, String duration, String Location, String Description, String Sponsored) {
-       // this.Location = Location;  Parse it into the correct format
+        this.Location = new LatLng(Double.parseDouble(Location.split(",")[0]), Double.parseDouble(Location.split(",")[1]));
         this.SessionID = SessionID;
         this.duration = duration;
         this.Description = Description;

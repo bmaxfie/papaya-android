@@ -215,8 +215,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 runOnUiThread(new Runnable() {
                     public void run() {
                         for (StudySession s : Sessions) {
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(s.getLocation()));
+                            if (s != null)
+                                if (s.getLocation() != null) {
+                                    mMap.addMarker(new MarkerOptions()
+                                            .position(s.getLocation()));
+                                }
                         }
                     }
                 });
@@ -258,14 +261,18 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
 
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/class/45digitid/sessions";
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
-            newJSONStudySession.put("UserID_Host", "thiswillbeauserid");
-            newJSONStudySession.put("Duration", 0.0);
-            newJSONStudySession.put("Location", myLatitude.toString() + "," + myLongitude.toString());
-            newJSONStudySession.put("Description", "This will be a description");
-            newJSONStudySession.put("Sponsored", true);
+            newJSONStudySession.put("user_id", "2DAkfVbjng9Nblya+CqEoQ==");
+            newJSONStudySession.put("duration", 0.0);
+            newJSONStudySession.put("location_desc", "Location Description");
+            newJSONStudySession.put("location_lat", myLatitude.floatValue());
+            newJSONStudySession.put("location_long", myLongitude.floatValue());
+            newJSONStudySession.put("description", "This will be a description");
+            newJSONStudySession.put("service", "GOOGLE");
+            newJSONStudySession.put("authentication_key", GPlusFragment.getPersonId());
+            newJSONStudySession.put("sponsored", true);
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
         }
@@ -276,8 +283,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     public void onResponse(JSONObject response) {
 
                         try {
-                            Sessions.add(new StudySession(newJSONStudySession.get("UserID_Host").toString(), newJSONStudySession.get("Duration").toString()
-                            , newJSONStudySession.get("Location").toString(), newJSONStudySession.get("Description").toString(), newJSONStudySession.get("Sponsored").toString()));
+                            Sessions.add(new StudySession(
+                                      newJSONStudySession.get("user_id").toString()
+                                    , newJSONStudySession.get("duration").toString()
+                                    , newJSONStudySession.get("location_lat").toString() + "," + newJSONStudySession.get("location_long").toString()
+                                    , newJSONStudySession.get("description").toString()
+                                    , newJSONStudySession.get("sponsored").toString()));
+                            System.out.println(response.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
