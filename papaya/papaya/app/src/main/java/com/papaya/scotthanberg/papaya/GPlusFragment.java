@@ -19,6 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -42,6 +46,9 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
@@ -64,13 +71,15 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private ProgressDialog mProgressDialog;
     private ImageView imgProfilePic;
     private GoogleSignInAccount acct;
-    private String personName;
-    private String personGivenName;
-    private String personFamilyName;
-    private String personEmail;
+    private static String personName;
+    private static String personGivenName;
+    private static String personFamilyName;
+    private static String personEmail;
     private static String personId;
+    private static String authentication_key;
+    private static String service;
     private Uri personPhoto;
-    private String idToken;
+    private static String idToken;
     private ImageView papayaPic;
     private boolean FBlogin;
 
@@ -131,9 +140,55 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 }
             }
         };
+//        if (PreferenceHandler.)
 
     }
+    public void addUserToDatabase() {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
+        final JSONObject newJSONStudySession = new JSONObject();
+        try {
+            if (FBlogin == true) {
+                newJSONStudySession.put("service", "FACEBOOK");
+                service = "FACEBOOK";
+            } else {
+                newJSONStudySession.put("service", "GOOGLE");
+                service = "GOOGLE";
+            }
+            newJSONStudySession.put("username", personName);
+            newJSONStudySession.put("authentication_key", personId);
+            /* Below code is not worky
+            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumber = tMgr.getLine1Number();
+            */
+            newJSONStudySession.put("phone", 5742386463l);
+            newJSONStudySession.put("email", personEmail);
+        } catch (JSONException e) {
+            System.out.println("LOL you got a JSONException");
+        }
 
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println("\n\n\n" + response.toString() + "\n\n\n");
+                            personId = response.getString("user_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
+    }
 
 
 
@@ -293,7 +348,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 personGivenName = acct.getGivenName();
                 personFamilyName = acct.getFamilyName();
                 personEmail = acct.getEmail();
-                personId = acct.getId();
+                authentication_key = acct.getId();
                 personPhoto = acct.getPhotoUrl();
                 idToken = acct.getIdToken();
                /* Toast.makeText(getContext(), "Authentication Failed",
@@ -314,7 +369,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
             if(acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-
+            addUserToDatabase();
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -420,6 +475,30 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
     public static String getPersonId() {
         return personId;
+    }
+
+    public static String getAuthentication_key() {
+        return authentication_key;
+    }
+
+    public static String getPersonEmail() {
+        return personEmail;
+    }
+
+    public static String getPersonFamilyName() {
+        return personFamilyName;
+    }
+
+    public static String getPersonGivenName() {
+        return personGivenName;
+    }
+
+    public static String getPersonName() {
+        return personName;
+    }
+
+    public static String getService() {
+        return service;
     }
 }
 

@@ -264,13 +264,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
-            newJSONStudySession.put("user_id", "2DAkfVbjng9Nblya+CqEoQ==");
+            newJSONStudySession.put("user_id", GPlusFragment.getPersonId());
             newJSONStudySession.put("duration", 0.0);
             newJSONStudySession.put("location_desc", "Location Description");
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
             newJSONStudySession.put("description", "This will be a description");
-            newJSONStudySession.put("service", "GOOGLE");
+            newJSONStudySession.put("service", GPlusFragment.getService());
             newJSONStudySession.put("authentication_key", GPlusFragment.getPersonId());
             newJSONStudySession.put("sponsored", true);
         } catch (JSONException e) {
