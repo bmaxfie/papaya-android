@@ -17,39 +17,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.login.widget.ProfilePictureView;
-import com.facebook.share.ShareApi;
 import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareDialog;
-import com.facebook.FacebookSdk;
-
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -60,8 +45,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import java.net.URL;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Arrays;
 
 /**
  * Created by ChristianLock on 3/1/17.
@@ -80,21 +70,28 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private ProgressDialog mProgressDialog;
     private ImageView imgProfilePic;
     private GoogleSignInAccount acct;
-    private String personName;
-    private String personGivenName;
-    private String personFamilyName;
-    private String personEmail;
-    private String personId;
+    private static String personName;
+    private static String personGivenName;
+    private static String personFamilyName;
+    private static String personEmail;
+    private static String personId;
+    private static String authentication_key;
+    private static String service;
     private Uri personPhoto;
-    private String idToken;
+    private static String idToken;
     private ImageView papayaPic;
     private boolean FBlogin;
+    private PreferenceHandler preferenceHandler;
 
     //Facebook Login Variables
     private LoginButton loginButton;
     private ImageView profilePicImageView;
     private CallbackManager callbackManager;
     private ProfileTracker profileTracker;
+
+    private boolean signedIn = false;
+
+
     
     private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
@@ -147,15 +144,68 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 }
             }
         };
-
     }
+    public void addUserToDatabase() {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
+        final JSONObject newJSONStudySession = new JSONObject();
+        try {
+            if (FBlogin == true) {
+                newJSONStudySession.put("service", "FACEBOOK");
+                service = "FACEBOOK";
+            } else {
+                newJSONStudySession.put("service", "GOOGLE");
+                service = "GOOGLE";
+            }
+            newJSONStudySession.put("username", personName);
+            System.out.println("This is the username" + personName);
+            newJSONStudySession.put("authentication_key", authentication_key);
+            System.out.println("This is the authentication_key" + authentication_key);
+            /* Below code is not worky
+            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumber = tMgr.getLine1Number();
+            */
+            newJSONStudySession.put("phone", 5742386463l);
+            newJSONStudySession.put("email", personEmail);
+        } catch (JSONException e) {
+            System.out.println("LOL you got a JSONException");
+        }
 
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println("\n\n\n" + response.toString() + "\n\n\n");
+                            personId = response.getString("user_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
+    }
 
 
 
     @Override
     public void onStart() {
         super.onStart();
+        preferenceHandler = new PreferenceHandler(getContext());
+        String value = preferenceHandler.readFromSharedPref("user_id");
+        if (value.equals("Value does not exist")) {
+            signedIn = false;
+        } else {
+            signedIn = true;
+        }
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
             signInButton.setVisibility(View.GONE);
@@ -304,12 +354,12 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
           //  if (result.isSuccess()) {
-             /*   acct = result.getSignInAccount();
+                acct = result.getSignInAccount();
                 personName = acct.getDisplayName();
                 personGivenName = acct.getGivenName();
                 personFamilyName = acct.getFamilyName();
                 personEmail = acct.getEmail();
-                personId = acct.getId();
+                authentication_key = acct.getId();
                 personPhoto = acct.getPhotoUrl();
                 idToken = acct.getIdToken();
                /* Toast.makeText(getContext(), "Authentication Failed",
@@ -330,7 +380,9 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
             if(acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-
+            if (!signedIn || signedIn) {
+                addUserToDatabase();
+            }
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -398,7 +450,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
     }
 
-
     /**
      * Background Async task to load user profile picture from url
      * */
@@ -434,6 +485,32 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         }
     }
 
+    public static String getPersonId() {
+        return personId;
+    }
 
+    public static String getAuthentication_key() {
+        return authentication_key;
+    }
+
+    public static String getPersonEmail() {
+        return personEmail;
+    }
+
+    public static String getPersonFamilyName() {
+        return personFamilyName;
+    }
+
+    public static String getPersonGivenName() {
+        return personGivenName;
+    }
+
+    public static String getPersonName() {
+        return personName;
+    }
+
+    public static String getService() {
+        return service;
+    }
 }
 

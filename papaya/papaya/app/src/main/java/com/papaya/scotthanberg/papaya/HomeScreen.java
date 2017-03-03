@@ -1,5 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -7,11 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -56,16 +61,27 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private LocationRequest locationRequest;
     private Double myLatitude;
     private Double myLongitude;
+
     /*
     private TextView latitudeText;
     private TextView longitudeText;
     */
-    private ArrayList<StudySession> Sessions;
+    private boolean shouldMove; //whether or not the map will snap back to the location of the user on location update
+    private static ArrayList<StudySession> Sessions;
     private Timer oneMinute;
     private TimerTask markStudySessions;
     String url = "google.com";
     User currentUser;
     View mapView;
+
+    //Main Menu Buttons
+    private ImageView menubutton;
+    private TextView textView;
+    private RelativeLayout dropDown;
+    private View backdrop;
+    private HorizontalScrollView horizontalScroll;
+    private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +92,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapView = mapFragment.getView();
         mapFragment.getMapAsync(this);
-
+        shouldMove = true;
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -90,18 +106,59 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Sessions = new ArrayList<StudySession>();
         oneMinute = new Timer();
 
+        dropDown = (RelativeLayout) findViewById(R.id.dropDown);
+        horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
+        backdrop = (View) findViewById(R.id.horizontalBackdrop);
+        newStudySession = (Button) findViewById(R.id.NewStudySession);
+        sortByClass = (Button) findViewById(R.id.SortByClass);
+        manageClasses = (Button) findViewById(R.id.ManageClasses);
+        findFriends = (Button) findViewById(R.id.FindFriends);
+        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+
         createClassButtons();
+
     }
+
+/*    public void addStudySession(View view) {
+        Intent studySession = new Intent(this, CreateNewSession.class);
+        dropDown.setVisibility(View.GONE);
+        newStudySession.setVisibility(View.GONE);
+        startActivity(studySession);
+    }
+ */
+
+    public void openMenu(View view) {
+        if (dropDown.getVisibility()==View.VISIBLE) {
+            dropDown.setVisibility(View.GONE);
+            horizontalScroll.setVisibility(View.VISIBLE);
+            backdrop.setVisibility(View.VISIBLE);
+            newStudySession.setVisibility(View.GONE);
+            sortByClass.setVisibility(View.GONE);
+            manageClasses.setVisibility(View.GONE);
+            findFriends.setVisibility(View.GONE);
+            joinNewClass.setVisibility(View.GONE);
+        } else {
+            dropDown.setVisibility(View.VISIBLE);
+            backdrop.setVisibility(View.GONE);
+            horizontalScroll.setVisibility(View.GONE);
+            newStudySession.setVisibility(View.VISIBLE);
+            sortByClass.setVisibility(View.VISIBLE);
+            manageClasses.setVisibility(View.VISIBLE);
+            findFriends.setVisibility(View.VISIBLE);
+            joinNewClass.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void createClassButtons() {
-        LinearLayout ll = (LinearLayout)findViewById(R.id.scrollContainer);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < 4; i++) {
             Button myButton = new Button(this);
             //TODO:change this to getString method accessing Lambda sending it index: i
-            myButton.setText("BUTTON "+i);
+            myButton.setText("BUTTON " + i);
             myButton.setTag("class_button" + i);
-            myButton.setOnClickListener(new View.OnClickListener(){
+            myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Object x = v.getTag();
                     filterClass(x);
@@ -111,9 +168,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
-    public void filterClass(Object x){
+    public void filterClass(Object x) {
         //TODO: lambda stuff goes here
-        System.out.println("x = "+x);
+        System.out.println("x = " + x);
     }
 
 
@@ -201,10 +258,14 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         longitudeText.setText("Longitude :" + String.valueOf(myLongitude));
         */
         // Change the camera to follow you!
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude, myLongitude)));
+        if(shouldMove) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude, myLongitude)));
+            shouldMove = false;
+        }
 
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -214,9 +275,40 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             public void run() {
                 runOnUiThread(new Runnable() {
                     public void run() {
+                        // first delete everything
+            //            mMap.clear();
+                        // then add everything from the database
+            /*            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + GPlusFragment.getAuthentication_key();
+                        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+
+                                        try {
+                                            Sessions.add(newStudySession(response.getString("session_id"),))
+                                            System.out.println(response.toString());
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        // TODO Auto-generated method stub
+
+                                    }
+                                });
+
+                        // Access the RequestQueue through your singleton class.
+                        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+                        */
                         for (StudySession s : Sessions) {
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(s.getLocation()));
+                            if (s != null)
+                                if (s.getLocation() != null) {
+                                    mMap.addMarker(new MarkerOptions()
+                                            .position(s.getLocation()));
+                                }
                         }
                     }
                 });
@@ -227,6 +319,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     @Override
     protected void onResume() {
+        Intent homescreen = getIntent(); // gets the previously created intent
+        String activity = homescreen.getStringExtra("from");
+        if(activity.equals("CreateNewSession")){
+  //          Sessions = (ArrayList<StudySession>) homescreen.getSerializableExtra("sessions");
+        }
         super.onResume();
         if (mGoogleApiClient.isConnected()) {
             requestLocationUpdates();
@@ -250,22 +347,25 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
      * TODO: ADD BUTTON METHODS HERE
      */
     public void addStudySession(View view) {
-        //this is where we will call
-        System.out.println("hi");
+
 
         // Instantiate the RequestQueue.
         /* Replace Beta with /class/id/sessions or something like that
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
 
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/class/45digitid/sessions";
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
-            newJSONStudySession.put("UserID_Host", "thiswillbeauserid");
-            newJSONStudySession.put("Duration", 0.0);
-            newJSONStudySession.put("Location", myLatitude.toString() + "," + myLongitude.toString());
-            newJSONStudySession.put("Description", "This will be a description");
-            newJSONStudySession.put("Sponsored", true);
+            newJSONStudySession.put("user_id", GPlusFragment.getPersonId());
+            newJSONStudySession.put("duration", 0.0);
+            newJSONStudySession.put("location_desc", "Location Description");
+            newJSONStudySession.put("location_lat", myLatitude.floatValue());
+            newJSONStudySession.put("location_long", myLongitude.floatValue());
+            newJSONStudySession.put("description", "This will be a description");
+            newJSONStudySession.put("service", GPlusFragment.getService());
+            newJSONStudySession.put("authentication_key", GPlusFragment.getPersonId());
+            newJSONStudySession.put("sponsored", true);
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
         }
@@ -276,8 +376,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     public void onResponse(JSONObject response) {
 
                         try {
-                            Sessions.add(new StudySession(newJSONStudySession.get("UserID_Host").toString(), newJSONStudySession.get("Duration").toString()
-                            , newJSONStudySession.get("Location").toString(), newJSONStudySession.get("Description").toString(), newJSONStudySession.get("Sponsored").toString()));
+                            Sessions.add(new StudySession(
+                                    newJSONStudySession.get("user_id").toString()
+                                    , newJSONStudySession.get("duration").toString()
+                                    , newJSONStudySession.get("location_lat").toString() + "," + newJSONStudySession.get("location_long").toString()
+                                    , newJSONStudySession.get("description").toString()
+                                    , newJSONStudySession.get("sponsored").toString()));
+                            System.out.println(response.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -303,9 +408,20 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Sessions.add(Honors);
         */
     }
+    public void buttonAddStudySession(View view){
+        Intent studySession = new Intent(this, CreateNewSession.class);
+        studySession.putExtra("lat",myLatitude);
+        studySession.putExtra("lon",myLongitude);
+        studySession.putExtra("session",Sessions);
+        startActivity(studySession);
+    }
 
-    public int dp_to_pixels(int dp){
+    public int dp_to_pixels(int dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    public static ArrayList<StudySession> getSessions() {
+        return Sessions;
     }
 }

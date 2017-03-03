@@ -4,20 +4,180 @@
     android:id="@+id/activity_create_new_session"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
 
     tools:context="com.papaya.scotthanberg.papaya.CreateNewSession">
 
-    <View
+    <RelativeLayout
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="120px"
-        android:background="@android:color/white"></View>
-    <TextView
-        android:text="New Study Session"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/menuButton"
+            android:src="@drawable/menuicon"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:onClick="openMenu"/>
+
+        <TextView
+            android:text="papaya"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/textView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:fontFamily="sans-serif"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/dropDown"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:layout_weight="2.5"
+        android:background="@android:color/holo_orange_light"
+        android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="65dp"
-        android:id="@+id/textView2" />
+        android:visibility="invisible">
+
+        <Button
+            android:id="@+id/NewStudySession"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="0dp"
+            android:text="New Study Session"
+            android:visibility="invisible"
+            android:onClick="addStudySession"/>
+
+        <Button
+            android:id="@+id/SortByClass"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:text="Sort By Class"
+            android:visibility="invisible"/>
+        <Button
+            android:id="@+id/ManageClasses"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="100dp"
+            android:text="Manage Classes"
+            android:visibility="invisible"/>
+        <Button
+            android:id="@+id/FindFriends"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="150dp"
+            android:text="Find Friends"
+            android:visibility="invisible" />
+        <Button
+            android:id="@+id/JoinNewClass"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="200dp"
+            android:text="Join A New Class"
+            android:visibility="invisible"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/view"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp">
+
+
+        <TextView
+            android:text="New Study Session"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleText"
+            android:textSize="24sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp">
+
+
+
+        <TextView
+            android:text="Enter the duration:"
+            android:id="@+id/durationText"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="24dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:layout_marginTop="12dp"
+            android:id="@+id/editText2"
+            android:layout_below="@+id/durationText"
+            android:layout_centerHorizontal="true"
+            android:hint="1 hour" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Class:"
+            android:id="@+id/classText"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_below="@+id/editText2"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:layout_marginTop="12dp"
+            android:id="@+id/editText3"
+            android:layout_below="@+id/classText"
+            android:layout_centerHorizontal="true"
+            android:hint="CS307" />
+
+        <Button
+            android:text="Create Session"
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="0dp"
+            android:onClick="addStudySession"/>
+
+
+    </RelativeLayout>
+
 </RelativeLayout>

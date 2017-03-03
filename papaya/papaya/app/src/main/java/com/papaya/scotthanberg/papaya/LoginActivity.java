@@ -6,11 +6,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private Button dropDown;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+      //  setTheme(R.style.splashScreenTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         FragmentManager fm = getSupportFragmentManager();
@@ -26,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loadMap(View view) {
         Intent homeScreen = new Intent(this, HomeScreen.class);
+        homeScreen.putExtra("from","LoginActivity");
         startActivity(homeScreen);
     }
 }
