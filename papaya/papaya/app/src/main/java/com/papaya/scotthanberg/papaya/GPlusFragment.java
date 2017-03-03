@@ -53,21 +53,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 
-
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 /**
  * Created by ChristianLock on 3/1/17.
  */
@@ -214,6 +199,13 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public void onStart() {
         super.onStart();
+        preferenceHandler = new PreferenceHandler(getContext());
+        String value = preferenceHandler.readFromSharedPref("user_id");
+        if (value.equals("Value does not exist")) {
+            signedIn = false;
+        } else {
+            signedIn = true;
+        }
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
             signInButton.setVisibility(View.GONE);
@@ -253,14 +245,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 });
             }
         }
-/*        preferenceHandler = new PreferenceHandler();
-        String value = preferenceHandler.readFromSharedPref("user_id");
-        if (value.equals("Value does not exist")) {
-            signedIn = false;
-        } else {
-            signedIn = true;
-        }
-*/
     }
 
 
@@ -396,7 +380,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
             if(acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-            if (!signedIn) {
+            if (!signedIn || signedIn) {
                 addUserToDatabase();
             }
             updateUI(true);

@@ -1,6 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -9,9 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -23,7 +20,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.CreateFileActivityBuilder;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -309,7 +305,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
      */
     public void addStudySession(View view) {
         //this is where we will call
-      //  System.out.println("hi");
+        System.out.println("hi");
 
         // Instantiate the RequestQueue.
         /* Replace Beta with /class/id/sessions or something like that
