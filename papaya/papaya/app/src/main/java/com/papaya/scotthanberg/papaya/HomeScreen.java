@@ -1,5 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.CreateFileActivityBuilder;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -103,6 +105,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         oneMinute = new Timer();
 
         createClassButtons();
+    }
+
+    public void addStudySession(View view) {
+        Intent studySession = new Intent(this, CreateNewSession.class);
+        startActivity(studySession);
     }
 
     public void openMenu(View view) {
@@ -296,15 +303,15 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     /**
      * TODO: ADD BUTTON METHODS HERE
      */
-    public void addStudySession(View view) {
+   // public void addStudySession(View view) {
         //this is where we will call
-        System.out.println("hi");
+      //  System.out.println("hi");
 
         // Instantiate the RequestQueue.
         /* Replace Beta with /class/id/sessions or something like that
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
-
+/*
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/class/45digitid/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
@@ -349,7 +356,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Sessions.add(Beering);
         Sessions.add(Honors);
         */
-    }
+    //}
 
     public int dp_to_pixels(int dp) {
         final float scale = getResources().getDisplayMetrics().density;

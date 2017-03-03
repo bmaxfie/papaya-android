@@ -79,7 +79,8 @@
             android:layout_height="50dp"
             android:layout_marginTop="0dp"
             android:text="New Study Session"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:onClick="addStudySession"/>
 
         <Button
             android:id="@+id/SortByClass"
