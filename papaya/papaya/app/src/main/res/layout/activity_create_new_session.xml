@@ -4,20 +4,80 @@
     android:id="@+id/activity_create_new_session"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
 
     tools:context="com.papaya.scotthanberg.papaya.CreateNewSession">
 
-    <View
-        android:id="@+id/view"
+    <include layout="@layout/main_menu" />
+
+    <RelativeLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="120px"
-        android:background="@android:color/white"></View>
-    <TextView
-        android:text="New Study Session"
-        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/view"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp">
+
+
+        <TextView
+            android:text="New Study Session"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleText"
+            android:textSize="24sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="65dp"
-        android:id="@+id/textView2" />
+        android:layout_below="@+id/title"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp">
+
+
+
+        <TextView
+            android:text="Enter the duration:"
+            android:id="@+id/durationText"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="24dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:layout_marginTop="12dp"
+            android:id="@+id/editText2"
+            android:layout_below="@+id/durationText"
+            android:layout_centerHorizontal="true"
+            android:hint="1 hour" />
+
+        <Button
+            android:text="Create Session"
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>
