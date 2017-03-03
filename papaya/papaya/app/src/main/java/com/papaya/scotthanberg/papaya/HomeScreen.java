@@ -1,5 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -66,7 +67,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private TextView longitudeText;
     */
     private boolean shouldMove; //whether or not the map will snap back to the location of the user on location update
-    private ArrayList<StudySession> Sessions;
+    private static ArrayList<StudySession> Sessions;
     private Timer oneMinute;
     private TimerTask markStudySessions;
     String url = "google.com";
@@ -378,10 +379,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Sessions.add(Beering);
         Sessions.add(Honors);
         */
-
-
-
-
     }
     public void buttonAddStudySession(View view){
         Intent studySession = new Intent(this, CreateNewSession.class);
@@ -394,5 +391,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public int dp_to_pixels(int dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    public static ArrayList<StudySession> getSessions() {
+        return Sessions;
     }
 }

@@ -1,8 +1,8 @@
 package com.papaya.scotthanberg.papaya;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -12,13 +12,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.location.LocationRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 import android.widget.Toast;
 
@@ -52,7 +50,7 @@ public class CreateNewSession extends AppCompatActivity {
         Intent studySession = getIntent(); // gets the previously created intent
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
-        Sessions = (ArrayList<StudySession>) studySession.getSerializableExtra("sesssion");
+        Sessions = HomeScreen.getSessions();
 
     }
 
