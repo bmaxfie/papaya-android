@@ -1,6 +1,10 @@
 #https://github.com/github/gitignore/blob/master/Android.gitignore
 # (github's .gitignore for android studio)
 
+#local changes
+papaya/papaya/app/google-services.json
+*.DS_Store
+
 # Built application files
 *.apk
 *.ap_
@@ -33,15 +37,7 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/dictionaries
-.idea/libraries
-
-# Keystore files
-*.jks
-
+.idea/
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 
@@ -52,3 +48,5 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
+
+.DS_Store
