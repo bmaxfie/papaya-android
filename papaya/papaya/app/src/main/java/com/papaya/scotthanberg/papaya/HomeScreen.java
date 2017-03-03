@@ -104,7 +104,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Sessions = new ArrayList<StudySession>();
         oneMinute = new Timer();
 
+        dropDown = (RelativeLayout) findViewById(R.id.dropDown);
+        horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
+        backdrop = (View) findViewById(R.id.horizontalBackdrop);
+        newStudySession = (Button) findViewById(R.id.NewStudySession);
+        sortByClass = (Button) findViewById(R.id.SortByClass);
+        manageClasses = (Button) findViewById(R.id.ManageClasses);
+        findFriends = (Button) findViewById(R.id.FindFriends);
+        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+
         createClassButtons();
+
     }
 
 /*    public void addStudySession(View view) {
@@ -137,14 +147,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public void createClassButtons() {
         LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
-        dropDown = (RelativeLayout) findViewById(R.id.dropDown);
-        horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
-        backdrop = (View) findViewById(R.id.horizontalBackdrop);
-        newStudySession = (Button) findViewById(R.id.NewStudySession);
-        sortByClass = (Button) findViewById(R.id.SortByClass);
-        manageClasses = (Button) findViewById(R.id.ManageClasses);
-        findFriends = (Button) findViewById(R.id.FindFriends);
-        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < 4; i++) {
@@ -316,60 +318,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
 
+        Intent studySession = new Intent(this, CreateNewSession.class);
+        startActivity(studySession);
 
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
-        final JSONObject newJSONStudySession = new JSONObject();
-        try {
-            newJSONStudySession.put("user_id", GPlusFragment.getPersonId());
-            newJSONStudySession.put("duration", 0.0);
-            newJSONStudySession.put("location_desc", "Location Description");
-            newJSONStudySession.put("location_lat", myLatitude.floatValue());
-            newJSONStudySession.put("location_long", myLongitude.floatValue());
-            newJSONStudySession.put("description", "This will be a description");
-            newJSONStudySession.put("service", GPlusFragment.getService());
-            newJSONStudySession.put("authentication_key", GPlusFragment.getPersonId());
-            newJSONStudySession.put("sponsored", true);
-        } catch (JSONException e) {
-            System.out.println("LOL you got a JSONException");
-        }
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            Sessions.add(new StudySession(
-                                      newJSONStudySession.get("user_id").toString()
-                                    , newJSONStudySession.get("duration").toString()
-                                    , newJSONStudySession.get("location_lat").toString() + "," + newJSONStudySession.get("location_long").toString()
-                                    , newJSONStudySession.get("description").toString()
-                                    , newJSONStudySession.get("sponsored").toString()));
-                            System.out.println(response.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-        /*
-        StudySession Triangle = new StudySession( new LatLng(40.425611, -86.916916));
-        StudySession Beering = new StudySession( new LatLng(40.425885, -86.915894));
-        StudySession Honors = new StudySession( new LatLng(40.427173, -86.919783));
-
-        Sessions.add(Triangle);
-        Sessions.add(Beering);
-        Sessions.add(Honors);
-        */
     }
 
     public int dp_to_pixels(int dp) {
