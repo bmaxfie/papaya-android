@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -68,7 +69,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     */
     private boolean shouldMove; //whether or not the map will snap back to the location of the user on location update
     private static ArrayList<StudySession> Sessions;
-    private static ArrayList<StudySession> filtered;
+    private static ArrayList<StudySession> filtered; //arrayList holding only the sessions that are in the specified class
     private Timer oneMinute;
     private TimerTask markStudySessions;
     String url = "google.com";
@@ -172,6 +173,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 for (StudySession s: Sessions){
                     filtered.add(s);
                 }
+                updateMarkers();
             }
         });
         ll.addView(all, lp);
@@ -188,6 +190,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             });
             ll.addView(myButton, lp);
         }
+        updateMarkers();
     }
 
     public void filterClass(Object x) {
@@ -197,21 +200,28 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         for (StudySession s: Sessions){
             if(s.getDescription().equals(x)){
                 filtered.add(s);
+            }
+        }
+
+        if (filtered.isEmpty()) {
+            for (StudySession s: Sessions){
+                filtered.add(s);
+            }
+            //todo:toast it
+            //Toast toast = Toast.makeText(this.getApplicationContext() ,"No study sessions for this class", Toast.LENGTH_SHORT);
+        }
+        updateMarkers();
+    }
+
+    public void updateMarkers() {
+        for (StudySession s : filtered) {
+            if (s != null)
                 if (s.getLocation() != null) {
                     mMap.addMarker(new MarkerOptions()
                             .position(s.getLocation()));
                 }
-            }
-        }
-        if (filtered.isEmpty()) {
-            //todo:toast it
-            for (StudySession s: Sessions){
-                filtered.add(s);
-
-            }
         }
     }
-
 
     /**
      * Manipulates the map once available.
