@@ -60,6 +60,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private TextView latitudeText;
     private TextView longitudeText;
     */
+    private boolean shouldMove; //whether or not the map will snap back to the location of the user on location update
     private ArrayList<StudySession> Sessions;
     private Timer oneMinute;
     private TimerTask markStudySessions;
@@ -76,7 +77,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 .findFragmentById(R.id.map);
         mapView = mapFragment.getView();
         mapFragment.getMapAsync(this);
-
+        shouldMove = true;
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -201,7 +202,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         longitudeText.setText("Longitude :" + String.valueOf(myLongitude));
         */
         // Change the camera to follow you!
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude, myLongitude)));
+        if(shouldMove) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude, myLongitude)));
+            shouldMove = false;
+        }
 
 
     }
