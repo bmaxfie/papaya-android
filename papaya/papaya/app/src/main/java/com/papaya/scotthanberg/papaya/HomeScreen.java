@@ -207,8 +207,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             for (StudySession s: Sessions){
                 filtered.add(s);
             }
-            //todo:toast it
-            //Toast toast = Toast.makeText(this.getApplicationContext() ,"No study sessions for this class", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this.getApplicationContext() ,"No study sessions for this class", Toast.LENGTH_SHORT);
+            toast.show();
         }
         updateMarkers();
     }
@@ -368,8 +368,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     @Override
     protected void onResume() {
-        Intent homescreen = getIntent(); // gets the previously created intent
-        String activity = homescreen.getStringExtra("from");
+        Intent homeScreen = getIntent(); // gets the previously created intent
+        String activity = homeScreen.getStringExtra("from");
+        System.out.println("THIS ACTIVITY IS" + activity);
         if(activity.equals("CreateNewSession")){
   //          Sessions = (ArrayList<StudySession>) homescreen.getSerializableExtra("sessions");
         }
