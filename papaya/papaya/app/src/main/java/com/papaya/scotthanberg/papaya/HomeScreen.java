@@ -290,7 +290,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent homescreen = getIntent(); // gets the previously created intent
         String activity = homescreen.getStringExtra("from");
         if(activity.equals("CreateNewSession")){
-            Sessions = (ArrayList<StudySession>) homescreen.getSerializableExtra("sesssions");
+            Sessions = (ArrayList<StudySession>) homescreen.getSerializableExtra("sessions");
         }
         super.onResume();
         if (mGoogleApiClient.isConnected()) {

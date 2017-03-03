@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loadMap(View view) {
         Intent homeScreen = new Intent(this, HomeScreen.class);
+        homeScreen.putExtra("from","LoginActivity");
         startActivity(homeScreen);
     }
 }
