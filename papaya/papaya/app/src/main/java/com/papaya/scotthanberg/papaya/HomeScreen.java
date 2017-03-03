@@ -8,8 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -56,6 +59,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private LocationRequest locationRequest;
     private Double myLatitude;
     private Double myLongitude;
+
     /*
     private TextView latitudeText;
     private TextView longitudeText;
@@ -67,6 +71,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     String url = "google.com";
     User currentUser;
     View mapView;
+
+    //Main Menu Buttons
+    private RelativeLayout dropDown;
+    private View backdrop;
+    private HorizontalScrollView horizontalScroll;
+    private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,16 +104,47 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         createClassButtons();
     }
+
+    public void openMenu(View view) {
+        if (dropDown.getVisibility()==View.VISIBLE) {
+            dropDown.setVisibility(View.GONE);
+            horizontalScroll.setVisibility(View.VISIBLE);
+            backdrop.setVisibility(View.VISIBLE);
+            newStudySession.setVisibility(View.GONE);
+            sortByClass.setVisibility(View.GONE);
+            manageClasses.setVisibility(View.GONE);
+            findFriends.setVisibility(View.GONE);
+            joinNewClass.setVisibility(View.GONE);
+        } else {
+            dropDown.setVisibility(View.VISIBLE);
+            backdrop.setVisibility(View.GONE);
+            horizontalScroll.setVisibility(View.GONE);
+            newStudySession.setVisibility(View.VISIBLE);
+            sortByClass.setVisibility(View.VISIBLE);
+            manageClasses.setVisibility(View.VISIBLE);
+            findFriends.setVisibility(View.VISIBLE);
+            joinNewClass.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void createClassButtons() {
-        LinearLayout ll = (LinearLayout)findViewById(R.id.scrollContainer);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
+        dropDown = (RelativeLayout) findViewById(R.id.dropDown);
+        horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
+        backdrop = (View) findViewById(R.id.horizontalBackdrop);
+        newStudySession = (Button) findViewById(R.id.NewStudySession);
+        sortByClass = (Button) findViewById(R.id.SortByClass);
+        manageClasses = (Button) findViewById(R.id.ManageClasses);
+        findFriends = (Button) findViewById(R.id.FindFriends);
+        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < 4; i++) {
             Button myButton = new Button(this);
             //TODO:change this to getString method accessing Lambda sending it index: i
-            myButton.setText("BUTTON "+i);
+            myButton.setText("BUTTON " + i);
             myButton.setTag("class_button" + i);
-            myButton.setOnClickListener(new View.OnClickListener(){
+            myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Object x = v.getTag();
                     filterClass(x);
@@ -112,9 +154,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
-    public void filterClass(Object x){
+    public void filterClass(Object x) {
         //TODO: lambda stuff goes here
-        System.out.println("x = "+x);
+        System.out.println("x = " + x);
     }
 
 
@@ -209,6 +251,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -281,7 +324,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                         try {
                             Sessions.add(new StudySession(newJSONStudySession.get("UserID_Host").toString(), newJSONStudySession.get("Duration").toString()
-                            , newJSONStudySession.get("Location").toString(), newJSONStudySession.get("Description").toString(), newJSONStudySession.get("Sponsored").toString()));
+                                    , newJSONStudySession.get("Location").toString(), newJSONStudySession.get("Description").toString(), newJSONStudySession.get("Sponsored").toString()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -308,7 +351,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         */
     }
 
-    public int dp_to_pixels(int dp){
+    public int dp_to_pixels(int dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }

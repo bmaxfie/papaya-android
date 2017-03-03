@@ -63,6 +63,20 @@ import com.google.android.gms.common.api.Status;
 import java.net.URL;
 
 
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * Created by ChristianLock on 3/1/17.
  */
@@ -397,7 +411,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         }
 
     }
-
 
     /**
      * Background Async task to load user profile picture from url
