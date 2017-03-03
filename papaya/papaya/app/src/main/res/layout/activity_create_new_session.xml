@@ -44,7 +44,8 @@
         android:background="@android:color/holo_orange_light"
         android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:elevation="2sp">
 
         <Button
             android:id="@+id/NewStudySession"
@@ -53,7 +54,8 @@
             android:layout_marginTop="0dp"
             android:text="New Study Session"
             android:visibility="invisible"
-            android:onClick="addStudySession"/>
+            android:onClick="addStudySession"
+            android:elevation="2sp"/>
 
         <Button
             android:id="@+id/SortByClass"
@@ -111,7 +113,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:background="@android:color/white"
-        android:layout_marginTop="1dp">
+        android:layout_marginTop="1dp"
+        android:elevation="1sp">
 
 
 
