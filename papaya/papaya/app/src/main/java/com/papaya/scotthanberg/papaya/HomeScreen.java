@@ -472,4 +472,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public static ArrayList<StudySession> getSessions() {
         return Sessions;
     }
+
+    public void buttonJoinClass(View view) {
+        Intent joinClass = new Intent(this, JoinClass.class);
+        startActivity(joinClass);
+    }
 }

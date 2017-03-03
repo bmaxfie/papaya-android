@@ -109,7 +109,8 @@
             android:layout_height="50dp"
             android:layout_marginTop="200dp"
             android:text="Join A New Class"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:onClick="buttonJoinClass"/>
     </RelativeLayout>
 
 

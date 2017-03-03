@@ -145,7 +145,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         Intent homeScreen = new Intent(this, HomeScreen.class);
         homeScreen.putExtra("from", "CreateNewSession");
-        homeScreen.putExtra("sessions",HomeScreen.getSessions());
+        //homeScreen.putExtra("sessions",HomeScreen.getSessions());
         startActivity(homeScreen);
     }
 
