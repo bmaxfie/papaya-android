@@ -8,14 +8,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -75,6 +78,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     View mapView;
 
     //Main Menu Buttons
+    private ImageView menubutton;
+    private TextView textView;
     private RelativeLayout dropDown;
     private View backdrop;
     private HorizontalScrollView horizontalScroll;
@@ -109,6 +114,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public void addStudySession(View view) {
         Intent studySession = new Intent(this, CreateNewSession.class);
+        dropDown.setVisibility(View.GONE);
+        newStudySession.setVisibility(View.GONE);
         startActivity(studySession);
     }
 
@@ -136,6 +143,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public void createClassButtons() {
         LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
+        menubutton = (ImageView) findViewById(R.id.menuButton);
+        textView = (TextView) findViewById(R.id.textView);
         dropDown = (RelativeLayout) findViewById(R.id.dropDown);
         horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
         backdrop = (View) findViewById(R.id.horizontalBackdrop);
