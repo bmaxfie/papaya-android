@@ -27,7 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:onClick="addStudySession"
+        android:onClick="buttonAddStudySession"
         />
 
     <!-- for naviagtion bar/ drawer thingy
@@ -80,7 +80,7 @@
             android:layout_marginTop="0dp"
             android:text="New Study Session"
             android:visibility="invisible"
-            android:onClick="addStudySession"/>
+            android:onClick="buttonAddStudySession"/>
 
         <Button
             android:id="@+id/SortByClass"
