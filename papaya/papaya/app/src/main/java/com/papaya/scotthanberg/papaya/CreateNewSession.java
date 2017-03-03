@@ -32,6 +32,9 @@ public class CreateNewSession extends AppCompatActivity {
 
     private Double myLatitude;
     private Double myLongitude;
+    
+    private EditText classID, timeDuration;
+    private ArrayList<StudySession> Sessions;
 
 
     @Override
