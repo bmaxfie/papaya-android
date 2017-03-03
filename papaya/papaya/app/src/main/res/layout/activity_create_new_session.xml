@@ -154,6 +154,7 @@
             android:layout_marginRight="0dp"
             android:onClick="addStudySession"/>
 
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -20,6 +20,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Timer;
 
+import android.widget.Toast;
+
+
 public class CreateNewSession extends AppCompatActivity {
 
     //Main Menu Buttons
@@ -74,6 +77,7 @@ public class CreateNewSession extends AppCompatActivity {
             joinNewClass.setVisibility(View.VISIBLE);
         }
     }
+
 
     public void addStudySession(View view) {
         // Instantiate the RequestQueue.
@@ -140,4 +144,18 @@ public class CreateNewSession extends AppCompatActivity {
         homeScreen.putExtra("sessions",Sessions);
         startActivity(homeScreen);
     }
+
+    public void createSession(View view) {
+        Intent sessionCreated = new Intent(this, HomeScreen.class);
+        Toast toast = Toast.makeText(this, "Study Session Created", Toast.LENGTH_SHORT);
+        toast.show();
+        startActivity(sessionCreated);
+    }
+
+    public void openMenu(View view) {
+        Toast toast = Toast.makeText(this, "Already creating session", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+
 }

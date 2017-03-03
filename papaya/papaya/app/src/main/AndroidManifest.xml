@@ -34,9 +34,10 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
+        <activity android:name=".LoginActivity"></activity>
         <activity
-            android:name=".LoginActivity"
-            >
+            android:name=".SplashScreen"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,7 +58,6 @@
             android:authorities="com.facebook.app.FacebookContentProvider148851038810437"
             android:exported="true" />
 
-        <activity android:name=".CreateNewSession"></activity>
     </application>
 
 </manifest>
