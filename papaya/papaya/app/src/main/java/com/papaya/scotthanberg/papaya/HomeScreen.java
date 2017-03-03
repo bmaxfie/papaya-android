@@ -92,7 +92,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         createClassButtons();
     }
-    private void createClassButtons() {
+    public void createClassButtons() {
         LinearLayout ll = (LinearLayout)findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -100,9 +100,20 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             Button myButton = new Button(this);
             //TODO:change this to getString method accessing Lambda sending it index: i
             myButton.setText("BUTTON "+i);
+            myButton.setTag("class_button" + i);
+            myButton.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v) {
+                    Object x = v.getTag();
+                    filterClass(x);
+                }
+            });
             ll.addView(myButton, lp);
         }
+    }
 
+    public void filterClass(Object x){
+        //TODO: lambda stuff goes here
+        System.out.println("x = "+x);
     }
 
 
