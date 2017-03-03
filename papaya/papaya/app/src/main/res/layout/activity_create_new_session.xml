@@ -140,6 +140,29 @@
             android:layout_centerHorizontal="true"
             android:hint="1 hour" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Class:"
+            android:id="@+id/classText"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_below="@+id/editText2"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:layout_marginTop="12dp"
+            android:id="@+id/editText3"
+            android:layout_below="@+id/classText"
+            android:layout_centerHorizontal="true"
+            android:hint="CS307" />
+
         <Button
             android:text="Create Session"
             android:id="@+id/button4"

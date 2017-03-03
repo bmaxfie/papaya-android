@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 
@@ -31,6 +32,7 @@ public class CreateNewSession extends AppCompatActivity {
 
     private Double myLatitude;
     private Double myLongitude;
+    private EditText classID, timeDuration;
     private ArrayList<StudySession> Sessions;
 
     @Override
@@ -38,6 +40,8 @@ public class CreateNewSession extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_session);
 
+        classID = (EditText) findViewById(R.id.editText3);
+        timeDuration = (EditText) findViewById(R.id.editText2);
         dropDown = (RelativeLayout) findViewById(R.id.dropDown);
         horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
         backdrop = (View) findViewById(R.id.horizontalBackdrop);
@@ -82,6 +86,8 @@ public class CreateNewSession extends AppCompatActivity {
         /* Replace Beta with /class/id/sessions or something like that
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
+        Toast toast = Toast.makeText(this, classID.getText() + " created for " + timeDuration.getText() + " hour(s)", Toast.LENGTH_LONG);
+        toast.show();
 
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
