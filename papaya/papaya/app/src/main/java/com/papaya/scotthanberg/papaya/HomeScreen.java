@@ -116,6 +116,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
         createClassButtons();
+        Sessions.add(new StudySession("1145", "2 hours", "40.425611, -86.916916", "descrip","false"));
+        Sessions.add(new StudySession("15814", "2 hours", "40.425885, -86.915894", "disctipno","false"));
+        Sessions.add(new StudySession("25135", "2 hours", "40.427173, -86.919783", "more workds","false"));
+
 
     }
 
@@ -412,7 +416,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent studySession = new Intent(this, CreateNewSession.class);
         studySession.putExtra("lat",myLatitude);
         studySession.putExtra("lon",myLongitude);
-        studySession.putExtra("session",Sessions);
         startActivity(studySession);
     }
 
