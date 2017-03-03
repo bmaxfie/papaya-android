@@ -1,6 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -8,12 +7,12 @@ import android.content.SharedPreferences;
  * Created by Sheolfire on 3/1/2017.
  */
 
-public class PreferenceHandler extends Fragment {
+public class PreferenceHandler {
     private SharedPreferences sharedPref;
 
-    public PreferenceHandler() {
-        Context context = getActivity();
-        sharedPref = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+    public PreferenceHandler(Context context) {
+      //  Context context = getActivity();
+        sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
     }
 
     /**
