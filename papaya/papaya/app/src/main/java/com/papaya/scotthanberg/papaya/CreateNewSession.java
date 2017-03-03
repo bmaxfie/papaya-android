@@ -16,8 +16,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public class CreateNewSession extends AppCompatActivity {
 
     //Main Menu Buttons
@@ -28,7 +26,6 @@ public class CreateNewSession extends AppCompatActivity {
 
     private Double myLatitude;
     private Double myLongitude;
-    private ArrayList<StudySession> Sessions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +44,6 @@ public class CreateNewSession extends AppCompatActivity {
         Intent studySession = getIntent(); // gets the previously created intent
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
-        Sessions = HomeScreen.getSessions();
-
     }
 
     public void openMenu(View view) {
@@ -101,7 +96,7 @@ public class CreateNewSession extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 
                         try {
-                            Sessions.add(new StudySession(
+                            HomeScreen.getSessions().add(new StudySession(
                                     newJSONStudySession.get("user_id").toString()
                                     , newJSONStudySession.get("duration").toString()
                                     , newJSONStudySession.get("location_lat").toString() + "," + newJSONStudySession.get("location_long").toString()
@@ -135,7 +130,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         Intent homeScreen = new Intent(this, HomeScreen.class);
         homeScreen.putExtra("from", "CreateNewSession");
-        homeScreen.putExtra("sessions",Sessions);
+        homeScreen.putExtra("sessions",HomeScreen.getSessions());
         startActivity(homeScreen);
     }
 }

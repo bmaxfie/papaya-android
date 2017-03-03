@@ -268,6 +268,34 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             public void run() {
                 runOnUiThread(new Runnable() {
                     public void run() {
+                        // first delete everything
+            //            mMap.clear();
+                        // then add everything from the database
+            /*            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + GPlusFragment.getAuthentication_key();
+                        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+
+                                        try {
+                                            Sessions.add(newStudySession(response.getString("session_id"),))
+                                            System.out.println(response.toString());
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        // TODO Auto-generated method stub
+
+                                    }
+                                });
+
+                        // Access the RequestQueue through your singleton class.
+                        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+                        */
                         for (StudySession s : Sessions) {
                             if (s != null)
                                 if (s.getLocation() != null) {
@@ -287,7 +315,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent homescreen = getIntent(); // gets the previously created intent
         String activity = homescreen.getStringExtra("from");
         if(activity.equals("CreateNewSession")){
-            Sessions = (ArrayList<StudySession>) homescreen.getSerializableExtra("sessions");
+  //          Sessions = (ArrayList<StudySession>) homescreen.getSerializableExtra("sessions");
         }
         super.onResume();
         if (mGoogleApiClient.isConnected()) {
