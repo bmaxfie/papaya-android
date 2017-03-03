@@ -82,12 +82,17 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private static String idToken;
     private ImageView papayaPic;
     private boolean FBlogin;
+    private PreferenceHandler preferenceHandler;
 
     //Facebook Login Variables
     private LoginButton loginButton;
     private ImageView profilePicImageView;
     private CallbackManager callbackManager;
     private ProfileTracker profileTracker;
+
+    private boolean signedIn = false;
+
+
     
     private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
@@ -140,8 +145,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 }
             }
         };
-//        if (PreferenceHandler.)
-
     }
     public void addUserToDatabase() {
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
@@ -155,7 +158,9 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 service = "GOOGLE";
             }
             newJSONStudySession.put("username", personName);
-            newJSONStudySession.put("authentication_key", personId);
+            System.out.println("This is the username" + personName);
+            newJSONStudySession.put("authentication_key", authentication_key);
+            System.out.println("This is the authentication_key" + authentication_key);
             /* Below code is not worky
             TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
             String mPhoneNumber = tMgr.getLine1Number();
@@ -234,6 +239,14 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 });
             }
         }
+/*        preferenceHandler = new PreferenceHandler();
+        String value = preferenceHandler.readFromSharedPref("user_id");
+        if (value.equals("Value does not exist")) {
+            signedIn = false;
+        } else {
+            signedIn = true;
+        }
+*/
     }
 
 
@@ -369,7 +382,9 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
             if(acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-            addUserToDatabase();
+            if (!signedIn) {
+                addUserToDatabase();
+            }
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
