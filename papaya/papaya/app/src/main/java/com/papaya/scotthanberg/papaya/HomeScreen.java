@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -276,17 +276,30 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 runOnUiThread(new Runnable() {
                     public void run() {
                         // first delete everything
-            //            mMap.clear();
+                        mMap.clear();
                         // then add everything from the database
-            /*            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + GPlusFragment.getAuthentication_key();
+                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
                         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
 
                                         try {
-                                            Sessions.add(newStudySession(response.getString("session_id"),))
+                                            /*
+                                            JSONArray arr = response.getJSONArray("sessions");
+                                            for (int i = 0; i < response.length(); i++) {
+                                                Sessions.add(new StudySession(
+                                                        arr.getJSONObject(i).get("session_id").toString(),
+                                                        arr.getJSONObject(i).get("duration").toString(),
+                                                        arr.getJSONObject(i).get("location_lat").toString() + "," + arr.getJSONObject(i).get("location_long").toString(),
+                                                        arr.getJSONObject(i).get("description").toString(),
+                                                        arr.getJSONObject(i).get("sponsored").toString()
+                                                )
+                                                );
+                                            }
+                                            */
                                             System.out.println(response.toString());
+                                            JSONArray arr = response.getJSONArray("sessions");
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -300,16 +313,21 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     }
                                 });
 
+
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-                        */
+
+
                         for (StudySession s : Sessions) {
                             if (s != null)
                                 if (s.getLocation() != null) {
                                     mMap.addMarker(new MarkerOptions()
-                                            .position(s.getLocation()));
+                                            .position(s.getLocation())
+                                            .title(s.getSessionID())
+                                    );
                                 }
                         }
+
                     }
                 });
             }
