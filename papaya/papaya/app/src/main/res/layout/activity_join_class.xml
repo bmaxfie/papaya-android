@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_create_new_session"
+    android:id="@+id/activity_join_class"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/darker_gray"
@@ -44,8 +44,7 @@
         android:background="@android:color/holo_orange_light"
         android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
-        android:visibility="invisible"
-        android:elevation="2sp">
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/NewStudySession"
@@ -54,8 +53,7 @@
             android:layout_marginTop="0dp"
             android:text="New Study Session"
             android:visibility="invisible"
-            android:onClick="addStudySession"
-            android:elevation="2sp"/>
+            android:onClick="addStudySession"/>
 
         <Button
             android:id="@+id/SortByClass"
@@ -97,7 +95,7 @@
 
 
         <TextView
-            android:text="New Study Session"
+            android:text="Join A New Class"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -113,13 +111,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:background="@android:color/white"
-        android:layout_marginTop="1dp"
-        android:elevation="1sp">
+        android:layout_marginTop="1dp">
 
 
 
         <TextView
-            android:text="Enter the duration:"
+            android:text="Enter the class Key:"
             android:id="@+id/durationText"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -135,39 +132,16 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="time"
+            android:inputType="text"
             android:ems="10"
             android:layout_marginTop="12dp"
             android:id="@+id/editText2"
             android:layout_below="@+id/durationText"
             android:layout_centerHorizontal="true"
-            android:hint="1 hour" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter Class:"
-            android:id="@+id/classText"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_below="@+id/editText2"
-            android:layout_marginLeft="28dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="12dp"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:ems="10"
-            android:layout_marginTop="12dp"
-            android:id="@+id/editText3"
-            android:layout_below="@+id/classText"
-            android:layout_centerHorizontal="true"
-            android:hint="CS307" />
+            android:hint="Insert Key Here" />
 
         <Button
-            android:text="Create Session"
+            android:text="Join Class"
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -178,7 +152,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="0dp"
-            android:onClick="addStudySession"/>
+            android:onClick="backToHome"/>
 
 
     </RelativeLayout>

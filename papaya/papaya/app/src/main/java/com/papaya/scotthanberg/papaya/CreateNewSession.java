@@ -13,6 +13,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +36,7 @@ public class CreateNewSession extends AppCompatActivity {
     private Double myLongitude;
     
     private EditText classID, timeDuration;
+    private GoogleMap mMap;
     private ArrayList<StudySession> Sessions;
 
 
@@ -61,8 +64,9 @@ public class CreateNewSession extends AppCompatActivity {
     public void openMenu(View view) {
         if (dropDown.getVisibility()==View.VISIBLE) {
             dropDown.setVisibility(View.GONE);
-            horizontalScroll.setVisibility(View.VISIBLE);
-            backdrop.setVisibility(View.VISIBLE);
+            System.out.println("THIS IS WORKING");
+         //   horizontalScroll.setVisibility(View.VISIBLE);
+          //  backdrop.setVisibility(View.VISIBLE);
             newStudySession.setVisibility(View.GONE);
             sortByClass.setVisibility(View.GONE);
             manageClasses.setVisibility(View.GONE);
@@ -70,8 +74,8 @@ public class CreateNewSession extends AppCompatActivity {
             joinNewClass.setVisibility(View.GONE);
         } else {
             dropDown.setVisibility(View.VISIBLE);
-            backdrop.setVisibility(View.GONE);
-            horizontalScroll.setVisibility(View.GONE);
+           // backdrop.setVisibility(View.GONE);
+           // horizontalScroll.setVisibility(View.GONE);
             newStudySession.setVisibility(View.VISIBLE);
             sortByClass.setVisibility(View.VISIBLE);
             manageClasses.setVisibility(View.VISIBLE);
@@ -88,7 +92,6 @@ public class CreateNewSession extends AppCompatActivity {
         *  */
         Toast toast = Toast.makeText(this, classID.getText() + " created for " + timeDuration.getText() + " hour(s)", Toast.LENGTH_LONG);
         toast.show();
-
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
@@ -145,7 +148,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         Intent homeScreen = new Intent(this, HomeScreen.class);
         homeScreen.putExtra("from", "CreateNewSession");
-        homeScreen.putExtra("sessions",HomeScreen.getSessions());
+        //homeScreen.putExtra("sessions",HomeScreen.getSessions());
         startActivity(homeScreen);
     }
 

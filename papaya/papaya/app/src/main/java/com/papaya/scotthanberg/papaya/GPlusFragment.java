@@ -402,6 +402,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         }
     }
 
+
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             signInButton.setVisibility(View.GONE);

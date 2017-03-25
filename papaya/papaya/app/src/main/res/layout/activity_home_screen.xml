@@ -109,7 +109,8 @@
             android:layout_height="50dp"
             android:layout_marginTop="200dp"
             android:text="Join A New Class"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:onClick="buttonJoinClass"/>
     </RelativeLayout>
 
 
@@ -145,11 +146,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All" />
+
         </LinearLayout>
     </HorizontalScrollView>
 
