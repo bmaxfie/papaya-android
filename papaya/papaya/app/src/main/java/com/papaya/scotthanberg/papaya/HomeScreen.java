@@ -33,6 +33,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     /**
@@ -72,7 +73,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private static ArrayList<StudySession> filtered; //arrayList holding only the sessions that are in the specified class
     private Timer oneMinute;
     private TimerTask markStudySessions;
-    String url = "google.com";
     User currentUser;
     View mapView;
 
@@ -362,11 +362,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                     }
                                 });
-
-
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-
 
                         for (StudySession s : Sessions) {
                             if (s != null)
@@ -435,5 +432,14 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void buttonJoinClass(View view) {
         Intent joinClass = new Intent(this, JoinClass.class);
         startActivity(joinClass);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Bundle args = new Bundle();
+        args.putString("id", marker.getTitle());
+        SessionMarkerDialog dialog = new SessionMarkerDialog();
+        dialog.setArguments(args);
+        return true;
     }
 }
