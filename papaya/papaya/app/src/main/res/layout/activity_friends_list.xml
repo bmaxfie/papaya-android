@@ -1,42 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_create_new_session"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
 
-    <!-- Google maps is contained in fragment-->
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.papaya.scotthanberg.papaya.HomeScreen"
-        />
-
-    <!-- add New Study Session Button-->
-    <Button
-        android:id="@+id/addNewSessionButton"
-        android:layout_width="42dp"
-        android:background="@drawable/study_session_button"
-        android:alpha="1"
-        android:layout_height="42dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginBottom="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:onClick="buttonAddStudySession"
-        />
-
-    <!-- for naviagtion bar/ drawer thingy
-        Also check out the native "spinner" which is in the category "widgets"
-        https://developer.android.com/training/implementing-navigation/nav-drawer.html
-    -->
-    <!--<include layout="@layout/main_menu" /> -->
+    tools:context="com.papaya.scotthanberg.papaya.CreateNewSession">
 
     <RelativeLayout
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/white">
@@ -71,7 +44,8 @@
         android:background="@android:color/holo_orange_light"
         android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:elevation="2sp">
 
         <Button
             android:id="@+id/NewStudySession"
@@ -80,7 +54,8 @@
             android:layout_marginTop="0dp"
             android:text="New Study Session"
             android:visibility="invisible"
-            android:onClick="buttonAddStudySession"/>
+            android:onClick="addStudySession"
+            android:elevation="2sp"/>
 
         <Button
             android:id="@+id/SortByClass"
@@ -101,55 +76,65 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="150dp"
-            android:text="My Friends"
-            android:visibility="invisible"
-            android:onClick="buttonMyFriends"/>
+            android:text="Find Friends"
+            android:visibility="invisible" />
         <Button
             android:id="@+id/JoinNewClass"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="200dp"
             android:text="Join A New Class"
-            android:visibility="invisible"
-            android:onClick="buttonJoinClass"/>
+            android:visibility="invisible"/>
     </RelativeLayout>
 
-
-
-
-
-    <!--scrollable menu for classes-->
-        <!--View is for alpha background-->
-    <View
-        android:id="@+id/horizontalBackdrop"
+    <RelativeLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/view"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@android:color/darker_gray"
-        android:alpha=".7"
-        />
-    <HorizontalScrollView
-        android:id="@+id/horizontalScroll"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@+id/view"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:scrollbars="none"
-        >
-        <LinearLayout
-            android:id="@+id/scrollContainer"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="3dp">
+
+
+        <TextView
+            android:id="@+id/titleText"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="My Friends"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/scrollView2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="hello world1"
+                android:textSize="24sp"
+                android:padding="10sp"
+                android:layout_marginBottom="3sp"
+                android:background="@android:color/white"/>
+
 
         </LinearLayout>
-    </HorizontalScrollView>
+
+    </ScrollView>
 
 </RelativeLayout>
-

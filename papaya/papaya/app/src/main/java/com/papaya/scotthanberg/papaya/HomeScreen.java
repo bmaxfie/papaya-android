@@ -436,4 +436,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent joinClass = new Intent(this, JoinClass.class);
         startActivity(joinClass);
     }
+
+    public void buttonMyFriends(View view) {
+        Intent friendsList = new Intent(this, FriendsList.class);
+        startActivity(friendsList);
+    }
 }
