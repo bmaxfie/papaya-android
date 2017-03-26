@@ -94,7 +94,7 @@
         android:layout_below="@+id/view"
         android:background="@android:color/white"
         android:layout_marginTop="1dp"
-        android:layout_marginBottom="3dp">
+        android:layout_marginBottom="5px">
 
 
         <TextView
@@ -119,18 +119,12 @@
         android:id="@+id/scrollView2">
 
         <LinearLayout
+            android:id="@+id/friendContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="hello world1"
-                android:textSize="24sp"
-                android:padding="10sp"
-                android:layout_marginBottom="3sp"
-                android:background="@android:color/white"/>
+
 
 
         </LinearLayout>
