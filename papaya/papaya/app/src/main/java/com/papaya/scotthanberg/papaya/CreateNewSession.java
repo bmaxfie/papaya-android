@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -17,10 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import java.util.ArrayList;
-
-import android.widget.Toast;
 
 public class CreateNewSession extends AppCompatActivity {
 
@@ -56,6 +54,7 @@ public class CreateNewSession extends AppCompatActivity {
         Intent studySession = getIntent(); // gets the previously created intent
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
+        Sessions = HomeScreen.getSessions();
     }
 
     public void openMenu(View view) {
@@ -145,7 +144,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         Intent homeScreen = new Intent(this, HomeScreen.class);
         homeScreen.putExtra("from", "CreateNewSession");
-        homeScreen.putExtra("sessions",HomeScreen.getSessions());
+//        homeScreen.putExtra("sessions",HomeScreen.getSessions());
         startActivity(homeScreen);
     }
 

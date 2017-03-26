@@ -285,21 +285,25 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     public void onResponse(JSONObject response) {
 
                                         try {
-                                            /*
+
                                             JSONArray arr = response.getJSONArray("sessions");
-                                            for (int i = 0; i < response.length(); i++) {
+                                            for (int i = 0; i < arr.length(); i++) {
                                                 Sessions.add(new StudySession(
                                                         arr.getJSONObject(i).get("session_id").toString(),
                                                         arr.getJSONObject(i).get("duration").toString(),
                                                         arr.getJSONObject(i).get("location_lat").toString() + "," + arr.getJSONObject(i).get("location_long").toString(),
                                                         arr.getJSONObject(i).get("description").toString(),
-                                                        arr.getJSONObject(i).get("sponsored").toString()
+                                                        ""
+                                                        //arr.getJSONObject(i).get("sponsored").toString()
                                                 )
                                                 );
                                             }
-                                            */
+
+                                            /*
                                             System.out.println(response.toString());
                                             JSONArray arr = response.getJSONArray("sessions");
+                                            */
+
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -360,77 +364,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mGoogleApiClient.disconnect();
     }
 
-
-    /**
-     * TODO: ADD BUTTON METHODS HERE
-     */
-    public void addStudySession(View view) {
-
-
-        // Instantiate the RequestQueue.
-        /* Replace Beta with /class/id/sessions or something like that
-        *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
-        *  */
-
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
-        final JSONObject newJSONStudySession = new JSONObject();
-        try {
-            newJSONStudySession.put("user_id", GPlusFragment.getPersonId());
-            newJSONStudySession.put("duration", 0.0);
-            newJSONStudySession.put("location_desc", "Location Description");
-            newJSONStudySession.put("location_lat", myLatitude.floatValue());
-            newJSONStudySession.put("location_long", myLongitude.floatValue());
-            newJSONStudySession.put("description", "This will be a description");
-            newJSONStudySession.put("service", GPlusFragment.getService());
-            newJSONStudySession.put("authentication_key", GPlusFragment.getPersonId());
-            newJSONStudySession.put("sponsored", true);
-        } catch (JSONException e) {
-            System.out.println("LOL you got a JSONException");
-        }
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            Sessions.add(new StudySession(
-                                    newJSONStudySession.get("user_id").toString()
-                                    , newJSONStudySession.get("duration").toString()
-                                    , newJSONStudySession.get("location_lat").toString() + "," + newJSONStudySession.get("location_long").toString()
-                                    , newJSONStudySession.get("description").toString()
-                                    , newJSONStudySession.get("sponsored").toString()));
-                            System.out.println(response.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-        /*
-        StudySession Triangle = new StudySession( new LatLng(40.425611, -86.916916));
-        StudySession Beering = new StudySession( new LatLng(40.425885, -86.915894));
-        StudySession Honors = new StudySession( new LatLng(40.427173, -86.919783));
-
-        Sessions.add(Triangle);
-        Sessions.add(Beering);
-        Sessions.add(Honors);
-        */
-    }
     public void buttonAddStudySession(View view){
         Intent studySession = new Intent(this, CreateNewSession.class);
         studySession.putExtra("lat",myLatitude);
         studySession.putExtra("lon",myLongitude);
-        studySession.putExtra("session",Sessions);
+      //  studySession.putExtra("session",Sessions);
         startActivity(studySession);
     }
 
