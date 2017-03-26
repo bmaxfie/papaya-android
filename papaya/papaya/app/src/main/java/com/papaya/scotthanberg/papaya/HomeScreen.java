@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -120,9 +119,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
         createClassButtons();
-        Sessions.add(new StudySession("1145", "2 hours", "40.425611, -86.916916", "Class0","false"));
-        Sessions.add(new StudySession("15814", "2 hours", "40.425885, -86.915894", "Class1","false"));
-        Sessions.add(new StudySession("25135", "2 hours", "40.427173, -86.919783", "Class2","false"));
         //set filtered
         for (StudySession s : Sessions) {
             filtered.add(s);
@@ -335,7 +331,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     public void onResponse(JSONObject response) {
 
                                         try {
-
+                                            System.out.println(response.toString());
                                             JSONArray arr = response.getJSONArray("sessions");
                                             for (int i = 0; i < arr.length(); i++) {
                                                 Sessions.add(new StudySession(
