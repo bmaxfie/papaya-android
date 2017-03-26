@@ -114,7 +114,7 @@ public class CreateNewSession extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 
                         try {
-                            HomeScreen.getSessions().add(new StudySession(
+                            HomeScreen.addToSessions(new StudySession(
                                     newJSONStudySession.get("user_id").toString()
                                     , newJSONStudySession.get("duration").toString()
                                     , newJSONStudySession.get("location_lat").toString() + "," + newJSONStudySession.get("location_long").toString()
