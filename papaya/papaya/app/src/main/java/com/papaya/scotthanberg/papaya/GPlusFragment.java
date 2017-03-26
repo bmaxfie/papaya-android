@@ -201,7 +201,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         super.onStart();
         preferenceHandler = new PreferenceHandler(getContext());
         String value = preferenceHandler.readFromSharedPref("user_id");
-        if (value.equals("Value does not exist")) {
+        if (value.equals("Value does not exist.")) {
             signedIn = false;
         } else {
             signedIn = true;
@@ -362,6 +362,10 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 authentication_key = acct.getId();
                 personPhoto = acct.getPhotoUrl();
                 idToken = acct.getIdToken();
+                /* Below is temp ? */
+                if (!signedIn) {
+                    addUserToDatabase();
+                }
                /* Toast.makeText(getContext(), "Authentication Failed",
                         Toast.LENGTH_SHORT).show();
                 System.out.println("HAHA FAILED");*/
@@ -380,8 +384,12 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
             if(acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-            if (!signedIn || signedIn) {
-                addUserToDatabase();
+            if (!signedIn/* || signedIn*/) {
+                Boolean value = preferenceHandler.writeToSharedPref("user_id", getPersonId());
+                if (value == false) {
+                    System.out.println("ERROR.  SHARED PREF NOT WRITING CORRECTLY");
+                }
+//                addUserToDatabase();
             }
             updateUI(true);
         } else {
