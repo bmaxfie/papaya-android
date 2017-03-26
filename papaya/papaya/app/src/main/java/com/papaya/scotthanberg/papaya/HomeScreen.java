@@ -391,7 +391,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         String activity = homeScreen.getStringExtra("from");
         System.out.println("THIS ACTIVITY IS" + activity);
         if(activity.equals("CreateNewSession")){
-  //          Sessions = (ArrayList<StudySession>) homescreen.getSerializableExtra("sessions");
+            //updateMarkers();
         }
         super.onResume();
         if (mGoogleApiClient.isConnected()) {
@@ -426,6 +426,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public static ArrayList<StudySession> getSessions() {
         return Sessions;
+    }
+
+    public static void addToSessions(StudySession studySession) {
+        Sessions.add(studySession);
     }
 
     public void buttonJoinClass(View view) {
