@@ -12,6 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -44,11 +51,33 @@ public class FriendsList extends AppCompatActivity {
     private ArrayList<String> getFriends() {
         ArrayList<String> result = new ArrayList<String>();
 
-        //todo: fix to get friends from database
+        String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends?" +
+                "user_id="+ GPlusFragment.getPersonId() +"&" +
+                "service="+ GPlusFragment.getService() +"&" +
+                "authentication_key=" + GPlusFragment.getAuthentication_key();
 
-        for (int i= 0; i < 20; i++) {
-            result.add("helloWorld"+i);
-        }
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        System.out.println("error:");
+                    }
+                });
+
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
+
+//for testing
+//        for (int i= 0; i < 20; i++) {
+//            result.add("helloWorld"+i);
+//        }
 
         return result;
     }
