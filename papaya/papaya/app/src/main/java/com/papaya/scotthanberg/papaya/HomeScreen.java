@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMarkerClickListener {
+public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
     /**
@@ -248,6 +248,16 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, dp_to_pixels(17), dp_to_pixels(63));
         }
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Bundle args = new Bundle();
+                args.putString("id", marker.getTitle());
+                SessionMarkerDialog dialog = new SessionMarkerDialog();
+                dialog.setArguments(args);
+                return true;
+            }
+        });
     }
 
     /**
@@ -331,7 +341,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     public void onResponse(JSONObject response) {
 
                                         try {
-                                            System.out.println(response.toString());
+                                            //System.out.println(response.toString());
                                             JSONArray arr = response.getJSONArray("sessions");
                                             for (int i = 0; i < arr.length(); i++) {
                                                 Sessions.add(new StudySession(
@@ -432,14 +442,5 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void buttonJoinClass(View view) {
         Intent joinClass = new Intent(this, JoinClass.class);
         startActivity(joinClass);
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Bundle args = new Bundle();
-        args.putString("id", marker.getTitle());
-        SessionMarkerDialog dialog = new SessionMarkerDialog();
-        dialog.setArguments(args);
-        return true;
     }
 }
