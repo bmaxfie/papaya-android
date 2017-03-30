@@ -82,6 +82,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private ImageView papayaPic;
     private boolean FBlogin;
     private PreferenceHandler preferenceHandler;
+    private int userCode;
 
     //Facebook Login Variables
     private LoginButton loginButton;
@@ -146,6 +147,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         };
     }
     public void addUserToDatabase() {
+        //Update Auth needs: "Auth_option:1 or 2", "Username", Optional("Email"), "Service Name: FACEBOOK or GOOGLE", "Auth Key"
+        //Create New needs: "Username", "Service Name", "Auth Key", Optional.. "Phone", "Email"
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
@@ -156,6 +159,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 newJSONStudySession.put("service", "GOOGLE");
                 service = "GOOGLE";
             }
+            newJSONStudySession.put("auth_option",2);
             newJSONStudySession.put("username", personName);
             System.out.println("This is the username" + personName);
             newJSONStudySession.put("authentication_key", authentication_key);
@@ -171,17 +175,20 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         }
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                (Request.Method.PUT, url, newJSONStudySession, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             System.out.println("\n\n\n" + response.toString() + "\n\n\n");
-                            personId = response.getString("user_id");
+                            //personId = response.getString("user_id");
+                            userCode = response.getInt("code");
+                            System.out.println("error checking");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                }, new Response.ErrorListener() {
+                }
+                , new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -189,6 +196,23 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
                     }
                 });
+        if (userCode == 404) {
+            jsObjRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                personId = response.getString("user_id");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    , new Response.ErrorListener() {
+                       @Override
+                        public void onErrorResponse(VolleyError error)  {}
+                    });
+        }
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
