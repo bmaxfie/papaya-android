@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -29,6 +30,8 @@ public class FriendsList extends AppCompatActivity {
     private View backdrop;
     private HorizontalScrollView horizontalScroll;
     private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
+
+    private ArrayList<String> listOfFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +47,40 @@ public class FriendsList extends AppCompatActivity {
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
+        listOfFriends = new ArrayList<String>();
+
         Intent list = getIntent(); // gets the previously created intent
-        createFriendTextViews();
+        getFriends(); //get friends from databse and update text views
+
     }
 
-    private ArrayList<String> getFriends() {
-        ArrayList<String> result = new ArrayList<String>();
+
+
+    private void getFriends() {
 
         String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends?" +
-                "user_id="+ GPlusFragment.getPersonId() +"&" +
-                "service="+ GPlusFragment.getService() +"&" +
-                "authentication_key=" + GPlusFragment.getAuthentication_key();
+                "user_id="+ "mX9hzcEETRVfVWqD6nKz5A==" +"&" + //GPlusFragment.getPersonId();
+                "service="+ "GOOGLE" +"&" +
+                "authentication_key=" + "1234567890123456789012345678901234567890";
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+        final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         System.out.println(response);
+                        try {
+                            JSONArray arr = response.getJSONArray("friends");
+                            for (int i = 0; i < arr.length(); i++) {
+                                JSONObject jsonObj2 = arr.getJSONObject(i);
+                                String temp = jsonObj2.getString("username");
+                                listOfFriends.add(temp);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //testing: listOfFriends.add("hello world");
+                        createFriendTextViews(); //updates the view with the new list of friends
+
                     }
                 }, new Response.ErrorListener() {
 
@@ -79,18 +99,16 @@ public class FriendsList extends AppCompatActivity {
 //            result.add("helloWorld"+i);
 //        }
 
-        return result;
     }
 
     public void createFriendTextViews() {
-        ArrayList<String> friends = getFriends();
 
         LinearLayout ll = (LinearLayout) findViewById(R.id.friendContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0,0,0,5);
 
-        for (String name: friends) {
+        for (String name: listOfFriends) {
             TextView myText = new TextView(this);
             myText.setText(name);
             myText.setTextSize(24);
