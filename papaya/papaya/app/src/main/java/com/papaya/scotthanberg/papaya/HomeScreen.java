@@ -1,5 +1,8 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -8,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -251,10 +255,16 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Bundle args = new Bundle();
-                args.putString("id", marker.getTitle());
-                SessionMarkerDialog dialog = new SessionMarkerDialog();
-                dialog.setArguments(args);
+                android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+                android.app.Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                // Create and show the dialog
+                SessionMarkerDialog smd = SessionMarkerDialog.newInstance(marker.getTitle());
+                smd.show(ft, "dialog");
                 return true;
             }
         });
@@ -443,4 +453,59 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent joinClass = new Intent(this, JoinClass.class);
         startActivity(joinClass);
     }
+
+    public static class SessionMarkerDialog extends DialogFragment {
+        String sessionId;
+        static SessionMarkerDialog newInstance(String title) {
+            SessionMarkerDialog smd = new SessionMarkerDialog();
+            Bundle bundle = new Bundle();
+            bundle.putString("id",title);
+            smd.setArguments(bundle);
+            return smd;
+        }
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            sessionId = getArguments().getString("id");
+
+        }
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Join this study session?")
+                    .setPositiveButton("Join", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // addUserToSession()
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
+        /*
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View v = inflater.inflate(R.layout.fragment_dialog, container, false);
+            View tv = v.findViewById(R.id.text);
+
+            // Watch for button clicks.
+            Button button = (Button)v.findViewById(R.id.show);
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // When button is clicked, call up to owning activity.
+                    ((SessionMarkerDialog)getActivity()).showDialog();
+                }
+            });
+
+            return v;
+        }
+
+        */
+    }
+
 }
