@@ -57,7 +57,7 @@ public class FriendsList extends AppCompatActivity {
 
 
     private void getFriends() {
-
+        //TODO: replace the hard coding
         String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends?" +
                 "user_id="+ "mX9hzcEETRVfVWqD6nKz5A==" +"&" + //GPlusFragment.getPersonId();
                 "service="+ "GOOGLE" +"&" +
