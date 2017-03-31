@@ -58,7 +58,8 @@
             android:authorities="com.facebook.app.FacebookContentProvider148851038810437"
             android:exported="true" />
 
-        <activity android:name=".JoinClass"></activity>
+        <activity android:name=".JoinClass" />
+        <activity android:name=".FriendsList"></activity>
     </application>
 
 </manifest>
