@@ -455,6 +455,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public static class SessionMarkerDialog extends DialogFragment {
+        // will need a class id for session as well
         String sessionId;
         static SessionMarkerDialog newInstance(String title) {
             SessionMarkerDialog smd = new SessionMarkerDialog();
@@ -475,7 +476,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             builder.setMessage("Join this study session?")
                     .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            // addUserToSession()
+                            addUserToSession(sessionId);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -485,6 +486,31 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     });
             // Create the AlertDialog object and return it
             return builder.create();
+        }
+        public void addUserToSession(String sessionId) {
+            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + sessionId;
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+
+                        }
+                    });
+            // Access the RequestQueue through your singleton class.
+            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
         }
         /*
         @Override
