@@ -60,7 +60,7 @@ import static java.lang.Thread.sleep;
  * Created by ChristianLock on 3/1/17.
  */
 
-public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
+public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "GPlusFragent";
     private int RC_SIGN_IN = 0;
     private GoogleApiClient mGoogleApiClient;
@@ -152,51 +152,51 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     public void addUserToDatabase() throws InterruptedException {
         //Update Auth needs: "Auth_option:1 or 2", "Username", Optional("Email"), "Service Name: FACEBOOK or GOOGLE", "Auth Key"
         //Create New needs: "Username", "Service Name", "Auth Key", Optional.. "Phone", "Email"
-        final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
-        final JSONObject newJSONStudySession = new JSONObject();
-        try {
-            if (FBlogin == true) {
-                newJSONStudySession.put("service", "FACEBOOK");
-                service = "FACEBOOK";
-            } else {
-                newJSONStudySession.put("service", "GOOGLE");
-                service = "GOOGLE";
-            }
-            newJSONStudySession.put("auth_option",2);
-            newJSONStudySession.put("username", personName);
-            System.out.println("This is the username" + personName);
-            newJSONStudySession.put("authentication_key", authentication_key);
-            System.out.println("This is the authentication_key" + authentication_key);
+            final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
+            final JSONObject newJSONStudySession = new JSONObject();
+            try {
+                if (FBlogin == true) {
+                    newJSONStudySession.put("service", "FACEBOOK");
+                    service = "FACEBOOK";
+                } else {
+                    newJSONStudySession.put("service", "GOOGLE");
+                    service = "GOOGLE";
+                }
+                newJSONStudySession.put("auth_option", 2);
+                newJSONStudySession.put("username", personName);
+                System.out.println("This is the username" + personName);
+                newJSONStudySession.put("authentication_key", authentication_key);
+                System.out.println("This is the authentication_key" + authentication_key);
             /* Below code is not worky
             TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
             String mPhoneNumber = tMgr.getLine1Number();
             */
-            newJSONStudySession.put("phone", 5742386463l);
-            newJSONStudySession.put("email", personEmail);
-        } catch (JSONException e) {
-            System.out.println("LOL you got a JSONException");
-        }
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.PUT, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            System.out.println("\n\n\n" + response.toString() + "\n\n\n");
-                            //personId = response.getString("user_id");
-                            userCode.set(response.getInt("code"));
-                            personId = response.getString("user_id");
-                            System.out.println("error checking");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                newJSONStudySession.put("phone", 5742386463l);
+                newJSONStudySession.put("email", personEmail);
+            } catch (JSONException e) {
+                System.out.println("LOL you got a JSONException");
+            }
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.PUT, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                System.out.println("\n\n\n" + response.toString() + "\n\n\n");
+                                //personId = response.getString("user_id");
+                                userCode.set(response.getInt("code"));
+                                personId = response.getString("user_id");
+                                System.out.println("error checking");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-                }
-                        , new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                    }
-                });
+                            , new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+                        }
+                    });
         if (userCode.get() == 404) {
             jsObjRequest = new JsonObjectRequest
                     (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
