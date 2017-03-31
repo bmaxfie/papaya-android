@@ -52,12 +52,15 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created by ChristianLock on 3/1/17.
  */
 
-public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
+public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "GPlusFragent";
     private int RC_SIGN_IN = 0;
     private GoogleApiClient mGoogleApiClient;
@@ -82,6 +85,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private ImageView papayaPic;
     private boolean FBlogin;
     private PreferenceHandler preferenceHandler;
+    private final AtomicInteger userCode = new AtomicInteger();
 
     //Facebook Login Variables
     private LoginButton loginButton;
@@ -145,56 +149,77 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         };
     }
-    public void addUserToDatabase() {
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
-        final JSONObject newJSONStudySession = new JSONObject();
-        try {
-            if (FBlogin == true) {
-                newJSONStudySession.put("service", "FACEBOOK");
-                service = "FACEBOOK";
-            } else {
-                newJSONStudySession.put("service", "GOOGLE");
-                service = "GOOGLE";
-            }
-            AccountData.setService(service);
-            newJSONStudySession.put("username", personName);
-            System.out.println("This is the username" + personName);
-            newJSONStudySession.put("authentication_key", authentication_key);
-            System.out.println("This is the authentication_key" + authentication_key);
+    
+    
+    public void addUserToDatabase() throws InterruptedException {
+        //Update Auth needs: "Auth_option:1 or 2", "Username", Optional("Email"), "Service Name: FACEBOOK or GOOGLE", "Auth Key"
+        //Create New needs: "Username", "Service Name", "Auth Key", Optional.. "Phone", "Email"
+            final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
+            final JSONObject newJSONStudySession = new JSONObject();
+            try {
+                if (FBlogin == true) {
+                    newJSONStudySession.put("service", "FACEBOOK");
+                    service = "FACEBOOK";
+                } else {
+                    newJSONStudySession.put("service", "GOOGLE");
+                    service = "GOOGLE";
+                }
+                AccountData.setService(service);
+                newJSONStudySession.put("auth_option", 2);
+                newJSONStudySession.put("username", personName);
+                System.out.println("This is the username" + personName);
+                newJSONStudySession.put("authentication_key", authentication_key);
+                System.out.println("This is the authentication_key" + authentication_key);
             /* Below code is not worky
             TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
             String mPhoneNumber = tMgr.getLine1Number();
             */
-            newJSONStudySession.put("phone", 5742386463l);
-            newJSONStudySession.put("email", personEmail);
-        } catch (JSONException e) {
-            System.out.println("LOL you got a JSONException");
-        }
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            System.out.println("\n\n\n" + response.toString() + "\n\n\n");
-                            personId = response.getString("user_id");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                newJSONStudySession.put("phone", 5742386463l);
+                newJSONStudySession.put("email", personEmail);
+            } catch (JSONException e) {
+                System.out.println("LOL you got a JSONException");
+            }
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.PUT, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                System.out.println("\n\n\n" + response.toString() + "\n\n\n");
+                                //personId = response.getString("user_id");
+                                userCode.set(response.getInt("code"));
+                                personId = response.getString("user_id");
+                                System.out.println("error checking");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
+                            , new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+                        }
+                    });
+        if (userCode.get() == 404) {
+            jsObjRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        personId = response.getString("user_id");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                                    , new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO AUTO-GENERATED METHOD STUB
+                        }
+                    });
+        }
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
     }
-
 
 
     @Override
@@ -365,7 +390,11 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 idToken = acct.getIdToken();
                 /* Below is temp ? */
                 if (!signedIn) {
-                    addUserToDatabase();
+                    try {
+                        addUserToDatabase();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                /* Toast.makeText(getContext(), "Authentication Failed",
                         Toast.LENGTH_SHORT).show();
@@ -390,7 +419,11 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 if (value == false) {
                     System.out.println("ERROR.  SHARED PREF NOT WRITING CORRECTLY");
                 }
-//                addUserToDatabase();
+                try {
+                    addUserToDatabase();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             updateUI(true);
         } else {
