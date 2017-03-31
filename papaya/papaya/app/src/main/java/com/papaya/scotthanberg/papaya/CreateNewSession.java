@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.widget.Toast;
 
@@ -58,6 +59,13 @@ public class CreateNewSession extends AppCompatActivity {
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
         Sessions = HomeScreen.getSessions();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
     }
 
     public void openMenu(View view) {
@@ -148,6 +156,7 @@ public class CreateNewSession extends AppCompatActivity {
         Intent homeScreen = new Intent(this, HomeScreen.class);
         homeScreen.putExtra("from", "CreateNewSession");
 //        homeScreen.putExtra("sessions",HomeScreen.getSessions());
+        homeScreen.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(homeScreen);
     }
 
@@ -155,9 +164,36 @@ public class CreateNewSession extends AppCompatActivity {
         Intent sessionCreated = new Intent(this, HomeScreen.class);
         Toast toast = Toast.makeText(this, "Study Session Created", Toast.LENGTH_SHORT);
         toast.show();
+        sessionCreated.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(sessionCreated);
     }
-    
 
+    /**
+     * Android callback
+     * Invoked when the activity may be temporarily destroyed, save the instance state here.
+     * @param outState - supplised by Android OS
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Android callback
+     * This callback is called only when there is a saved instance previously saved using
+     * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
+     * other state here, possibly usable after onStart() has completed.
+     * The savedInstanceState Bundle is same as the one used in onCreate().
+     * @param savedInstancestate - supplied by Android OS
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstancestate) {
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+
+        super.onRestoreInstanceState(savedInstancestate);
+    }
 
 }

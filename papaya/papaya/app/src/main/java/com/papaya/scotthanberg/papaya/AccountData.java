@@ -9,6 +9,9 @@ import java.util.HashMap;
 
 public class AccountData
 {
+
+    public static final String ACCOUNT_DATA = "ACCOUNT_DATA";
+
     public enum AccountDataType {
         CLASSES,
         FRIENDS,

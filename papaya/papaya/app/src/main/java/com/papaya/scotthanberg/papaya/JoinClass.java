@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 
+import java.util.HashMap;
+
 import static com.papaya.scotthanberg.papaya.R.id.dropDown;
 
 public class JoinClass extends AppCompatActivity {
@@ -31,9 +33,17 @@ public class JoinClass extends AppCompatActivity {
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+    }
+
     public void backToHome(View view) {
         Intent home = new Intent(this, HomeScreen.class);
         home.putExtra("from", "JoinClass");
+        home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(home);
     }
 
@@ -58,5 +68,33 @@ public class JoinClass extends AppCompatActivity {
             findFriends.setVisibility(View.VISIBLE);
             joinNewClass.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * Android callback
+     * Invoked when the activity may be temporarily destroyed, save the instance state here.
+     * @param outState - supplised by Android OS
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Android callback
+     * This callback is called only when there is a saved instance previously saved using
+     * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
+     * other state here, possibly usable after onStart() has completed.
+     * The savedInstanceState Bundle is same as the one used in onCreate().
+     * @param savedInstancestate - supplied by Android OS
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstancestate) {
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+
+        super.onRestoreInstanceState(savedInstancestate);
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,7 +34,36 @@ public class LoginActivity extends AppCompatActivity {
     public void loadMap(View view) {
         Intent homeScreen = new Intent(this, HomeScreen.class);
         homeScreen.putExtra("from","LoginActivity");
-        homeScreen.putExtra("ACCOUNT_DATA", AccountData.data);
+        homeScreen.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(homeScreen);
+    }
+
+
+    /**
+     * Android callback
+     * Invoked when the activity may be temporarily destroyed, save the instance state here.
+     * @param outState - supplised by Android OS
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Android callback
+     * This callback is called only when there is a saved instance previously saved using
+     * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
+     * other state here, possibly usable after onStart() has completed.
+     * The savedInstanceState Bundle is same as the one used in onCreate().
+     * @param savedInstancestate - supplied by Android OS
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstancestate) {
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+
+        super.onRestoreInstanceState(savedInstancestate);
     }
 }
