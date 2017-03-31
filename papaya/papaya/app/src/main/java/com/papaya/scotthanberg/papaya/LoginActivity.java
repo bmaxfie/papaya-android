@@ -29,7 +29,13 @@ public class LoginActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+
+        if (savedInstanceState != null)
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        else
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
     }
+
 
     public void loadMap(View view) {
         Intent homeScreen = new Intent(this, HomeScreen.class);
@@ -62,8 +68,11 @@ public class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onRestoreInstanceState(Bundle savedInstancestate) {
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
-
         super.onRestoreInstanceState(savedInstancestate);
+
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
+
+    // TODO: Remove on Resume callback and put it in Create. If in onCreate, check for null parameter.
+
 }

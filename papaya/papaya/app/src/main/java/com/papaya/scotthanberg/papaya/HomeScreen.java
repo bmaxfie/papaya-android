@@ -102,6 +102,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 .addOnConnectionFailedListener(this)
                 .build();
 
+        if (savedInstanceState != null)
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        else
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+
         locationRequest = new LocationRequest();
         locationRequest.setInterval(60 * 1000); // This pulls once every minute
         locationRequest.setFastestInterval(15 * 1000); // This is the fastest interval
@@ -388,14 +393,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     @Override
     protected void onResume() {
+        super.onResume();
         Intent homeScreen = getIntent(); // gets the previously created intent
         String activity = homeScreen.getStringExtra("from");
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) homeScreen.getSerializableExtra("ACCOUNT_DATA");
         System.out.println("THIS ACTIVITY IS" + activity);
         if(activity.equals("CreateNewSession")){
             //updateMarkers();
         }
-        super.onResume();
         if (mGoogleApiClient.isConnected()) {
             requestLocationUpdates();
         }
@@ -429,10 +433,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public static ArrayList<StudySession> getSessions() {
         return Sessions;
-    }
-
-    public static void addToSessions(StudySession studySession) {
-        Sessions.add(studySession);
     }
 
     public void buttonMyFriends(View view) {

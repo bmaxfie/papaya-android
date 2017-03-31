@@ -39,6 +39,11 @@ public class FriendsList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_list);
 
+        if (savedInstanceState != null)
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        else
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+
         dropDown = (RelativeLayout) findViewById(R.id.dropDown);
         horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
         backdrop = (View) findViewById(R.id.horizontalBackdrop);
@@ -53,17 +58,6 @@ public class FriendsList extends AppCompatActivity {
         Intent list = getIntent(); // gets the previously created intent
         getFriends(); //get friends from databse and update text views
 
-    }
-
-    /**
-     * This callback will always be executed, whether it is a new activity or restarting an old one.
-     * Either way, this should always refresh the AccountData with the last saved version.
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
     }
 
     private void getFriends() {

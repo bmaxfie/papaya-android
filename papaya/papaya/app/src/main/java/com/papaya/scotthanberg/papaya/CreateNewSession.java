@@ -3,6 +3,7 @@ package com.papaya.scotthanberg.papaya;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +37,6 @@ public class CreateNewSession extends AppCompatActivity {
     private Double myLongitude;
     
     private EditText classID, timeDuration;
-    private ArrayList<StudySession> Sessions;
 
 
     @Override
@@ -55,18 +55,19 @@ public class CreateNewSession extends AppCompatActivity {
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
+        if (savedInstanceState != null)
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        else
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+
+        // Load data from AccountData into class variables:
+
         Intent studySession = getIntent(); // gets the previously created intent
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
-        Sessions = HomeScreen.getSessions();
+
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
-    }
 
     public void openMenu(View view) {
         if (dropDown.getVisibility()==View.VISIBLE) {
@@ -96,8 +97,6 @@ public class CreateNewSession extends AppCompatActivity {
         /* Replace Beta with /class/id/sessions or something like that
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
-        Toast toast = Toast.makeText(this, classID.getText() + " created for " + timeDuration.getText() + " hour(s)", Toast.LENGTH_LONG);
-        toast.show();
 
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
@@ -108,7 +107,7 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
             newJSONStudySession.put("description", "This will be a description");
-            newJSONStudySession.put("service", GPlusFragment.getService());
+            newJSONStudySession.put("service", AccountData.getService());
             newJSONStudySession.put("authentication_key", GPlusFragment.getPersonId());
             newJSONStudySession.put("sponsored", true);
         } catch (JSONException e) {
@@ -119,24 +118,27 @@ public class CreateNewSession extends AppCompatActivity {
                 (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
                         try {
-                            HomeScreen.addToSessions(new StudySession(
-                                    newJSONStudySession.get("user_id").toString()
-                                    , newJSONStudySession.get("duration").toString()
-                                    , newJSONStudySession.get("location_lat").toString() + "," + newJSONStudySession.get("location_long").toString()
-                                    , newJSONStudySession.get("description").toString()
-                                    , newJSONStudySession.get("sponsored").toString()));
-                            System.out.println(response.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            if (response.getInt("code") == 201) {
+                                Toast.makeText(CreateNewSession.this, classID.getText() + " created for " + timeDuration.getText() + " hour(s)", Toast.LENGTH_LONG).show();
+                                Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
+
+                                // Confirm session_id and class_id in response probably.
+                            }
+                            else {
+                                Toast.makeText(CreateNewSession.this, response.getString("code_description"), Toast.LENGTH_LONG).show();
+                                Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
+                            }
+                        } catch (JSONException jsone) {
+                            Toast.makeText(CreateNewSession.this, "Malformed JSON Response ERROR.", Toast.LENGTH_LONG).show();
+                            Log.d("CREATE_NEW_SESSION", "Malformed JSON Response ERROR.");
                         }
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
+                        Log.d("CREATE_NEW_SESSION", "onErrorResponse: " + error.getMessage());
 
                     }
                 });

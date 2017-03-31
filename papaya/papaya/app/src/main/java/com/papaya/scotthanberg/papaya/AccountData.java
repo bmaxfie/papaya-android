@@ -16,6 +16,7 @@ public class AccountData
         CLASSES,
         FRIENDS,
         CURRENT_SESSION,
+        SERVICE,
         USERID,
         USERNAME,
         EMAIL,
@@ -32,6 +33,9 @@ public class AccountData
     }
     public static ArrayList<User> getFriends() {
         return (ArrayList<User>) data.get(AccountDataType.FRIENDS);
+    }
+    public static String getService() {
+        return (String) data.get(AccountDataType.SERVICE);
     }
     public static String getUserID() {
         return (String) data.get(AccountDataType.USERID);
@@ -61,6 +65,9 @@ public class AccountData
     }
     public static void setUserID(String user_id) {
         data.put(AccountDataType.USERID, user_id);
+    }
+    public static void setService(String service) {
+        data.put(AccountDataType.SERVICE, service);
     }
     public static void setCurrentSession(String currentSession) {
         data.put(AccountDataType.CURRENT_SESSION, currentSession);

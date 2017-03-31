@@ -30,15 +30,14 @@ public class JoinClass extends AppCompatActivity {
         sortByClass = (Button) findViewById(R.id.SortByClass);
         manageClasses = (Button) findViewById(R.id.ManageClasses);
         findFriends = (Button) findViewById(R.id.FindFriends);
-        joinNewClass = (Button) findViewById(R.id.JoinNewClass);;
+        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+
+        if (savedInstanceState != null)
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        else
+            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
-    }
 
     public void backToHome(View view) {
         Intent home = new Intent(this, HomeScreen.class);

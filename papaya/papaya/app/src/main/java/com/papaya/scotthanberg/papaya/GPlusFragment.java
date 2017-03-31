@@ -156,6 +156,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 newJSONStudySession.put("service", "GOOGLE");
                 service = "GOOGLE";
             }
+            AccountData.setService(service);
             newJSONStudySession.put("username", personName);
             System.out.println("This is the username" + personName);
             newJSONStudySession.put("authentication_key", authentication_key);
