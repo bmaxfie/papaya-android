@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FriendsList extends AppCompatActivity {
     //Main Menu Buttons
@@ -54,7 +55,16 @@ public class FriendsList extends AppCompatActivity {
 
     }
 
+    /**
+     * This callback will always be executed, whether it is a new activity or restarting an old one.
+     * Either way, this should always refresh the AccountData with the last saved version.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+    }
 
     private void getFriends() {
         //TODO: replace the hard coding
@@ -128,5 +138,33 @@ public class FriendsList extends AppCompatActivity {
 
             ll.addView(myText, lp);
         }
+    }
+
+    /**
+     * Android callback
+     * Invoked when the activity may be temporarily destroyed, save the instance state here.
+     * @param outState - supplised by Android OS
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Android callback
+     * This callback is called only when there is a saved instance previously saved using
+     * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
+     * other state here, possibly usable after onStart() has completed.
+     * The savedInstanceState Bundle is same as the one used in onCreate().
+     * @param savedInstancestate - supplied by Android OS
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstancestate) {
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+
+        super.onRestoreInstanceState(savedInstancestate);
     }
 }

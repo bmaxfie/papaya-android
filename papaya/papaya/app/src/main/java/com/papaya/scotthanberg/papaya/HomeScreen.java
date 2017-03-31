@@ -437,6 +437,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public void buttonMyFriends(View view) {
         Intent friendsList = new Intent(this, FriendsList.class);
+        friendsList.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(friendsList);
     }
 
