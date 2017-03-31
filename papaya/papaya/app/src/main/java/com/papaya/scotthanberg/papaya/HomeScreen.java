@@ -1,8 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -263,7 +259,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 ft.addToBackStack(null);
 
                 // Create and show the dialog
-                SessionMarkerDialog smd = SessionMarkerDialog.newInstance(marker.getTitle());
+                SessionMarkerDialog smd = new SessionMarkerDialog();
+                smd.setSessionId(marker.getTitle());
                 smd.show(ft, "dialog");
                 return true;
             }
@@ -453,85 +450,4 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent joinClass = new Intent(this, JoinClass.class);
         startActivity(joinClass);
     }
-
-    public static class SessionMarkerDialog extends DialogFragment {
-        // will need a class id for session as well
-        String sessionId;
-        static SessionMarkerDialog newInstance(String title) {
-            SessionMarkerDialog smd = new SessionMarkerDialog();
-            Bundle bundle = new Bundle();
-            bundle.putString("id",title);
-            smd.setArguments(bundle);
-            return smd;
-        }
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            sessionId = getArguments().getString("id");
-
-        }
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Join this study session?")
-                    .setPositiveButton("Join", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            addUserToSession(sessionId);
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            return builder.create();
-        }
-        public void addUserToSession(String sessionId) {
-            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + sessionId;
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                            try {
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-
-                        }
-                    });
-            // Access the RequestQueue through your singleton class.
-            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-
-        }
-        /*
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View v = inflater.inflate(R.layout.fragment_dialog, container, false);
-            View tv = v.findViewById(R.id.text);
-
-            // Watch for button clicks.
-            Button button = (Button)v.findViewById(R.id.show);
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // When button is clicked, call up to owning activity.
-                    ((SessionMarkerDialog)getActivity()).showDialog();
-                }
-            });
-
-            return v;
-        }
-
-        */
-    }
-
 }
