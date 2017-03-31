@@ -2,6 +2,8 @@ package com.papaya.scotthanberg.papaya;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import com.papaya.scotthanberg.papaya.Class;
+
 import java.util.List;
 
 /**
@@ -9,32 +11,34 @@ import java.util.List;
  */
 
 public class StudySession {
-    private List<Student> Students;
-    private LatLng Location;
+    private List<User> users;
+    private LatLng location;
     private String duration;
-    private String Description;
+    private String description;
     /*  List<Post> Posts; */
-    private String SessionID;
-    private String Sponsored;
+    private String sessionID;
+    private String sponsored;
+    private Class classObject;
 
-    public StudySession() {
 
-    }
-
-    public StudySession(String SessionID, String duration, String Location, String Description, String Sponsored) {
-        this.Location = new LatLng(Double.parseDouble(Location.split(",")[0]), Double.parseDouble(Location.split(",")[1]));
-        this.SessionID = SessionID;
+    public StudySession(String sessionID, String duration, String location, String description, String sponsored) {
+        this.location = new LatLng(Double.parseDouble(location.split(",")[0]), Double.parseDouble(location.split(",")[1]));
+        this.sessionID = sessionID;
         this.duration = duration;
-        this.Description = Description;
-        this.Sponsored = Sponsored;
+        this.description = description;
+        this.sponsored = sponsored;
     }
 
-    public List<Student> getStudents() {
-        return Students;
+
+    /*
+        GETTERS:
+     */
+    public List<User> getUsers() {
+        return users;
     }
 
     public LatLng getLocation() {
-        return Location;
+        return location;
     }
 
     public String getDuration() {
@@ -42,14 +46,25 @@ public class StudySession {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public String getSessionID() {
-        return SessionID;
+        return sessionID;
     }
 
     public String getSponsored() {
-        return Sponsored;
+        return sponsored;
     }
+
+    public Class getClassObject() { return classObject; }
+
+
+    /*
+        SETTERS:
+     */
+    public void setClassObject(Class c) {
+        this.classObject = c;
+    }
+
 }

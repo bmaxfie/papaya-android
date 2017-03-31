@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button dropDown;
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     public void loadMap(View view) {
         Intent homeScreen = new Intent(this, HomeScreen.class);
         homeScreen.putExtra("from","LoginActivity");
+        homeScreen.putExtra("ACCOUNT_DATA", AccountData.data);
         startActivity(homeScreen);
     }
 }

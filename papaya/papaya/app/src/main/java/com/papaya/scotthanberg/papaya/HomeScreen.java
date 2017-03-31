@@ -40,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -389,6 +390,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     protected void onResume() {
         Intent homeScreen = getIntent(); // gets the previously created intent
         String activity = homeScreen.getStringExtra("from");
+        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) homeScreen.getSerializableExtra("ACCOUNT_DATA");
         System.out.println("THIS ACTIVITY IS" + activity);
         if(activity.equals("CreateNewSession")){
             //updateMarkers();

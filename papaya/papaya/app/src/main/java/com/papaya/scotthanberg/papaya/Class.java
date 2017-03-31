@@ -7,39 +7,65 @@ import java.util.List;
  */
 
 public class Class {
-    private List<Student> listOfStudents;
-    private Professor Prof;
-    private List<StudySession> pastStudySessions;
+
+    //private List<Student> listOfStudents;
+    //private Professor professor;
+    //private List<StudySession> pastStudySessions;
+
+
     private List<StudySession> activeStudySessions;
     private String classID;
+    private String className;
+    private String description;
 
-    public Class() {
 
-    }
-
-    public Class(String classID) {
+    public Class(String classID, String className, String description, List<StudySession> sessions) {
         this.classID = classID;
+        this.className = className;
+        this.description = description;
+        this.activeStudySessions = sessions;
     }
 
-    public List<Student> getListOfStudents() {
-        return listOfStudents;
+
+    /*
+        GETTERS:
+     */
+    public String getClassID() {
+        return classID;
     }
 
-    public Professor getProf() {
-        return Prof;
-    }
+    public String getClassName() { return className; }
 
-    public List<StudySession> getPastStudySessions() {
-        return pastStudySessions;
-    }
+    public String getDescription() { return description; }
 
     public List<StudySession> getActiveStudySessions() {
         return activeStudySessions;
     }
 
-    public String getClassID() {
-        return classID;
+    /*
+        SETTERS:
+     */
+    public void setActiveStudySessions(List<StudySession> newSessions) {
+        activeStudySessions.clear();
+        // Set references to this Class so that
+        for (StudySession session : newSessions)
+            session.setClassObject(this);
+        activeStudySessions = newSessions;
     }
+
+
+    /*public List<Student> getListOfStudents() {
+        return listOfStudents;
+    }
+
+    public Professor getProf() {
+        return professor;
+    }
+
+    public List<StudySession> getPastStudySessions() {
+        return pastStudySessions;
+    }
+    */
 
 
 }
