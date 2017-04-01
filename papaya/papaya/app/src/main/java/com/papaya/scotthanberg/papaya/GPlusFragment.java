@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -132,7 +133,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 // options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
 
@@ -216,7 +217,10 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         }
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
-    }
+        /*
+        try {
+            future.get();
+        } catch (InterruptedException e) {
 
 
     @Override
@@ -281,45 +285,45 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         callbackManager = CallbackManager.Factory.create();
         // Facebook Callback Registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Toast toast = Toast.makeText(getActivity(), "Logged In", Toast.LENGTH_SHORT);
-                        toast.show();
-                        signInButton.setVisibility(View.GONE);
-                        signOutButton.setVisibility(View.GONE);
-                        profilePicImageView.setVisibility(View.VISIBLE);
-                        continue_to_papaya.setVisibility(View.VISIBLE);
-                        Profile p = Profile.getCurrentProfile();
-                        papayaPic.setVisibility(View.GONE);
-                        new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200,200).toString());
-                        updateUI();
-                    }
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Toast toast = Toast.makeText(getActivity(), "Logged In", Toast.LENGTH_SHORT);
+                toast.show();
+                signInButton.setVisibility(View.GONE);
+                signOutButton.setVisibility(View.GONE);
+                profilePicImageView.setVisibility(View.VISIBLE);
+                continue_to_papaya.setVisibility(View.VISIBLE);
+                Profile p = Profile.getCurrentProfile();
+                papayaPic.setVisibility(View.GONE);
+                new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200, 200).toString());
+                updateUI();
+            }
 
-                    @Override
-                    public void onCancel() {
-                        // App code
-                        papayaPic.setVisibility(View.VISIBLE);
-                        loginButton.setVisibility(View.VISIBLE);
-                        signInButton.setVisibility(View.VISIBLE);
-                        profilePicImageView.setVisibility(View.GONE);
-                        continue_to_papaya.setVisibility(View.GONE);
-                        updateUI();
-                    }
+            @Override
+            public void onCancel() {
+                // App code
+                papayaPic.setVisibility(View.VISIBLE);
+                loginButton.setVisibility(View.VISIBLE);
+                signInButton.setVisibility(View.VISIBLE);
+                profilePicImageView.setVisibility(View.GONE);
+                continue_to_papaya.setVisibility(View.GONE);
+                updateUI();
+            }
 
-                    @Override
-                    public void onError(FacebookException exception) {
-                        papayaPic.setVisibility(View.VISIBLE);
-                        profilePicImageView.setVisibility(View.GONE);
-                        loginButton.setVisibility(View.VISIBLE);
-                        signInButton.setVisibility(View.VISIBLE);
-                        continue_to_papaya.setVisibility(View.VISIBLE);
-                        updateUI();
-                    }
+            @Override
+            public void onError(FacebookException exception) {
+                papayaPic.setVisibility(View.VISIBLE);
+                profilePicImageView.setVisibility(View.GONE);
+                loginButton.setVisibility(View.VISIBLE);
+                signInButton.setVisibility(View.VISIBLE);
+                continue_to_papaya.setVisibility(View.VISIBLE);
+                updateUI();
+            }
         });
 
         profilePicImageView = (ImageView) v.findViewById(R.id.profilePicture);
         Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.user_default);
-        profilePicImageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),icon, 200, 200, 200, false, false,false, false));
+        profilePicImageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(), icon, 200, 200, 200, false, false, false, false));
         loginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
@@ -334,8 +338,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         continue_to_papaya = (Button) v.findViewById(R.id.continue_to_papaya);
         imgProfilePic = (ImageView) v.findViewById(R.id.img_profile_pic);
 
-       // mStatusTextView = (TextView) v.findViewById(R.id.status);
-        imgProfilePic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),icon, 200, 200, 200, false, false, false, false));
+        // mStatusTextView = (TextView) v.findViewById(R.id.status);
+        imgProfilePic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(), icon, 200, 200, 200, false, false, false, false));
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -364,9 +368,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     }
 
 
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -376,7 +377,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-          //  if (result.isSuccess()) {
+            //  if (result.isSuccess()) {
+            /*
                 acct = result.getSignInAccount();
                 personName = acct.getDisplayName();
                 personGivenName = acct.getGivenName();
@@ -385,7 +387,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 authentication_key = acct.getId();
                 personPhoto = acct.getPhotoUrl();
                 idToken = acct.getIdToken();
-                /* Below is temp ? */
+                /* Below is temp ?
                 if (!signedIn) {
                     try {
                         addUserToDatabase();
@@ -393,9 +395,11 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                         e.printStackTrace();
                     }
                 }
+            */
                /* Toast.makeText(getContext(), "Authentication Failed",
                         Toast.LENGTH_SHORT).show();
                 System.out.println("HAHA FAILED");*/
+
             handleSignInResult(result);
         }
     }
@@ -406,12 +410,35 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-      //      mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            //      mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //Similarly you can get the email and photourl using acct.getEmail() and  acct.getPhotoUrl()
+            if (FBlogin == true) {
+                service = "FACEBOOK";
+            } else {
+                service = "GOOGLE";
+            }
+            personName = acct.getDisplayName();
+            personGivenName = acct.getGivenName();
+            personFamilyName = acct.getFamilyName();
+            personEmail = acct.getEmail();
+            authentication_key = acct.getId();
+            personPhoto = acct.getPhotoUrl();
+            idToken = acct.getIdToken();
+            addUserToDatabase();  // Should write to shared prefs for later
+            // Below should only need to be executed on non first time sign ins
+            if (personId == null) {
+                String value = preferenceHandler.readFromSharedPref("user_id");
+                if (value.equals("Value does not exist.")) {
+                    System.out.println("No userid yet");
+                } else {
+                    personId = value;
+                }
+            }
 
-            if(acct.getPhotoUrl() != null)
+            if (acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-            if (!signedIn/* || signedIn*/) {
+            /*
+            if (!signedIn/* || signedIn) {
                 Boolean value = preferenceHandler.writeToSharedPref("user_id", getPersonId());
                 if (value == false) {
                     System.out.println("ERROR.  SHARED PREF NOT WRITING CORRECTLY");
@@ -422,9 +449,11 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     e.printStackTrace();
                 }
             }
+            */
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
+            signedIn = false;
             updateUI(false);
         }
     }
@@ -434,9 +463,9 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         boolean enableButtons = AccessToken.getCurrentAccessToken() != null;
         Profile profile = Profile.getCurrentProfile();
         if (enableButtons && profile != null) {
-            new LoadProfileImage(profilePicImageView).execute(profile.getProfilePictureUri(200,200).toString());
+            new LoadProfileImage(profilePicImageView).execute(profile.getProfilePictureUri(200, 200).toString());
         } else {
-            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.user_default);
+            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.user_default);
             profilePicImageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(), icon, 200, 200, 200, false, false, false, false));
         }
     }
@@ -451,11 +480,11 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             imgProfilePic.setVisibility(View.VISIBLE);
             profilePicImageView.setVisibility(View.GONE);
             papayaPic.setVisibility(View.GONE);
-          //  Intent toy = new Intent(this.getActivity(), HomeScreen.class);
+            //  Intent toy = new Intent(this.getActivity(), HomeScreen.class);
         } else {
-           // mStatusTextView.setText(R.string.signed_out);
-            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(),R.drawable.user_default);
-            imgProfilePic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),icon, 200, 200, 200, false, false, false, false));
+            // mStatusTextView.setText(R.string.signed_out);
+            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.user_default);
+            imgProfilePic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(), icon, 200, 200, 200, false, false, false, false));
             signInButton.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.VISIBLE);
             imgProfilePic.setVisibility(View.GONE);
@@ -492,7 +521,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
     /**
      * Background Async task to load user profile picture from url
-     * */
+     */
     private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -518,8 +547,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             if (result != null) {
 
 
-                Bitmap resized = Bitmap.createScaledBitmap(result,200,200, true);
-                bmImage.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),resized,250,200,200, false, false, false, false));
+                Bitmap resized = Bitmap.createScaledBitmap(result, 200, 200, true);
+                bmImage.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(), resized, 250, 200, 200, false, false, false, false));
 
             }
         }
