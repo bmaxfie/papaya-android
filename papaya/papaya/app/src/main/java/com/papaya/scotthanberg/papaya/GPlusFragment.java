@@ -153,63 +153,63 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     public void addUserToDatabase() throws InterruptedException {
         //Update Auth needs: "Auth_option:1 or 2", "Username", Optional("Email"), "Service Name: FACEBOOK or GOOGLE", "Auth Key"
         //Create New needs: "Username", "Service Name", "Auth Key", Optional.. "Phone", "Email"
-            final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
-            final JSONObject newJSONStudySession = new JSONObject();
-            try {
-                if (FBlogin == true) {
-                    newJSONStudySession.put("service", "FACEBOOK");
-                    service = "FACEBOOK";
-                } else {
-                    newJSONStudySession.put("service", "GOOGLE");
-                    service = "GOOGLE";
-                }
-                newJSONStudySession.put("auth_option", 2);
-                newJSONStudySession.put("username", personName);
-                System.out.println("This is the username" + personName);
-                newJSONStudySession.put("authentication_key", authentication_key);
-                System.out.println("This is the authentication_key" + authentication_key);
+        final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
+        final JSONObject newJSONStudySession = new JSONObject();
+        try {
+            if (FBlogin == true) {
+                newJSONStudySession.put("service", "FACEBOOK");
+                service = "FACEBOOK";
+            } else {
+                newJSONStudySession.put("service", "GOOGLE");
+                service = "GOOGLE";
+            }
+            newJSONStudySession.put("auth_option", 2);
+            newJSONStudySession.put("username", personName);
+            System.out.println("This is the username" + personName);
+            newJSONStudySession.put("authentication_key", authentication_key);
+            System.out.println("This is the authentication_key" + authentication_key);
             /* Below code is not worky
             TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
             String mPhoneNumber = tMgr.getLine1Number();
             */
-                newJSONStudySession.put("phone", 5742386463l);
-                newJSONStudySession.put("email", personEmail);
-            } catch (JSONException e) {
-                System.out.println("LOL you got a JSONException");
-            }
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                    (Request.Method.PUT, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                        @Override
+            newJSONStudySession.put("phone", 5742386463l);
+            newJSONStudySession.put("email", personEmail);
+        } catch (JSONException e) {
+            System.out.println("LOL you got a JSONException");
+        }
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.PUT, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println("\n\n\n" + response.toString() + "\n\n\n");
+                            //personId = response.getString("user_id");
+                            userCode.set(response.getInt("code"));
+                            personId = response.getString("user_id");
+                            System.out.println("error checking");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                        , new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                    }
+                });
+        if (userCode.get() == 404) {
+            jsObjRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
                         public void onResponse(JSONObject response) {
                             try {
-                                System.out.println("\n\n\n" + response.toString() + "\n\n\n");
-                                //personId = response.getString("user_id");
-                                userCode.set(response.getInt("code"));
                                 personId = response.getString("user_id");
-                                System.out.println("error checking");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                             , new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-                        }
-                    });
-        if (userCode.get() == 404) {
-            jsObjRequest = new JsonObjectRequest
-                    (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        personId = response.getString("user_id");
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                                    , new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             // TODO AUTO-GENERATED METHOD STUB
                         }
@@ -222,6 +222,9 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             future.get();
         } catch (InterruptedException e) {
 
+        }
+        */
+    }
 
     @Override
     public void onStart() {
@@ -424,7 +427,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             authentication_key = acct.getId();
             personPhoto = acct.getPhotoUrl();
             idToken = acct.getIdToken();
-            addUserToDatabase();  // Should write to shared prefs for later
+            //addUserToDatabase();  // Should write to shared prefs for later
             // Below should only need to be executed on non first time sign ins
             if (personId == null) {
                 String value = preferenceHandler.readFromSharedPref("user_id");
@@ -437,8 +440,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
             if (acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-            /*
-            if (!signedIn/* || signedIn) {
+
+            if (!signedIn || signedIn) {
                 Boolean value = preferenceHandler.writeToSharedPref("user_id", getPersonId());
                 if (value == false) {
                     System.out.println("ERROR.  SHARED PREF NOT WRITING CORRECTLY");
@@ -449,7 +452,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     e.printStackTrace();
                 }
             }
-            */
+
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
