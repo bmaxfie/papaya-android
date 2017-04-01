@@ -59,7 +59,8 @@
             android:exported="true" />
 
         <activity android:name=".JoinClass" />
-        <activity android:name=".FriendsList"></activity>
+        <activity android:name=".FriendsList" />
+        <activity android:name=".SessionInfo"></activity>
     </application>
 
 </manifest>
