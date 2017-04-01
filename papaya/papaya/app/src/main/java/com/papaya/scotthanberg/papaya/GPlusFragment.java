@@ -23,7 +23,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -54,8 +53,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static java.lang.Thread.sleep;
 
 /**
  * Created by ChristianLock on 3/1/17.
@@ -201,6 +198,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         if (userCode.get() == 404) {
             jsObjRequest = new JsonObjectRequest
                     (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                        @Override
                         public void onResponse(JSONObject response) {
                             try {
                                 personId = response.getString("user_id");
@@ -380,29 +378,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            //  if (result.isSuccess()) {
-            /*
-                acct = result.getSignInAccount();
-                personName = acct.getDisplayName();
-                personGivenName = acct.getGivenName();
-                personFamilyName = acct.getFamilyName();
-                personEmail = acct.getEmail();
-                authentication_key = acct.getId();
-                personPhoto = acct.getPhotoUrl();
-                idToken = acct.getIdToken();
-                /* Below is temp ?
-                if (!signedIn) {
-                    try {
-                        addUserToDatabase();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            */
-               /* Toast.makeText(getContext(), "Authentication Failed",
-                        Toast.LENGTH_SHORT).show();
-                System.out.println("HAHA FAILED");*/
-
             handleSignInResult(result);
         }
     }
