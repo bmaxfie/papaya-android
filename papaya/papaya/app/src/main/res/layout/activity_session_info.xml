@@ -12,7 +12,13 @@
         android:id="@+id/view"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        layout="@layout/main_menu" />
+        layout="@layout/main_menu1" />
+    <include
+        android:id="@+id/dropDown"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/view"
+        layout="@layout/main_menu2" />
 
     <RelativeLayout
         android:id="@+id/title"
@@ -24,7 +30,7 @@
 
 
         <TextView
-            android:text="New Study Session"
+            android:text="Session Info"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/dropDown"
+    android:layout_width="fill_parent"
+    android:layout_height="250dp"
+    android:layout_weight="2.5"
+    android:background="@android:color/holo_orange_light"
+    android:layout_marginTop="50dp"
+    android:layout_alignParentTop="true"
+    android:visibility="gone"
+    android:elevation="2sp">
+
+    <Button
+        android:id="@+id/NewStudySession"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="0dp"
+        android:text="New Study Session"
+        android:visibility="gone"
+        android:onClick="buttonAddStudySession"
+        android:elevation="2sp"/>
+
+    <Button
+        android:id="@+id/SortByClass"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:text="Sort By Class"
+        android:visibility="gone"
+        android:elevation="2sp"/>
+    <Button
+        android:id="@+id/ManageClasses"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="100dp"
+        android:text="Manage Classes"
+        android:visibility="gone"
+        android:elevation="2sp"/>
+    <Button
+        android:id="@+id/FindFriends"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="150dp"
+        android:text="My Friends"
+        android:visibility="gone"
+        android:onClick="buttonMyFriends"
+        android:elevation="2sp"/>
+    <Button
+        android:id="@+id/JoinNewClass"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="200dp"
+        android:text="Join A New Class"
+        android:visibility="gone"
+        android:onClick="buttonJoinClass"
+        android:elevation="2sp"/>
+</RelativeLayout>
+
+
