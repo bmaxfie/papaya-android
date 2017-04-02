@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_create_new_session"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+
+    tools:context="com.papaya.scotthanberg.papaya.CreateNewSession">
+
+    <include
+        android:id="@+id/view"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        layout="@layout/main_menu1" />
+    <include
+        android:id="@+id/dropDown"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/view"
+        layout="@layout/main_menu2" />
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/view"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp">
+
+
+        <TextView
+            android:text="Session Info"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleText"
+            android:textSize="24sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp"
+        android:elevation="1sp">
+
+
+
+        <TextView
+            android:text="Enter the duration:"
+            android:id="@+id/durationText"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="24dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:layout_marginTop="12dp"
+            android:id="@+id/editText2"
+            android:layout_below="@+id/durationText"
+            android:layout_centerHorizontal="true"
+            android:hint="1 hour" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Class:"
+            android:id="@+id/classText"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_below="@+id/editText2"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:layout_marginTop="12dp"
+            android:id="@+id/editText3"
+            android:layout_below="@+id/classText"
+            android:layout_centerHorizontal="true"
+            android:hint="CS307" />
+
+        <Button
+            android:text="Create Session"
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="0dp"
+            android:onClick="addStudySession"/>
+
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>
