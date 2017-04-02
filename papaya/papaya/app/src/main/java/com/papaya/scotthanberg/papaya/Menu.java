@@ -131,13 +131,14 @@ public class Menu extends AppCompatActivity {
     }
 
     public void buttonJoinClass(View view) {
-        Intent joinClass = new Intent(this, JoinClass.class);
-        startActivity(joinClass);
+        Intent joinClass = new Intent(context, JoinClass.class);
+        context.startActivity(joinClass);
     }
 
     public void buttonMyFriends(View view) {
-        Intent friendsList = new Intent(this, FriendsList.class);
-        startActivity(friendsList);
+        System.out.println("\n" + view.toString());
+        Intent friendsList = new Intent(context, FriendsList.class);
+        context.startActivity(friendsList);
     }
 
 }
