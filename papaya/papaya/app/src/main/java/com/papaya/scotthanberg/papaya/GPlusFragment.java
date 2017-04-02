@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -150,21 +149,10 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         };
     }
-    final android.os.Handler dataHandler = new android.os.Handler() {
-        @Override
-        public void handleMessage(Message m) {
-            Bundle myData = m.getData();
-            String user_id = myData.getString("user_id");
-            if (user_id != null) {
-                personId = user_id;
-            }
-        }
-    };
     public void connectToDatabase() {
         // Update Auth needs: "Auth_option:1 or 2", "Username", Optional("Email"), "Service Name: FACEBOOK or GOOGLE", "Auth Key"
         // Create New needs: "Username", "Service Name", "Auth Key", Optional.. "Phone", "Email"
         // Since you CANNOT block the main thread, this has to be done on a "worker" or "background" thread
-        final boolean[] done = {false};
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -200,7 +188,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 try {
                     JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
                     System.out.println("\n\n\n" + response.toString() + "\n\n\n");
-                    // personId = response.getString("user_id");
                     userCode.set(response.getInt("code"));
                     personId = response.getString("user_id");
                     System.out.println("error checking");
@@ -219,7 +206,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     try {
                         JSONObject response = future1.get();   // This will block
                         personId = response.getString("user_id");
-                        done[0] = true;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch(ExecutionException e) {
@@ -411,33 +397,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             personPhoto = acct.getPhotoUrl();
             idToken = acct.getIdToken();
             connectToDatabase();
-            //addUserToDatabase();  // Should write to shared prefs for later
-            // Below should only need to be executed on non first time sign ins
-            /*
-            if (personId == null) {
-                String value = preferenceHandler.readFromSharedPref("user_id");
-                if (value.equals("Value does not exist.")) {
-                    System.out.println("No userid yet");
-                } else {
-                    personId = value;
-                }
-            }*/
-
             if (acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-            /*
-            if (!signedIn || signedIn) {
-                Boolean value = preferenceHandler.writeToSharedPref("user_id", getPersonId());
-                if (value == false) {
-                    System.out.println("ERROR.  SHARED PREF NOT WRITING CORRECTLY");
-                }
-                try {
-                    addUserToDatabase();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            */
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
