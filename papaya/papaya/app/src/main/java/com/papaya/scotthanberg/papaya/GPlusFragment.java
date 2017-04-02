@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,9 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -52,6 +52,9 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -147,86 +150,90 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         };
     }
-    public void addUserToDatabase() throws InterruptedException {
-        //Update Auth needs: "Auth_option:1 or 2", "Username", Optional("Email"), "Service Name: FACEBOOK or GOOGLE", "Auth Key"
-        //Create New needs: "Username", "Service Name", "Auth Key", Optional.. "Phone", "Email"
-        final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
-        final JSONObject newJSONStudySession = new JSONObject();
-        try {
-            if (FBlogin == true) {
-                newJSONStudySession.put("service", "FACEBOOK");
-                service = "FACEBOOK";
-            } else {
-                newJSONStudySession.put("service", "GOOGLE");
-                service = "GOOGLE";
+    final android.os.Handler dataHandler = new android.os.Handler() {
+        @Override
+        public void handleMessage(Message m) {
+            Bundle myData = m.getData();
+            String user_id = myData.getString("user_id");
+            if (user_id != null) {
+                personId = user_id;
             }
-            newJSONStudySession.put("auth_option", 2);
-            newJSONStudySession.put("username", personName);
-            System.out.println("This is the username" + personName);
-            newJSONStudySession.put("authentication_key", authentication_key);
-            System.out.println("This is the authentication_key" + authentication_key);
-            /* Below code is not worky
-            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-            String mPhoneNumber = tMgr.getLine1Number();
-            */
-            newJSONStudySession.put("phone", 5742386463l);
-            newJSONStudySession.put("email", personEmail);
-        } catch (JSONException e) {
-            System.out.println("LOL you got a JSONException");
         }
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.PUT, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            System.out.println("\n\n\n" + response.toString() + "\n\n\n");
-                            //personId = response.getString("user_id");
-                            userCode.set(response.getInt("code"));
-                            personId = response.getString("user_id");
-                            System.out.println("error checking");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+    };
+    public void connectToDatabase() {
+        // Update Auth needs: "Auth_option:1 or 2", "Username", Optional("Email"), "Service Name: FACEBOOK or GOOGLE", "Auth Key"
+        // Create New needs: "Username", "Service Name", "Auth Key", Optional.. "Phone", "Email"
+        // Since you CANNOT block the main thread, this has to be done on a "worker" or "background" thread
+        final boolean[] done = {false};
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/";
+                final JSONObject newJSONStudySession = new JSONObject();
+                try {
+                    if (FBlogin == true) {
+                        newJSONStudySession.put("service", "FACEBOOK");
+                        service = "FACEBOOK";
+                    } else {
+                        newJSONStudySession.put("service", "GOOGLE");
+                        service = "GOOGLE";
+                    }
+                    newJSONStudySession.put("auth_option", 2);
+                    newJSONStudySession.put("username", personName);
+                    System.out.println("This is the username" + personName);
+                    newJSONStudySession.put("authentication_key", authentication_key);
+                    System.out.println("This is the authentication_key" + authentication_key);
+                     /* Below code is not worky
+                        TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                      String mPhoneNumber = tMgr.getLine1Number();
+                       */
+                    newJSONStudySession.put("phone", 5742386463l);
+                    newJSONStudySession.put("email", personEmail);
+                } catch (JSONException e) {
+                    System.out.println("LOL you got a JSONException");
+                }
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                JsonObjectRequest jsObjRequestPUT = new JsonObjectRequest
+                        (Request.Method.PUT, url, newJSONStudySession, future, future);
+                // Access the RequestQueue through your singleton class.
+                MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequestPUT);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
+                    System.out.println("\n\n\n" + response.toString() + "\n\n\n");
+                    // personId = response.getString("user_id");
+                    userCode.set(response.getInt("code"));
+                    personId = response.getString("user_id");
+                    System.out.println("error checking");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                } catch (InterruptedException e) {
+                } catch (TimeoutException e) {
+                    System.out.println(e.toString());
+                }
+                if (userCode.get() == 404) {
+                    RequestFuture<JSONObject> future1 = RequestFuture.newFuture();
+                    JsonObjectRequest jsObjRequestPOST = new JsonObjectRequest
+                            (Request.Method.POST, url, newJSONStudySession, future1, future1);
+                    MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequestPOST);
+                    try {
+                        JSONObject response = future1.get();   // This will block
+                        personId = response.getString("user_id");
+                        done[0] = true;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch(ExecutionException e) {
+                    } catch (InterruptedException e) {
                     }
                 }
-                        , new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                    }
-                });
-        if (userCode.get() == 404) {
-            jsObjRequest = new JsonObjectRequest
-                    (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                personId = response.getString("user_id");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                            , new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO AUTO-GENERATED METHOD STUB
-                        }
-                    });
-        }
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequest);
-        /*
-        try {
-            future.get();
-        } catch (InterruptedException e) {
-
-        }
-        */
+            }
+        }).start();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        /*
         preferenceHandler = new PreferenceHandler(getContext());
         String value = preferenceHandler.readFromSharedPref("user_id");
         if (value.equals("Value does not exist.")) {
@@ -234,6 +241,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         } else {
             signedIn = true;
         }
+        */
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
             signInButton.setVisibility(View.GONE);
@@ -402,8 +410,10 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             authentication_key = acct.getId();
             personPhoto = acct.getPhotoUrl();
             idToken = acct.getIdToken();
+            connectToDatabase();
             //addUserToDatabase();  // Should write to shared prefs for later
             // Below should only need to be executed on non first time sign ins
+            /*
             if (personId == null) {
                 String value = preferenceHandler.readFromSharedPref("user_id");
                 if (value.equals("Value does not exist.")) {
@@ -411,11 +421,11 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 } else {
                     personId = value;
                 }
-            }
+            }*/
 
             if (acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
-
+            /*
             if (!signedIn || signedIn) {
                 Boolean value = preferenceHandler.writeToSharedPref("user_id", getPersonId());
                 if (value == false) {
@@ -427,11 +437,10 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     e.printStackTrace();
                 }
             }
-
+            */
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
-            signedIn = false;
             updateUI(false);
         }
     }
