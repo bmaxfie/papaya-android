@@ -116,6 +116,11 @@ public class SessionInfo extends AppCompatActivity {
             rl.addView(sideways, lp);
 
             //add button listener
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    //todo: call function to add them as a friend
+                }
+            });
 
             counter++;
 
