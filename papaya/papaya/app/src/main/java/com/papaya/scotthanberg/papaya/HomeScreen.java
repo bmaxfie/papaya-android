@@ -224,7 +224,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void myCurrentStudySession() {
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession"
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
     }
 
     public void getUsersInStudySession(StudySession session) {
