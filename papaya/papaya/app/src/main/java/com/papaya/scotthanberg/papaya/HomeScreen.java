@@ -33,6 +33,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -73,7 +74,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private static ArrayList<StudySession> filtered; //arrayList holding only the sessions that are in the specified class
     private Timer oneMinute;
     private TimerTask markStudySessions;
-    String url = "google.com";
     User currentUser;
     View mapView;
 
@@ -254,6 +254,23 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, dp_to_pixels(17), dp_to_pixels(63));
         }
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+                android.app.Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                // Create and show the dialog
+                SessionMarkerDialog smd = new SessionMarkerDialog();
+                smd.setSessionId(marker.getTitle());
+                smd.show(ft, "dialog");
+                return true;
+            }
+        });
     }
 
     /**
@@ -337,7 +354,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     public void onResponse(JSONObject response) {
 
                                         try {
-                                            System.out.println(response.toString());
+                                            //System.out.println(response.toString());
                                             JSONArray arr = response.getJSONArray("sessions");
                                             for (int i = 0; i < arr.length(); i++) {
                                                 Sessions.add(new StudySession(
@@ -368,11 +385,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                     }
                                 });
-
-
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-
 
                         for (StudySession s : Sessions) {
                             if (s != null)
