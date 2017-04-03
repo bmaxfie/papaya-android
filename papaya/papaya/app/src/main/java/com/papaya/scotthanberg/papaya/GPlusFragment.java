@@ -162,21 +162,27 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     if (FBlogin == true) {
                         newJSONStudySession.put("service", "FACEBOOK");
                         service = "FACEBOOK";
+                        Profile profile = Profile.getCurrentProfile();
+                        newJSONStudySession.put("auth_option", 2);
+                        newJSONStudySession.put("username", profile.getFirstName());
+                        newJSONStudySession.put("authentication_key", profile.getId());
+                       // newJSONStudySession.put("email", profile.get)
                     } else {
                         newJSONStudySession.put("service", "GOOGLE");
                         service = "GOOGLE";
+                        newJSONStudySession.put("auth_option", 2);
+                        newJSONStudySession.put("username", personName);
+                        System.out.println("This is the username" + personName);
+                        newJSONStudySession.put("authentication_key", authentication_key);
+                        System.out.println("This is the authentication_key" + authentication_key);
+                        newJSONStudySession.put("email", personEmail);
                     }
-                    newJSONStudySession.put("auth_option", 2);
-                    newJSONStudySession.put("username", personName);
-                    System.out.println("This is the username" + personName);
-                    newJSONStudySession.put("authentication_key", authentication_key);
-                    System.out.println("This is the authentication_key" + authentication_key);
                      /* Below code is not worky
                         TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
                       String mPhoneNumber = tMgr.getLine1Number();
                        */
                     newJSONStudySession.put("phone", 5742386463l);
-                    newJSONStudySession.put("email", personEmail);
+
                 } catch (JSONException e) {
                     System.out.println("LOL you got a JSONException");
                 }
@@ -277,6 +283,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         View v = inflater.inflate(R.layout.fragment_gplus, parent, false);
         loginButton = (LoginButton) v.findViewById(R.id.loginButton);
         loginButton.setFragment(this);
+        loginButton.setReadPermissions(Arrays.asList("email"));
         callbackManager = CallbackManager.Factory.create();
         // Facebook Callback Registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -386,16 +393,17 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             //Similarly you can get the email and photourl using acct.getEmail() and  acct.getPhotoUrl()
             if (FBlogin == true) {
                 service = "FACEBOOK";
+
             } else {
                 service = "GOOGLE";
+                personName = acct.getDisplayName();
+                personGivenName = acct.getGivenName();
+                personFamilyName = acct.getFamilyName();
+                personEmail = acct.getEmail();
+                authentication_key = acct.getId();
+                personPhoto = acct.getPhotoUrl();
+                idToken = acct.getIdToken();
             }
-            personName = acct.getDisplayName();
-            personGivenName = acct.getGivenName();
-            personFamilyName = acct.getFamilyName();
-            personEmail = acct.getEmail();
-            authentication_key = acct.getId();
-            personPhoto = acct.getPhotoUrl();
-            idToken = acct.getIdToken();
             connectToDatabase();
             if (acct.getPhotoUrl() != null)
                 new LoadProfileImage(imgProfilePic).execute(acct.getPhotoUrl().toString());
