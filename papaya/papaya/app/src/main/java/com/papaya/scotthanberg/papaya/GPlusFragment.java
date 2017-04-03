@@ -28,6 +28,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
@@ -80,6 +82,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private static String personId;
     private static String authentication_key;
     private static String service;
+    private static String facebookEmail;
     private Uri personPhoto;
     private static String idToken;
     private ImageView papayaPic;
@@ -166,6 +169,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                         newJSONStudySession.put("auth_option", 2);
                         newJSONStudySession.put("username", profile.getFirstName());
                         newJSONStudySession.put("authentication_key", profile.getId());
+                        newJSONStudySession.put("email", facebookEmail);
                        // newJSONStudySession.put("email", profile.get)
                     } else {
                         newJSONStudySession.put("service", "GOOGLE");
@@ -283,12 +287,36 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         View v = inflater.inflate(R.layout.fragment_gplus, parent, false);
         loginButton = (LoginButton) v.findViewById(R.id.loginButton);
         loginButton.setFragment(this);
-        loginButton.setReadPermissions(Arrays.asList("email"));
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         callbackManager = CallbackManager.Factory.create();
         // Facebook Callback Registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                try {
+                                    facebookEmail = object.getString("email");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                /*Service = "GOOGLE";
+                                personName = acct.getDisplayName();
+                                personGivenName = acct.getGivenName();
+                                personFamilyName = acct.getFamilyName();
+                                personEmail = acct.getEmail();
+                                authentication_key = acct.getId();
+                                personPhoto = acct.getPhotoUrl();
+                                idToken = acct.getIdToken();*/
+                                // Application code
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id, name,link,birthday,first_name,gender,last_name,location,email,picture.type(large)");
+                request.setParameters(parameters);
+                request.executeAsync();
                 Toast toast = Toast.makeText(getActivity(), "Logged In", Toast.LENGTH_SHORT);
                 toast.show();
                 signInButton.setVisibility(View.GONE);
@@ -299,6 +327,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 papayaPic.setVisibility(View.GONE);
                 new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200, 200).toString());
                 updateUI();
+                connectToDatabase();
             }
 
             @Override
