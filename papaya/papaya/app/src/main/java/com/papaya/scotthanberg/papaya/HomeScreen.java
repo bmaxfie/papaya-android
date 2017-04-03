@@ -330,9 +330,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void getUsersInStudySession(StudySession session) {
-        //String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session.getSessionID() + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/91wBXfOeGxf8kOsZkG3nug==?authentication_key=1234512345123451234512345123451234512345&user_id=bNvqxLf+m6VbMx1x8OCQrw==&service=GOOGLE";
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session.getSessionID() + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
+        //String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/91wBXfOeGxf8kOsZkG3nug==?authentication_key=1234512345123451234512345123451234512345&user_id=bNvqxLf+m6VbMx1x8OCQrw==&service=GOOGLE";
 
+        
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -414,6 +415,12 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
 
+                        /* TODO callToFilterClass(Sessions, class)
+                         * alters Sessions to contain the correct values
+                         * move all this to another method
+                         *
+                         */
+
                         for (StudySession s : Sessions) {
                             if (s != null) {
                                 if (s.getLocation() != null) {
@@ -422,7 +429,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                             .title(s.getSessionID())
                                     );
                                 }
-                                getUsersInStudySession(s);
                             }
 
                         }
