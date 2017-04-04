@@ -225,13 +225,52 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void updateMarkers() {
+        getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
+
         for (StudySession s : filtered) {
             if (s != null)
+                getUsersInStudySession(s);
                 if (s.getLocation() != null) {
                     mMap.addMarker(new MarkerOptions()
                             .position(s.getLocation()));
                 }
         }
+    }
+
+    public void myCurrentStudySession() {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
+    }
+
+    public void getUsersInStudySession(StudySession session) {
+        //String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session.getSessionID() + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111/sessions/91wBXfOeGxf8kOsZkG3nug==";/*?user_id=bNvqxLf+m6VbMx1x8OCQrw==&service=GOOGLE&authentication_key=1234512345123451234512345123451234512345";*/
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    System.out.println(response.toString());
+                                    JSONArray arr = response.getJSONArray("users");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        System.out.println(arr.getJSONObject(i).get("user_id").toString());
+                                        System.out.println(arr.getJSONObject(i).get("username").toString());
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO Auto-generated method stub
+                             if (true)
+                                 System.out.println("Test");
+                             }
+                        });
     }
 
     /**
@@ -334,6 +373,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void onLocationChanged(Location location) {
         myLatitude = location.getLatitude();
         myLongitude = location.getLongitude();
+
         /*
         * Use the below for debugging if need be
         latitudeText.setText("Latitude :" + String.valueOf(myLatitude));

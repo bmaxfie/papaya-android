@@ -37,6 +37,7 @@ public class CreateNewSession extends AppCompatActivity {
     private Double myLongitude;
     
     private EditText classID, timeDuration;
+    private ArrayList<StudySession> Sessions;
 
 
     @Override
@@ -44,16 +45,11 @@ public class CreateNewSession extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_session);
 
+        Menu menu = new Menu(this);
+
         classID = (EditText) findViewById(R.id.editText3);
         timeDuration = (EditText) findViewById(R.id.editText2);
-        dropDown = (RelativeLayout) findViewById(R.id.dropDown);
-        horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
-        backdrop = (View) findViewById(R.id.horizontalBackdrop);
-        newStudySession = (Button) findViewById(R.id.NewStudySession);
-        sortByClass = (Button) findViewById(R.id.SortByClass);
-        manageClasses = (Button) findViewById(R.id.ManageClasses);
-        findFriends = (Button) findViewById(R.id.FindFriends);
-        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+
 
         if (savedInstanceState != null) {
             AccountData.data.clear();
@@ -72,33 +68,8 @@ public class CreateNewSession extends AppCompatActivity {
         Intent studySession = getIntent(); // gets the previously created intent
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
-
     }
 
-
-
-
-    public void openMenu(View view) {
-        if (dropDown.getVisibility()==View.VISIBLE) {
-            dropDown.setVisibility(View.GONE);
-            horizontalScroll.setVisibility(View.VISIBLE);
-            backdrop.setVisibility(View.VISIBLE);
-            newStudySession.setVisibility(View.GONE);
-            sortByClass.setVisibility(View.GONE);
-            manageClasses.setVisibility(View.GONE);
-            findFriends.setVisibility(View.GONE);
-            joinNewClass.setVisibility(View.GONE);
-        } else {
-            dropDown.setVisibility(View.VISIBLE);
-            backdrop.setVisibility(View.GONE);
-            horizontalScroll.setVisibility(View.GONE);
-            newStudySession.setVisibility(View.VISIBLE);
-            sortByClass.setVisibility(View.VISIBLE);
-            manageClasses.setVisibility(View.VISIBLE);
-            findFriends.setVisibility(View.VISIBLE);
-            joinNewClass.setVisibility(View.VISIBLE);
-        }
-    }
 
 
     public void addStudySession(View view) {
