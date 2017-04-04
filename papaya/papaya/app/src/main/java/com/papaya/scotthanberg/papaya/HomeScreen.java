@@ -32,6 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -329,7 +330,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
-    public boolean checkIfUsersInStudySessionAreFriends() {
+    public boolean checkIfUsersInStudySessionAreFriends(String session_id) {
         // Get a list of friends (an array of userid)
         final ArrayList<String> friends = new ArrayList<String>();
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/friends/" + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
@@ -352,15 +353,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
                         if(true)
                             System.out.println("Test");
                     }
                 });
 
         final Boolean[] thereAreFriends = {false};
-        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/currentsession/" + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
-        
+        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session_id + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
         JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -453,10 +452,19 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         for (StudySession s : Sessions) {
                             if (s != null) {
                                 if (s.getLocation() != null) {
-                                    mMap.addMarker(new MarkerOptions()
-                                            .position(s.getLocation())
-                                            .title(s.getSessionID())
-                                    );
+                                    if (checkIfUsersInStudySessionAreFriends(s.getSessionID()) == false){
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(s.getLocation())
+                                                .title(s.getSessionID())
+                                        );
+                                    } else {
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(s.getLocation())
+                                                .title(s.getSessionID())
+                                                .icon(BitmapDescriptorFactory
+                                                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                        );
+                                    }
                                 }
                             }
 
