@@ -290,6 +290,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                buttonSessionInfo();
+
+                /*
+                //OLD DIALOG WAY OF JOINING A SESSION
                 android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
                 android.app.Fragment prev = getFragmentManager().findFragmentByTag("dialog");
                 if (prev != null) {
@@ -301,6 +305,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 SessionMarkerDialog smd = new SessionMarkerDialog();
                 smd.setSessionId(marker.getTitle());
                 smd.show(ft, "dialog");
+                */
                 return true;
             }
         });
@@ -494,5 +499,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void buttonMyFriends(View view) {
         Intent friendsList = new Intent(this, FriendsList.class);
         startActivity(friendsList);
+    }
+    public void buttonSessionInfo() {
+        Intent sessionInfo = new Intent(this, SessionInfo.class);
+        startActivity(sessionInfo);
     }
 }

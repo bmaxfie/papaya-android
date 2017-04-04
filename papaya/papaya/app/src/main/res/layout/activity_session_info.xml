@@ -28,7 +28,7 @@
         android:background="@android:color/white"
         android:layout_marginTop="1dp">
         <TextView
-            android:text="New Study Session"
+            android:text="Session Info"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +38,7 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
@@ -47,87 +48,78 @@
         android:layout_marginTop="1dp"
         android:elevation="1sp">
 
-
-
         <TextView
-            android:text="Enter the duration:"
-            android:id="@+id/durationText"
-            android:textStyle="bold"
+            android:id="@+id/descriptionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="28dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="24dp" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="23dp"
+            android:paddingLeft="25dp"
+            android:text="Session Description:"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="time"
-            android:ems="10"
-            android:layout_marginTop="10dp"
-            android:id="@+id/editText2"
-            android:hint="hours:minutes"
-            android:layout_below="@+id/durationText"
-            android:layout_alignLeft="@+id/durationText"
-            android:layout_alignStart="@+id/durationText"
-            android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp" />
+        <ScrollView
+            android:id="@+id/scrollDescription"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/descriptionTitle"
+            android:layout_marginTop="13dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\nDescription goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\nDescription goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\nDescription goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\n" />
+        </ScrollView>
 
         <TextView
+            android:id="@+id/peopleTitle"
+            android:layout_below="@+id/scrollDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enter Class:"
-            android:id="@+id/classText"
-            android:textStyle="bold"
+            android:layout_marginTop="23dp"
+            android:paddingLeft="25dp"
+            android:paddingBottom="15dp"
+            android:text="People in this session:"
             android:textSize="18sp"
-            android:layout_below="@+id/editText2"
-            android:layout_marginLeft="28dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="12dp"/>
+            android:textStyle="bold" />
 
-        <!-- Look into spinners?? -->
-        <EditText
-            android:layout_width="wrap_content"
+        <ScrollView
+            android:id="@+id/people"
+            android:layout_below="@+id/peopleTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:ems="10"
-            android:layout_marginTop="10dp"
-            android:id="@+id/editText3"
-            android:hint="CS307"
-            android:layout_below="@+id/classText"
-            android:layout_alignLeft="@+id/editText2"
-            android:layout_alignStart="@+id/editText2" />
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:paddingBottom="48dp">
 
-        <TextView
-            android:id="@+id/descriptionText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter Description:"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_below="@+id/editText3"
-            android:layout_marginLeft="28dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="12dp"/>
+            <LinearLayout
+                android:id="@+id/peopleContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:layout_marginTop="10dp"
-            android:id="@+id/editText4"
-            android:hint="Please enter a description of your study session here"
-            android:layout_below="@+id/descriptionText"
-            android:layout_alignLeft="@+id/editText3"
-            android:layout_alignStart="@+id/editText3" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
 
         <Button
-            android:text="Create Session"
+            android:text="Join Session"
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -139,6 +131,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="0dp"
             android:onClick="addStudySession"/>
+
+
 
 
     </RelativeLayout>
