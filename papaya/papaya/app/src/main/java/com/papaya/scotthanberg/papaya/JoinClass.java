@@ -32,10 +32,16 @@ public class JoinClass extends AppCompatActivity {
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
-        if (savedInstanceState != null)
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
-        else
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        if (savedInstanceState != null) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        }
+        else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        }
     }
 
 
@@ -92,8 +98,10 @@ public class JoinClass extends AppCompatActivity {
      */
     @Override
     public void onRestoreInstanceState(Bundle savedInstancestate) {
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
-
         super.onRestoreInstanceState(savedInstancestate);
+
+        AccountData.data.clear();
+        AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstancestate.getSerializable(AccountData.ACCOUNT_DATA));
+        //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
 }

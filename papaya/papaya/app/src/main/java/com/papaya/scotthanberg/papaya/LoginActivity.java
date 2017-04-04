@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -30,10 +31,18 @@ public class LoginActivity extends AppCompatActivity {
                     .commit();
         }
 
-        if (savedInstanceState != null)
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
-        else
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        if (savedInstanceState != null) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        }
+        else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        }
+
+        Log.d("AccountData", "username: " + AccountData.getUsername());
     }
 
 
@@ -52,10 +61,10 @@ public class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
-
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
+
+        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
     }
 
     /**
@@ -70,9 +79,10 @@ public class LoginActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstancestate) {
         super.onRestoreInstanceState(savedInstancestate);
 
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+        AccountData.data.clear();
+        AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA));
+        //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
 
-    // TODO: Remove on Resume callback and put it in Create. If in onCreate, check for null parameter.
 
 }

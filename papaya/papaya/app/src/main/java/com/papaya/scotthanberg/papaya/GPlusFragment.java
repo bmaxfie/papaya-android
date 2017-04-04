@@ -1,6 +1,8 @@
 package com.papaya.scotthanberg.papaya;
 
+import com.papaya.scotthanberg.papaya.AccountData;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +54,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -73,13 +77,13 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private ProgressDialog mProgressDialog;
     private ImageView imgProfilePic;
     private GoogleSignInAccount acct;
-    private static String personName;
+    /*private static String personName;
     private static String personGivenName;
     private static String personFamilyName;
     private static String personEmail;
     private static String personId;
     private static String authentication_key;
-    private static String service;
+    private static String service;*/
     private Uri personPhoto;
     private static String idToken;
     private ImageView papayaPic;
@@ -96,7 +100,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
     private boolean signedIn = false;
 
 
-    
     private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
         public void onSuccess(Sharer.Result result) {
@@ -120,6 +123,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
         super.onCreate(savedInstanceState);
         //Facebook SDK init..
         FacebookSdk.sdkInitialize(getActivity());
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -160,28 +164,34 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 final JSONObject newJSONStudySession = new JSONObject();
                 try {
                     if (FBlogin == true) {
-                        newJSONStudySession.put("service", "FACEBOOK");
-                        service = "FACEBOOK";
                         Profile profile = Profile.getCurrentProfile();
+                        AccountData.setUsername(profile.getName());
+                        AccountData.setAuthKey(profile.getId());
+                        AccountData.setService("FACEBOOK");
+                        newJSONStudySession.put("service", "FACEBOOK");
                         newJSONStudySession.put("auth_option", 2);
-                        newJSONStudySession.put("username", profile.getFirstName());
-                        newJSONStudySession.put("authentication_key", profile.getId());
+                        newJSONStudySession.put("username", AccountData.getUsername());
+                        newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
                        // newJSONStudySession.put("email", profile.get)
                     } else {
+                        AccountData.setService("GOOGLE");
                         newJSONStudySession.put("service", "GOOGLE");
-                        service = "GOOGLE";
                         newJSONStudySession.put("auth_option", 2);
-                        newJSONStudySession.put("username", personName);
-                        System.out.println("This is the username" + personName);
-                        newJSONStudySession.put("authentication_key", authentication_key);
-                        System.out.println("This is the authentication_key" + authentication_key);
-                        newJSONStudySession.put("email", personEmail);
+                        newJSONStudySession.put("username", AccountData.getUsername());
+                        newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
+                        newJSONStudySession.put("email", AccountData.getEmail());
                     }
-                     /* Below code is not worky
-                        TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-                      String mPhoneNumber = tMgr.getLine1Number();
-                       */
-                    newJSONStudySession.put("phone", 5742386463l);
+                     /* Below code is not worky */
+                    TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                    String mPhoneNumber = tMgr.getLine1Number();
+                    try {
+                        long phone;
+                        if ((phone = Long.parseLong(mPhoneNumber)) != 0)
+                            AccountData.setPhone(new Long(phone));
+                    } catch (NumberFormatException e) {
+                        AccountData.setPhone(new Long(0));
+                    }
+                    newJSONStudySession.put("phone", AccountData.getPhone());
 
                 } catch (JSONException e) {
                     System.out.println("LOL you got a JSONException");
@@ -195,7 +205,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
                     System.out.println("\n\n\n" + response.toString() + "\n\n\n");
                     userCode.set(response.getInt("code"));
-                    personId = response.getString("user_id");
+                    AccountData.setUserID(response.getString("user_id"));
                     System.out.println("error checking");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -211,7 +221,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                     MySingleton.getInstance(getContext()).addToRequestQueue(jsObjRequestPOST);
                     try {
                         JSONObject response = future1.get();   // This will block
-                        personId = response.getString("user_id");
+                        AccountData.setUserID(response.getString("user_id"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch(ExecutionException e) {
@@ -392,15 +402,13 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             //      mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //Similarly you can get the email and photourl using acct.getEmail() and  acct.getPhotoUrl()
             if (FBlogin == true) {
-                service = "FACEBOOK";
+                AccountData.setService("FACEBOOK");
 
             } else {
-                service = "GOOGLE";
-                personName = acct.getDisplayName();
-                personGivenName = acct.getGivenName();
-                personFamilyName = acct.getFamilyName();
-                personEmail = acct.getEmail();
-                authentication_key = acct.getId();
+                AccountData.setService("GOOGLE");
+                AccountData.setUsername(acct.getDisplayName());
+                AccountData.setEmail(acct.getEmail());
+                AccountData.setAuthKey(acct.getId());
                 personPhoto = acct.getPhotoUrl();
                 idToken = acct.getIdToken();
             }
@@ -508,34 +516,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
             }
         }
-    }
-
-    public static String getPersonId() {
-        return personId;
-    }
-
-    public static String getAuthentication_key() {
-        return authentication_key;
-    }
-
-    public static String getPersonEmail() {
-        return personEmail;
-    }
-
-    public static String getPersonFamilyName() {
-        return personFamilyName;
-    }
-
-    public static String getPersonGivenName() {
-        return personGivenName;
-    }
-
-    public static String getPersonName() {
-        return personName;
-    }
-
-    public static String getService() {
-        return service;
     }
 }
 

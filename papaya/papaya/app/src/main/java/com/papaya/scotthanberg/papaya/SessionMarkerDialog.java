@@ -54,8 +54,8 @@ public class SessionMarkerDialog extends DialogFragment {
         JSONObject info = new JSONObject();
         try {
             info.put("user_id", "bNvqxLf+m6VbMx1x8OCQrw==");
-            info.put("authentication_key",GPlusFragment.getAuthentication_key());
-            info.put("service", GPlusFragment.getService());
+            info.put("authentication_key",AccountData.getAuthKey());
+            info.put("service", AccountData.getService());
         } catch (JSONException e) {
             e.printStackTrace();
         }

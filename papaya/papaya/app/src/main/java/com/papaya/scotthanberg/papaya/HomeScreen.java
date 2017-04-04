@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -102,10 +103,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        if (savedInstanceState != null)
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
-        else
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        if (savedInstanceState != null) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        }
+        else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        }
+        Log.d("AccountData", "username: " + AccountData.getUsername());
 
         locationRequest = new LocationRequest();
         locationRequest.setInterval(60 * 1000); // This pulls once every minute
@@ -352,7 +360,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         // first delete everything
                         mMap.clear();
                         // then add everything from the database
-                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
+                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
                         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                     @Override
@@ -475,6 +483,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
 
+        Log.d("HomeScreen", "onSaveInstanceState() called!");
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
@@ -485,13 +494,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
      * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
      * other state here, possibly usable after onStart() has completed.
      * The savedInstanceState Bundle is same as the one used in onCreate().
-     * @param savedInstancestate - supplied by Android OS
+     * @param savedInstanceState - supplied by Android OS
      */
     @Override
-    public void onRestoreInstanceState(Bundle savedInstancestate) {
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
-        super.onRestoreInstanceState(savedInstancestate);
+        Log.d("HomeScreen", "onRestoreInstanceState() called!");
+
+        AccountData.data.clear();
+        AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+        //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
     public void buttonSessionInfo() {
         Intent sessionInfo = new Intent(this, SessionInfo.class);

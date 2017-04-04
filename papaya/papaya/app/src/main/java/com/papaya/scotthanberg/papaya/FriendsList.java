@@ -39,10 +39,16 @@ public class FriendsList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_list);
 
-        if (savedInstanceState != null)
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
-        else
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        if (savedInstanceState != null) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        }
+        else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        }
 
         dropDown = (RelativeLayout) findViewById(R.id.dropDown);
         horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
@@ -153,12 +159,14 @@ public class FriendsList extends AppCompatActivity {
      * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
      * other state here, possibly usable after onStart() has completed.
      * The savedInstanceState Bundle is same as the one used in onCreate().
-     * @param savedInstancestate - supplied by Android OS
+     * @param savedInstanceState - supplied by Android OS
      */
     @Override
-    public void onRestoreInstanceState(Bundle savedInstancestate) {
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
-        super.onRestoreInstanceState(savedInstancestate);
+        AccountData.data.clear();
+        AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+        //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
 }

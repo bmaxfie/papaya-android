@@ -55,18 +55,27 @@ public class CreateNewSession extends AppCompatActivity {
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
-        if (savedInstanceState != null)
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
-        else
-            AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
-
+        if (savedInstanceState != null) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        }
+        else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        }
         // Load data from AccountData into class variables:
+
+        Log.d("AccountData", "username: " + AccountData.getUsername());
 
         Intent studySession = getIntent(); // gets the previously created intent
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
 
     }
+
+
 
 
     public void openMenu(View view) {
@@ -101,14 +110,14 @@ public class CreateNewSession extends AppCompatActivity {
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
-            newJSONStudySession.put("user_id", GPlusFragment.getPersonId());
+            newJSONStudySession.put("user_id", AccountData.getUserID());
             newJSONStudySession.put("duration", 0.0);
             newJSONStudySession.put("location_desc", "Location Description");
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
             newJSONStudySession.put("description", "This will be a description");
             newJSONStudySession.put("service", AccountData.getService());
-            newJSONStudySession.put("authentication_key", GPlusFragment.getPersonId());
+            newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
             newJSONStudySession.put("sponsored", true);
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
@@ -177,10 +186,10 @@ public class CreateNewSession extends AppCompatActivity {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
-
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
+
+        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
     }
 
     /**
@@ -189,13 +198,15 @@ public class CreateNewSession extends AppCompatActivity {
      * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
      * other state here, possibly usable after onStart() has completed.
      * The savedInstanceState Bundle is same as the one used in onCreate().
-     * @param savedInstancestate - supplied by Android OS
+     * @param savedInstanceState - supplied by Android OS
      */
     @Override
-    public void onRestoreInstanceState(Bundle savedInstancestate) {
-        AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
-        super.onRestoreInstanceState(savedInstancestate);
+        AccountData.data.clear();
+        AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.get(AccountData.ACCOUNT_DATA));
+        //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
 
 }
