@@ -305,7 +305,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                buttonSessionInfo();
+                String sessionId = marker.getTitle();
+                buttonSessionInfo(sessionId); //todo: we need to send the correct session id to the intent
 
                 /*
                 //OLD DIALOG WAY OF JOINING A SESSION
@@ -321,6 +322,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 smd.setSessionId(marker.getTitle());
                 smd.show(ft, "dialog");
                 */
+
                 return true;
             }
         });
@@ -592,6 +594,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         startActivity(joinClass);
     }
 
+    public void buttonSessionInfo(String sessionId) {
+        Intent sessionInfo = new Intent(this, SessionInfo.class);
+        sessionInfo.putExtra("sessionId",sessionId);
+        sessionInfo.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        startActivity(sessionInfo);
+    }
+
     /**
      * Android callback
      * Invoked when the activity may be temporarily destroyed, save the instance state here.
@@ -624,8 +633,5 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
-    public void buttonSessionInfo() {
-        Intent sessionInfo = new Intent(this, SessionInfo.class);
-        startActivity(sessionInfo);
-    }
+
 }

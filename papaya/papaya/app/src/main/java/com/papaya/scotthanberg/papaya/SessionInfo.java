@@ -21,9 +21,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SessionInfo extends AppCompatActivity {
 
+    String sessionId;
+    String description;
     ArrayList<String> people = new ArrayList<String>();
 
     @Override
@@ -35,11 +40,25 @@ public class SessionInfo extends AppCompatActivity {
         Menu menu = new Menu(SessionInfo.this);
 
         Intent studySession = getIntent(); // gets the previously created intent
+        this.sessionId = studySession.getStringExtra("sessionId");
 
-        getUsers();
+        if (savedInstanceState != null) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
+        }
+        else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
+            AccountData.data.clear();
+            AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
+            //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
+        }
+
+        //todo: call /classes/{class-id}/sessions/{session-id} GET to get the information about the class
+        getInfo();
     }
 
-    private void getUsers() {
+
+    private void getInfo() {
         //TODO: replace the hard coding
         String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends?" +
                 "user_id="+ "mX9hzcEETRVfVWqD6nKz5A==" +"&" + //GPlusFragment.getPersonId();
@@ -78,7 +97,7 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void createPeopleTextViews() {
-        //testing:
+        //testing: todo: remove this
         for(int i = 0; i < 20; i++) {
             people.add("Person " + i);
         }
@@ -104,6 +123,7 @@ public class SessionInfo extends AppCompatActivity {
             myText.setId(counter);
             sideways.addView(myText, lp);
 
+            //todo: if they are already a friend, do not add button
             //put button next to name
             Button button = new Button(this);
             button.setText("Add Friend");
@@ -126,6 +146,50 @@ public class SessionInfo extends AppCompatActivity {
 
 
         }
+    }
+
+    public void buttonAddUserToSession(View view) {
+        addUserToSession(this.sessionId);
+        backToHome(view);
+    }
+
+    public void addUserToSession(String sessionId) {
+        // I hardcoded my user_id only because we're going to have to change it anyway with the new Data Manager
+        JSONObject info = new JSONObject();
+        try {
+            info.put("user_id", "GXuFK5J9RLm1SgueLKJCFg==");
+            info.put("authentication_key",AccountData.getAuthKey());
+            info.put("service", AccountData.getService());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println(sessionId);
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + sessionId;
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response);
+                        //todo: toast success?
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
+    }
+
+    public void backToHome(View view) {
+        Intent home = new Intent(this, HomeScreen.class);
+        home.putExtra("from", "SessionInfo");
+        home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        startActivity(home);
     }
 
 }
