@@ -32,6 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -374,6 +375,66 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
+    public boolean checkIfUsersInStudySessionAreFriends(String session_id) {
+        // Get a list of friends (an array of userid)
+        final ArrayList<String> friends = new ArrayList<String>();
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/friends/" + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response.toString());
+                            JSONArray arr = response.getJSONArray("friends");
+                            for (int i = 0; i < arr.length(); i++) {
+                                friends.add(arr.getJSONObject(i).get("user_id").toString());
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if(true)
+                            System.out.println("Test");
+                    }
+                });
+
+        final Boolean[] thereAreFriends = {false};
+        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session_id + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
+        JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response.toString());
+                            JSONArray arr = response.getJSONArray("users");
+                            for (int i = 0; i < arr.length(); i++) {
+                                if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
+                                    thereAreFriends[0] = true;
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        if(true)
+                            System.out.println("Test");
+                    }
+                });
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
+        return thereAreFriends[0];
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -427,14 +488,31 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
 
+                        /* TODO callToFilterClass(Sessions, class)
+                         * alters Sessions to contain the correct values
+                         * move all this to another method
+                         *
+                         */
+
                         for (StudySession s : Sessions) {
-                            if (s != null)
+                            if (s != null) {
                                 if (s.getLocation() != null) {
-                                    mMap.addMarker(new MarkerOptions()
-                                            .position(s.getLocation())
-                                            .title(s.getSessionID())
-                                    );
+                                    if (checkIfUsersInStudySessionAreFriends(s.getSessionID()) == false){
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(s.getLocation())
+                                                .title(s.getSessionID())
+                                        );
+                                    } else {
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(s.getLocation())
+                                                .title(s.getSessionID())
+                                                .icon(BitmapDescriptorFactory
+                                                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                        );
+                                    }
                                 }
+                            }
+
                         }
 
                     }
