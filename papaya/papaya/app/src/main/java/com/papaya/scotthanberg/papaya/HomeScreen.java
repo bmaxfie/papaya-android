@@ -329,21 +329,19 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
-    public void getUsersInStudySession(StudySession session) {
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session.getSessionID() + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
-        //String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/91wBXfOeGxf8kOsZkG3nug==?authentication_key=1234512345123451234512345123451234512345&user_id=bNvqxLf+m6VbMx1x8OCQrw==&service=GOOGLE";
-
-        
+    public boolean checkIfUsersInStudySessionAreFriends() {
+        // Get a list of friends (an array of userid)
+        final ArrayList<String> friends = new ArrayList<String>();
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/friends/" + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             System.out.println(response.toString());
-                            JSONArray arr = response.getJSONArray("users");
+                            JSONArray arr = response.getJSONArray("friends");
                             for (int i = 0; i < arr.length(); i++) {
-                                System.out.println(arr.getJSONObject(i).get("user_id").toString());
-                                System.out.println(arr.getJSONObject(i).get("username").toString());
+                                friends.add(arr.getJSONObject(i).get("user_id").toString());
                             }
 
                         } catch (JSONException e) {
@@ -359,7 +357,38 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             System.out.println("Test");
                     }
                 });
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
+        final Boolean[] thereAreFriends = {false};
+        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/currentsession/" + "?authentication_key=" + GPlusFragment.getAuthentication_key() + "&user_id=" + GPlusFragment.getPersonId() + "&service=" + GPlusFragment.getService();
+        
+        JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response.toString());
+                            JSONArray arr = response.getJSONArray("users");
+                            for (int i = 0; i < arr.length(); i++) {
+                                if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
+                                    thereAreFriends[0] = true;
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        if(true)
+                            System.out.println("Test");
+                    }
+                });
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
+        return thereAreFriends[0];
     }
 
     @Override
