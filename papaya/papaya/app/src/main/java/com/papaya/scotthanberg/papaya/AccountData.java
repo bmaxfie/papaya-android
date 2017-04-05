@@ -1,7 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,7 +21,8 @@ public class AccountData
         USERNAME,
         EMAIL,
         PHONE,
-        AUTH_KEY
+        AUTH_KEY,
+        SERVICE_USER_ID
     }
 
     public static final HashMap<AccountDataType, Object> data = new HashMap<AccountDataType, Object>();
@@ -57,6 +56,7 @@ public class AccountData
     public static String getAuthKey() {
         return (String) data.get(AccountDataType.AUTH_KEY);
     }
+    public static String getServiceUserId() {return (String) data.get(AccountDataType.SERVICE_USER_ID); }
 
 
     /*
@@ -87,5 +87,6 @@ public class AccountData
         data.put(AccountDataType.PHONE, phone);
     }
     public static void setAuthKey(String key) { data.put(AccountDataType.AUTH_KEY, key); }
+    public static void setServiceUserId(String service_id) { data.put(AccountDataType.SERVICE_USER_ID, service_id); }
 
 }

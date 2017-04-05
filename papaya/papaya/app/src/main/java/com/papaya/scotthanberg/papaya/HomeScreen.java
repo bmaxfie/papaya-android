@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -46,6 +47,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -173,6 +177,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void createClassButtons() {
+        setListOfClasses();
         LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -189,11 +194,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
         ll.addView(all, lp);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < AccountData.getClasses().size(); i++) {
+            ArrayList<Class> classes = AccountData.getClasses();
+            Class currentClass = classes.get(i);
             Button myButton = new Button(this);
             //TODO:change this to getString method accessing Lambda sending it index: i
-            myButton.setText("Class" + i);
-            myButton.setTag("Class" + i);
+            myButton.setText(currentClass.getClassName());
+            myButton.setTag(currentClass.getClassName());
             myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Object x = v.getTag();
@@ -646,5 +653,35 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void buttonSessionInfo() {
         Intent sessionInfo = new Intent(this, SessionInfo.class);
         startActivity(sessionInfo);
+    }
+    public void setListOfClasses() {
+        final ArrayList<Class> classList = new ArrayList<Class>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, future, future);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
+                    JSONArray classes = response.getJSONArray("classes");
+                    for (int i = 0; i < classes.length(); i++) {
+                        JSONObject jsobj = classes.getJSONObject(i);
+                        classList.add(new Class(jsobj.getString("class_id"), jsobj.getString("classname"), jsobj.getString("descriptions"), null));
+                    }
+                } catch (JSONException e) {
+                } catch (ExecutionException e) {
+                } catch (TimeoutException e) {
+                } catch (InterruptedException e) {
+                }
+                // Access the RequestQueue through your singleton class
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+            }
+        });
+        ArrayList<Class> classListCopy = new ArrayList<Class>();
+        classListCopy.addAll(classList);
+        AccountData.setClasses(classList);
     }
 }

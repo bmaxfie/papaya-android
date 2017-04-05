@@ -1,6 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import com.papaya.scotthanberg.papaya.AccountData;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -56,7 +55,6 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -437,9 +435,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 AccountData.setService("GOOGLE");
                 AccountData.setUsername(acct.getDisplayName());
                 AccountData.setEmail(acct.getEmail());
-                AccountData.setAuthKey(acct.getId());
+                AccountData.setAuthKey(acct.getIdToken());
                 personPhoto = acct.getPhotoUrl();
-                idToken = acct.getIdToken();
             }
             connectToDatabase();
             if (acct.getPhotoUrl() != null)
