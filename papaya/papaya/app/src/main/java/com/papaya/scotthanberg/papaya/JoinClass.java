@@ -10,9 +10,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 
 import org.json.JSONObject;
 
@@ -55,20 +54,11 @@ public class JoinClass extends AppCompatActivity {
 
     public void joinTheClass(View view) {
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&access_key=" + edit.getText().toString();
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response);
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
+                (Request.Method.POST, url, null, future, future);
+    
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
 
