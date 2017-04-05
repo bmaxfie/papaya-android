@@ -90,6 +90,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private View backdrop;
     private HorizontalScrollView horizontalScroll;
     private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
+    private String currentStudySession;
 
 
     @Override
@@ -246,26 +247,49 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void myCurrentStudySession() {
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey();
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            response.getString("current_session_id");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey();;
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                final JSONObject newJSONStudySession = new JSONObject();
+                JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
+                        (Request.Method.GET, url, newJSONStudySession, future, future);
+                // Access the RequestQueue through your singleton class.
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
+                    currentStudySession = response.getString("current_session_id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                } catch (InterruptedException e) {
+                } catch (TimeoutException e) {
+                    System.out.println(e.toString());
+                }
+                currentStudySession = "0vqPQEBj7omHegXN8wwmLA==";
+                for (int i =0; i< Sessions.size(); i++) {
+                    if (Sessions.get(i).getSessionID().equals(currentStudySession)) {
+                        StudySession current = Sessions.get(i);
+                        Location locationA = new Location("point A");
+                        Location locationB = new Location("point B");
+                        locationA.setLatitude(myLatitude);
+                        locationA.setLongitude(myLongitude);
+                        locationB.setLatitude(current.getLocation().latitude);
+                        locationB.setLongitude(current.getLocation().longitude);
+                        float distance = locationA.distanceTo(locationB);
+                        if (distance >= 5) {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast leaving = Toast.makeText(getApplicationContext(), "You are leaving study session area", Toast.LENGTH_SHORT);
+                                    leaving.show();
+                            }
+                            });
                         }
                     }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if(true)
-                            System.out.println("Test");
-                    }
-                });
+                }
+            }
+        }).start();
     }
 
     public void getUsersInStudySession(StudySession session) {
@@ -400,7 +424,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void onLocationChanged(Location location) {
         myLatitude = location.getLatitude();
         myLongitude = location.getLongitude();
-
+        myCurrentStudySession();
         /*
         * Use the below for debugging if need be
         latitudeText.setText("Latitude :" + String.valueOf(myLatitude));

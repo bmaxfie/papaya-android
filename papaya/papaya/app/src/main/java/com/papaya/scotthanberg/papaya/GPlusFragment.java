@@ -184,14 +184,17 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                         newJSONStudySession.put("email", AccountData.getEmail());
                     }
                      /* Below code is not worky */
-                    TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-                    String mPhoneNumber = tMgr.getLine1Number();
                     try {
+                        TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                        String mPhoneNumber = tMgr.getLine1Number();
                         long phone;
                         if ((phone = Long.parseLong(mPhoneNumber)) != 0)
                             AccountData.setPhone(new Long(phone));
                     } catch (NumberFormatException e) {
                         AccountData.setPhone(new Long(0));
+                    } catch (Exception i) {
+                        AccountData.setPhone(new Long(0));
+                        i.printStackTrace();
                     }
                     newJSONStudySession.put("phone", AccountData.getPhone());
 
