@@ -13,6 +13,7 @@ public class AccountData
     public static final String ACCOUNT_DATA = "ACCOUNT_DATA";
 
     public enum AccountDataType {
+        //todo: add arraylist study sessions that is used a lot in Homescreen.java
         CLASSES,
         FRIENDS,
         CURRENT_SESSION,

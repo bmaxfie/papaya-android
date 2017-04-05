@@ -315,7 +315,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             public boolean onMarkerClick(Marker marker) {
                 StudySession sess = (StudySession)marker.getTag();
                 AccountData.setTappedSession((StudySession)marker.getTag());
-                buttonSessionInfo(); //todo: we need to send the correct session id to the intent
+                buttonSessionInfo();
 
                 /*
                 //OLD DIALOG WAY OF JOINING A SESSION
@@ -471,7 +471,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     public void run() {
                         // first delete everything
                         mMap.clear();
-                        // then add everything from the database
+                        // then add sessions and classes from the database
                         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
                                 + AccountData.getAuthKey()
                                 + "&user_id=" + AccountData.getUserID()
@@ -483,13 +483,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     public void onResponse(JSONObject response) {
 
                                         try {
-                                            //System.out.println(response.toString());
+                                            //update the arrayList Sessions and corresponding classes
+                                            Sessions.clear();
+                                            ArrayList<Class> classes = new ArrayList<Class>();
+                                            ArrayList<StudySession> temp = new ArrayList<StudySession>();
                                             JSONArray arr = response.getJSONArray("classes");
                                             for (int i = 0; i < arr.length(); i++) {
                                                 JSONObject sessionsObject = arr.getJSONObject(i);
                                                 JSONArray sessionsArray = sessionsObject.getJSONArray("sessions");
                                                 for (int j = 0; j < sessionsArray.length(); j++) {
-                                                    Sessions.add(new StudySession(
+                                                    //adds sessions to the temp arraylist
+                                                    temp.add(new StudySession(
                                                             sessionsArray.getJSONObject(j).get("duration").toString(),
                                                             sessionsArray.getJSONObject(j).get("location_long").toString(),
                                                             sessionsArray.getJSONObject(j).get("start_time").toString(),
@@ -501,14 +505,24 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                                             sessionsArray.getJSONObject(j).get("location_lat").toString()
                                                             )
                                                     );
+                                                } //end loop that traverses all sessions in a class
+
+                                                //populates the classes arrayList one at a time
+                                                Class tempClass = new Class(
+                                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"),sessionsObject.getString("descriptions"), temp
+                                                );
+                                                classes.add(tempClass);
+
+                                                //push temp onto Sessions variable
+                                                for (int a = temp.size() - 1; a > 0; a--) {
+                                                    temp.get(a).setClassObject(tempClass);
+                                                    Sessions.add(temp.get(a)); //adds the study sesssion to the variable
+                                                    temp.remove(a); //clears temp for next set of sessions
                                                 }
-                                            }
+                                            } //end loop traversing all classes
 
-                                        /*
-                                        System.out.println(response.toString());
-                                        JSONArray arr = response.getJSONArray("sessions");
-                                        */
-
+                                            //add classes arrayList to the AccountData
+                                            AccountData.setClasses(classes);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
