@@ -1,5 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,15 +8,17 @@ import java.util.HashMap;
  * Created by bmaxf on 3/30/2017.
  */
 
-public class AccountData
+public class AccountData implements Serializable
 {
 
     public static final String ACCOUNT_DATA = "ACCOUNT_DATA";
 
     public enum AccountDataType {
+        //todo: add arraylist study sessions that is used a lot in Homescreen.java
         CLASSES,
         FRIENDS,
         CURRENT_SESSION,
+        TAPPED_SESSION,
         SERVICE,
         USERID,
         USERNAME,
@@ -41,8 +44,11 @@ public class AccountData
     public static String getUserID() {
         return (String) data.get(AccountDataType.USERID);
     }
-    public static String getCurrentSession() {
-        return (String) data.get(AccountDataType.CURRENT_SESSION);
+    public static StudySession getCurrentSession() {
+        return (StudySession) data.get(AccountDataType.CURRENT_SESSION);
+    }
+    public static StudySession getTappedSession() {
+        return (StudySession) data.get(AccountDataType.TAPPED_SESSION);
     }
     public static String getUsername() {
         return (String) data.get(AccountDataType.USERNAME);
@@ -76,6 +82,9 @@ public class AccountData
     }
     public static void setCurrentSession(String currentSession) {
         data.put(AccountDataType.CURRENT_SESSION, currentSession);
+    }
+    public static void setTappedSession(StudySession tappedSessionId) {
+        data.put(AccountDataType.TAPPED_SESSION, tappedSessionId);
     }
     public static void setUsername(String username) {
         data.put(AccountDataType.USERNAME, username);

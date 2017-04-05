@@ -1,12 +1,13 @@
 package com.papaya.scotthanberg.papaya;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by scotthanberg on 2/27/17.
  */
 
-public class Class {
+public class Class implements Serializable {
 
     //private List<Student> listOfStudents;
     //private Professor professor;

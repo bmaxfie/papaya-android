@@ -233,16 +233,24 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void updateMarkers() {
-        getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
+        //getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
 
-        for (StudySession s : filtered) {
-            if (s != null)
-                getUsersInStudySession(s);
+        for (StudySession s : Sessions) {
+            if (s != null) {
                 if (s.getLocation() != null) {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(s.getLocation()));
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(s.getLocation())
+                            .title(s.getSessionID())
+                            //.icon(BitmapDescriptorFactory
+                            //        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    );
+                    //tag is used to store the session object inside each marker
+                    marker.setTag(s);
                 }
+            }
+
         }
+
     }
 
     public void myCurrentStudySession() {
@@ -331,6 +339,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                StudySession sess = (StudySession)marker.getTag();
+                AccountData.setTappedSession((StudySession)marker.getTag());
                 buttonSessionInfo();
 
                 /*
@@ -347,6 +357,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 smd.setSessionId(marker.getTitle());
                 smd.show(ft, "dialog");
                 */
+
                 return true;
             }
         });
@@ -486,33 +497,58 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     public void run() {
                         // first delete everything
                         mMap.clear();
-                        // then add everything from the database
-                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                        // then add sessions and classes from the database
+                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
+                                + AccountData.getAuthKey()
+                                + "&user_id=" + AccountData.getUserID()
+                                + "&service=" + AccountData.getService()
+                                + "&service_user_id=" + "0123456789012345678901234567890123456789"; //todo: fix hardcoding
                         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
 
                                         try {
-                                            //System.out.println(response.toString());
-                                            JSONArray arr = response.getJSONArray("sessions");
+                                            //update the arrayList Sessions and corresponding classes
+                                            Sessions.clear();
+                                            ArrayList<Class> classes = new ArrayList<Class>();
+                                            ArrayList<StudySession> temp = new ArrayList<StudySession>();
+                                            JSONArray arr = response.getJSONArray("classes");
                                             for (int i = 0; i < arr.length(); i++) {
-                                                Sessions.add(new StudySession(
-                                                        arr.getJSONObject(i).get("session_id").toString(),
-                                                        arr.getJSONObject(i).get("duration").toString(),
-                                                        arr.getJSONObject(i).get("location_lat").toString() + "," + arr.getJSONObject(i).get("location_long").toString(),
-                                                        arr.getJSONObject(i).get("description").toString(),
-                                                        ""
-                                                        //arr.getJSONObject(i).get("sponsored").toString()
-                                                )
+                                                JSONObject sessionsObject = arr.getJSONObject(i);
+                                                JSONArray sessionsArray = sessionsObject.getJSONArray("sessions");
+                                                for (int j = 0; j < sessionsArray.length(); j++) {
+                                                    //adds sessions to the temp arraylist
+                                                    temp.add(new StudySession(
+                                                            sessionsArray.getJSONObject(j).get("duration").toString(),
+                                                            sessionsArray.getJSONObject(j).get("location_long").toString(),
+                                                            sessionsArray.getJSONObject(j).get("start_time").toString(),
+                                                            sessionsArray.getJSONObject(j).get("session_id").toString(),
+                                                            sessionsArray.getJSONObject(j).get("location_desc").toString(),
+                                                            sessionsArray.getJSONObject(j).get("description").toString(),
+                                                            sessionsArray.getJSONObject(j).get("sponsored").toString(),
+                                                            sessionsArray.getJSONObject(j).get("host_id").toString(),
+                                                            sessionsArray.getJSONObject(j).get("location_lat").toString()
+                                                            )
+                                                    );
+                                                } //end loop that traverses all sessions in a class
+
+                                                //populates the classes arrayList one at a time
+                                                Class tempClass = new Class(
+                                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"),sessionsObject.getString("descriptions"), temp
                                                 );
-                                            }
+                                                classes.add(tempClass);
 
-                                            /*
-                                            System.out.println(response.toString());
-                                            JSONArray arr = response.getJSONArray("sessions");
-                                            */
+                                                //push temp onto Sessions variable
+                                                for (int a = temp.size() - 1; a > 0; a--) {
+                                                    temp.get(a).setClassObject(tempClass);
+                                                    Sessions.add(temp.get(a)); //adds the study sesssion to the variable
+                                                    temp.remove(a); //clears temp for next set of sessions
+                                                }
+                                            } //end loop traversing all classes
 
+                                            //add classes arrayList to the AccountData
+                                            AccountData.setClasses(classes);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -534,6 +570,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                          *
                          */
 
+                        updateMarkers();
+                        /*
                         for (StudySession s : Sessions) {
                             if (s != null) {
                                 if (s.getLocation() != null) {
@@ -554,6 +592,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             }
 
                         }
+                        */
 
                     }
                 });
@@ -618,6 +657,12 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         startActivity(joinClass);
     }
 
+    public void buttonSessionInfo() {
+        Intent sessionInfo = new Intent(this, SessionInfo.class);
+        sessionInfo.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        startActivity(sessionInfo);
+    }
+
     /**
      * Android callback
      * Invoked when the activity may be temporarily destroyed, save the instance state here.
@@ -649,10 +694,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         AccountData.data.clear();
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
-    }
-    public void buttonSessionInfo() {
-        Intent sessionInfo = new Intent(this, SessionInfo.class);
-        startActivity(sessionInfo);
     }
     public void setListOfClasses() {
         final ArrayList<Class> classList = new ArrayList<Class>();
