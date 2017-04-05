@@ -14,9 +14,9 @@ import java.util.List;
  * Created by scotthanberg on 2/27/17.
  */
 
-public class StudySession {
+public class StudySession implements Serializable {
     private List<User> users;
-    private LatLng location;
+    //private LatLng location;
     private String duration;
     private String description;
     /*  List<Post> Posts; */
@@ -34,7 +34,7 @@ public class StudySession {
     public StudySession(String duration, String location_long, String start_time, String session_id, String location_desc,
                         String description, String sponsored, String host_id, String location_lat) {
         this.duration = duration;
-        this.location = new LatLng(Double.parseDouble(location_lat), Double.parseDouble(location_long));
+        //this.location = new LatLng(Double.parseDouble(location_lat), Double.parseDouble(location_long));
         this.location_long = location_long;
         this.location_lat = location_lat;
         this.startTime = start_time;
@@ -54,7 +54,8 @@ public class StudySession {
     }
 
     public LatLng getLocation() {
-        return location;
+        //return location;
+        return new LatLng(Double.parseDouble(location_lat), Double.parseDouble(location_long));
     }
 
     public String getDuration() {

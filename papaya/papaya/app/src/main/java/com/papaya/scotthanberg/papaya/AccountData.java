@@ -1,5 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,7 +8,7 @@ import java.util.HashMap;
  * Created by bmaxf on 3/30/2017.
  */
 
-public class AccountData
+public class AccountData implements Serializable
 {
 
     public static final String ACCOUNT_DATA = "ACCOUNT_DATA";
