@@ -1,16 +1,22 @@
 package com.papaya.scotthanberg.papaya;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 
-import java.util.HashMap;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-import static com.papaya.scotthanberg.papaya.R.id.dropDown;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class JoinClass extends AppCompatActivity {
 
@@ -19,7 +25,7 @@ public class JoinClass extends AppCompatActivity {
     private View backdrop;
     private HorizontalScrollView horizontalScroll;
     private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
-
+    private EditText edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +48,30 @@ public class JoinClass extends AppCompatActivity {
             AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
             //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
         }
+        edit = (EditText)findViewById(R.id.editText2);
+
     }
 
 
-    public void backToHome(View view) {
+    public void joinTheClass(View view) {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&access_key=" + edit.getText().toString();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
         Intent home = new Intent(this, HomeScreen.class);
         home.putExtra("from", "JoinClass");
         home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
