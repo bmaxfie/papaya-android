@@ -29,7 +29,8 @@ public class SessionInfo extends AppCompatActivity {
 
     String locationDesription;
     String description;
-    ArrayList<String> people = new ArrayList<String>();
+    //doesn't have to be a student, just need to hold both id and username
+    ArrayList<Student> people = new ArrayList<Student>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +60,16 @@ public class SessionInfo extends AppCompatActivity {
 
     private void getInfo() {
         //TODO: replace the hard coding
-        StudySession bla = AccountData.getTappedSession();
-        Class bla1 = bla.getClassObject();
-        String name = bla1.getClassID();
 
 
-        String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/";
+
+
+        String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" +
+                AccountData.getTappedSession().getClassObject().getClassID() + "/" +
+                "sessions/" + AccountData.getTappedSession().getSessionID() +
+                "?user_id=" + AccountData.getUserID() +
+                "&service=" + AccountData.getService() +
+                "&authentication_key=" + AccountData.getAuthKey();
 
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -73,11 +78,12 @@ public class SessionInfo extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         System.out.println(response);
                         try {
-                            JSONArray arr = response.getJSONArray("friends");
+                            JSONArray arr = response.getJSONArray("users");
                             for (int i = 0; i < arr.length(); i++) {
                                 JSONObject jsonObj2 = arr.getJSONObject(i);
-                                String temp = jsonObj2.getString("username");
-                                people.add(temp);
+                                String id = jsonObj2.getString("user_id");
+                                String name = jsonObj2.getString("username");
+                                people.add(new Student(id, name));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -100,9 +106,7 @@ public class SessionInfo extends AppCompatActivity {
 
     public void createPeopleTextViews() {
         //testing: todo: remove this
-        for(int i = 0; i < 20; i++) {
-            people.add("Person " + i);
-        }
+
 
         LinearLayout rl = (LinearLayout) findViewById(R.id.peopleContainer);
         rl.setOrientation(LinearLayout.VERTICAL);
@@ -110,7 +114,7 @@ public class SessionInfo extends AppCompatActivity {
         //lp.setMargins(0,0,0,5);
 
         int counter = 0;
-        for (String name: people) {
+        for (Student s : people) {
             lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             LinearLayout sideways = new LinearLayout(this);
@@ -118,7 +122,7 @@ public class SessionInfo extends AppCompatActivity {
 
             //put person name to the left
             TextView myText = new TextView(this);
-            myText.setText(name);
+            myText.setText(s.getName());
             myText.setTextSize(20);
             //myText.setPadding(0, 0, 0, 15);
             //myText.setBackgroundColor(Color.WHITE);
@@ -141,6 +145,7 @@ public class SessionInfo extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     //todo: call function to add them as a friend
+                    //use the userId that is held in the s.getUserID()
                 }
             });
 
@@ -223,5 +228,4 @@ public class SessionInfo extends AppCompatActivity {
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.get(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
-
 }
