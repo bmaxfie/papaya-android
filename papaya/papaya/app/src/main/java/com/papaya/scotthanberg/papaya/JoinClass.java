@@ -16,6 +16,9 @@ import com.android.volley.toolbox.RequestFuture;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class JoinClass extends AppCompatActivity {
 
@@ -53,21 +56,36 @@ public class JoinClass extends AppCompatActivity {
 
 
     public void joinTheClass(View view) {
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&access_key=" + edit.getText().toString();
-        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&access_key=" + edit.getText().toString();
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, null, future, future);
-    
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, null, future, future);
+                try {
+                    JSONObject response = future.get(10,TimeUnit.SECONDS);
+                    System.out.println(response);
+                    backToHomescreen();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                }
+                // Access the RequestQueue through your singleton class.
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+            }
+        }).start();
+    }
+    public void backToHomescreen() {
         Intent home = new Intent(this, HomeScreen.class);
         home.putExtra("from", "JoinClass");
         home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(home);
     }
-
     public void openMenu(View view) {
         if (dropDown.getVisibility()==View.VISIBLE) {
             dropDown.setVisibility(View.GONE);
