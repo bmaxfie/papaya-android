@@ -234,11 +234,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .position(s.getLocation())
                             .title(s.getSessionID())
-                            .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                            //.icon(BitmapDescriptorFactory
+                            //        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     );
+                    //tag is used to store the session object inside each marker
                     marker.setTag(s);
-                    System.out.println(marker.getTag());
                 }
             }
 
