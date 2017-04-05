@@ -1,5 +1,8 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -8,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -250,7 +254,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey();;
+                /*final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey();;
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
                 final JSONObject newJSONStudySession = new JSONObject();
                 JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
@@ -266,8 +270,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 } catch (InterruptedException e) {
                 } catch (TimeoutException e) {
                     System.out.println(e.toString());
-                }
-                currentStudySession = "0vqPQEBj7omHegXN8wwmLA==";
+                }*/
+              //  currentStudySession = AccountData.getCurrentSession();
+                currentStudySession = "'Gc8QfLpJIJ6V1dsR9EEQ5w=='";
                 for (int i =0; i< Sessions.size(); i++) {
                     if (Sessions.get(i).getSessionID().equals(currentStudySession)) {
                         StudySession current = Sessions.get(i);
@@ -281,7 +286,25 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         if (distance >= 5) {
                             runOnUiThread(new Runnable() {
                                 public void run() {
-                                    Toast leaving = Toast.makeText(getApplicationContext(), "You are leaving study session area", Toast.LENGTH_SHORT);
+                                    AlertDialog alertDialog = new AlertDialog.Builder(HomeScreen.this).create();
+                                    alertDialog.setTitle("Alert");
+                                    alertDialog.setMessage("You are too far from the study session. Going any further will make you leave the session");
+                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    alertDialog.show();
+                                }
+                            });
+
+                        }
+                        else if (distance >= 15) {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast leaving = Toast.makeText(getApplicationContext(), "You have left the study session", Toast.LENGTH_SHORT);
                                     leaving.show();
                             }
                             });
