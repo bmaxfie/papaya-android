@@ -1,7 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,6 +16,7 @@ public class AccountData
         CLASSES,
         FRIENDS,
         CURRENT_SESSION,
+        TAPPED_SESSION,
         SERVICE,
         USERID,
         USERNAME,
@@ -42,8 +41,11 @@ public class AccountData
     public static String getUserID() {
         return (String) data.get(AccountDataType.USERID);
     }
-    public static String getCurrentSession() {
-        return (String) data.get(AccountDataType.CURRENT_SESSION);
+    public static StudySession getCurrentSession() {
+        return (StudySession) data.get(AccountDataType.CURRENT_SESSION);
+    }
+    public static StudySession getTappedSession() {
+        return (StudySession) data.get(AccountDataType.TAPPED_SESSION);
     }
     public static String getUsername() {
         return (String) data.get(AccountDataType.USERNAME);
@@ -76,6 +78,9 @@ public class AccountData
     }
     public static void setCurrentSession(String currentSession) {
         data.put(AccountDataType.CURRENT_SESSION, currentSession);
+    }
+    public static void setTappedSession(StudySession tappedSessionId) {
+        data.put(AccountDataType.TAPPED_SESSION, tappedSessionId);
     }
     public static void setUsername(String username) {
         data.put(AccountDataType.USERNAME, username);

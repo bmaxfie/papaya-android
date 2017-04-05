@@ -226,16 +226,24 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void updateMarkers() {
-        getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
+        //getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
 
-        for (StudySession s : filtered) {
-            if (s != null)
-                getUsersInStudySession(s);
+        for (StudySession s : Sessions) {
+            if (s != null) {
                 if (s.getLocation() != null) {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(s.getLocation()));
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(s.getLocation())
+                            .title(s.getSessionID())
+                            .icon(BitmapDescriptorFactory
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    );
+                    marker.setTag(s);
+                    System.out.println(marker.getTag());
                 }
+            }
+
         }
+
     }
 
     public void myCurrentStudySession() {
@@ -305,8 +313,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String sessionId = marker.getTitle();
-                buttonSessionInfo(sessionId); //todo: we need to send the correct session id to the intent
+                StudySession sess = (StudySession)marker.getTag();
+                AccountData.setTappedSession((StudySession)marker.getTag());
+                buttonSessionInfo(); //todo: we need to send the correct session id to the intent
 
                 /*
                 //OLD DIALOG WAY OF JOINING A SESSION
@@ -463,7 +472,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         // first delete everything
                         mMap.clear();
                         // then add everything from the database
-                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
+                                + AccountData.getAuthKey()
+                                + "&user_id=" + AccountData.getUserID()
+                                + "&service=" + AccountData.getService()
+                                + "&service_user_id=" + "0123456789012345678901234567890123456789"; //todo: fix hardcoding
                         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                     @Override
@@ -471,23 +484,30 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                         try {
                                             //System.out.println(response.toString());
-                                            JSONArray arr = response.getJSONArray("sessions");
+                                            JSONArray arr = response.getJSONArray("classes");
                                             for (int i = 0; i < arr.length(); i++) {
-                                                Sessions.add(new StudySession(
-                                                        arr.getJSONObject(i).get("session_id").toString(),
-                                                        arr.getJSONObject(i).get("duration").toString(),
-                                                        arr.getJSONObject(i).get("location_lat").toString() + "," + arr.getJSONObject(i).get("location_long").toString(),
-                                                        arr.getJSONObject(i).get("description").toString(),
-                                                        ""
-                                                        //arr.getJSONObject(i).get("sponsored").toString()
-                                                )
-                                                );
+                                                JSONObject sessionsObject = arr.getJSONObject(i);
+                                                JSONArray sessionsArray = sessionsObject.getJSONArray("sessions");
+                                                for (int j = 0; j < sessionsArray.length(); j++) {
+                                                    Sessions.add(new StudySession(
+                                                            sessionsArray.getJSONObject(j).get("duration").toString(),
+                                                            sessionsArray.getJSONObject(j).get("location_long").toString(),
+                                                            sessionsArray.getJSONObject(j).get("start_time").toString(),
+                                                            sessionsArray.getJSONObject(j).get("session_id").toString(),
+                                                            sessionsArray.getJSONObject(j).get("location_desc").toString(),
+                                                            sessionsArray.getJSONObject(j).get("description").toString(),
+                                                            sessionsArray.getJSONObject(j).get("sponsored").toString(),
+                                                            sessionsArray.getJSONObject(j).get("host_id").toString(),
+                                                            sessionsArray.getJSONObject(j).get("location_lat").toString()
+                                                            )
+                                                    );
+                                                }
                                             }
 
-                                            /*
-                                            System.out.println(response.toString());
-                                            JSONArray arr = response.getJSONArray("sessions");
-                                            */
+                                        /*
+                                        System.out.println(response.toString());
+                                        JSONArray arr = response.getJSONArray("sessions");
+                                        */
 
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -510,6 +530,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                          *
                          */
 
+                        updateMarkers();
+                        /*
                         for (StudySession s : Sessions) {
                             if (s != null) {
                                 if (s.getLocation() != null) {
@@ -530,6 +552,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             }
 
                         }
+                        */
 
                     }
                 });
@@ -594,9 +617,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         startActivity(joinClass);
     }
 
-    public void buttonSessionInfo(String sessionId) {
+    public void buttonSessionInfo() {
         Intent sessionInfo = new Intent(this, SessionInfo.class);
-        sessionInfo.putExtra("sessionId",sessionId);
         sessionInfo.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(sessionInfo);
     }

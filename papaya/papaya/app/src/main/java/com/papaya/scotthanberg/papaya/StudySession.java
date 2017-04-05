@@ -19,14 +19,22 @@ public class StudySession {
     private String sessionID;
     private String sponsored;
     private Class classObject;
+    private String startTime;
+    private String location_desc;
+    private String host_id;
 
 
-    public StudySession(String sessionID, String duration, String location, String description, String sponsored) {
-        this.location = new LatLng(Double.parseDouble(location.split(",")[0]), Double.parseDouble(location.split(",")[1]));
-        this.sessionID = sessionID;
+
+    public StudySession(String duration, String location_long, String start_time, String session_id, String location_desc,
+                        String description, String sponsored, String host_id, String location_lat) {
         this.duration = duration;
+        this.location = new LatLng(Double.parseDouble(location_lat), Double.parseDouble(location_long));
+        this.startTime = start_time;
+        this.sessionID = session_id;
+        this.location_desc = location_desc;
         this.description = description;
         this.sponsored = sponsored;
+        this.host_id = host_id;
     }
 
 

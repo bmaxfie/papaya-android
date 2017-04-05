@@ -27,7 +27,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SessionInfo extends AppCompatActivity {
 
-    String sessionId;
+    String locationDesription;
     String description;
     ArrayList<String> people = new ArrayList<String>();
 
@@ -40,7 +40,6 @@ public class SessionInfo extends AppCompatActivity {
         Menu menu = new Menu(SessionInfo.this);
 
         Intent studySession = getIntent(); // gets the previously created intent
-        this.sessionId = studySession.getStringExtra("sessionId");
 
         if (savedInstanceState != null) {
             AccountData.data.clear();
@@ -60,10 +59,13 @@ public class SessionInfo extends AppCompatActivity {
 
     private void getInfo() {
         //TODO: replace the hard coding
-        String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends?" +
-                "user_id="+ "mX9hzcEETRVfVWqD6nKz5A==" +"&" + //GPlusFragment.getPersonId();
-                "service="+ "GOOGLE" +"&" +
-                "authentication_key=" + "1234567890123456789012345678901234567890";
+        StudySession bla = AccountData.getTappedSession();
+        Class bla1 = bla.getClassObject();
+        String name = bla1.getClassID();
+
+
+        String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/";
+
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -149,7 +151,7 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void buttonAddUserToSession(View view) {
-        addUserToSession(this.sessionId);
+        addUserToSession(AccountData.getTappedSession().getSessionID());
         backToHome(view);
     }
 
@@ -190,6 +192,36 @@ public class SessionInfo extends AppCompatActivity {
         home.putExtra("from", "SessionInfo");
         home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(home);
+    }
+
+    /**
+     * Android callback
+     * Invoked when the activity may be temporarily destroyed, save the instance state here.
+     * @param outState - supplised by Android OS
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(AccountData.ACCOUNT_DATA, AccountData.data);
+    }
+
+    /**
+     * Android callback
+     * This callback is called only when there is a saved instance previously saved using
+     * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
+     * other state here, possibly usable after onStart() has completed.
+     * The savedInstanceState Bundle is same as the one used in onCreate().
+     * @param savedInstanceState - supplied by Android OS
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        AccountData.data.clear();
+        AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.get(AccountData.ACCOUNT_DATA));
+        //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
 
 }
