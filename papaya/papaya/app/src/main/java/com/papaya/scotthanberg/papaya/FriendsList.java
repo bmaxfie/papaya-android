@@ -69,10 +69,10 @@ public class FriendsList extends AppCompatActivity {
     private void getFriends() {
         //TODO: replace the hard coding
         String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends?" +
-                "user_id="+ AccountData.getUserID() +
-                "&service="+ AccountData.getService() +
-                "&authentication_key=" + AccountData.getAuthKey() +
-                "&service_user_id=" + AccountData.getAuthKey(); //todo:AccountData.getServiceUserId();
+                "user_id="+ AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B") +
+                "&service="+ AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B") +
+                "&authentication_key=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B") +
+                "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B"); //todo:AccountData.getServiceUserId();
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
