@@ -183,6 +183,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ll.removeAllViews();
         Button all = new Button(this);
         all.setText("All");
         all.setTag("all_button");
@@ -201,16 +202,16 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             AccountData.setClasses(new ArrayList<Class>());
         }
         for (int i = 0; i < AccountData.getClasses().size(); i++) {
-            ArrayList<Class> classes = AccountData.getClasses();
+            final ArrayList<Class> classes = AccountData.getClasses();
+            final int index = i;
             Class currentClass = classes.get(i);
             Button myButton = new Button(this);
-            //TODO:change this to getString method accessing Lambda sending it index: i
             myButton.setText(currentClass.getClassName());
             myButton.setTag(currentClass.getClassName());
             myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Object x = v.getTag();
-                    filterClass(x);
+                    //Object x = v.getTag();
+                    filterClass(classes.get(index));
                 }
             });
             ll.addView(myButton, lp);
@@ -218,15 +219,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         updateMarkers();
     }
 
-    public void filterClass(Object x) {
-        //TODO: lambda stuff goes here
+
+    public void filterClass(Class a_class) {
         filtered.clear();
         mMap.clear();
         for (StudySession s: Sessions){
-            if(s.getDescription().equals(x)){
+            if(s.getClassObject().getClassID().equals(a_class.getClassID())){
                 filtered.add(s);
             }
         }
+        Sessions.clear();
+        Sessions.addAll(filtered);
 
         if (filtered.isEmpty()) {
             for (StudySession s: Sessions){
@@ -235,13 +238,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             Toast toast = Toast.makeText(this.getApplicationContext() ,"No study sessions for this class", Toast.LENGTH_SHORT);
             toast.show();
         }
-        updateMarkers();
     }
 
     public void updateMarkers() {
-   //     getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
-        //getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
-
         for (StudySession s : Sessions) {
             if (s != null) {
                 if (s.getLocation() != null) {
@@ -609,21 +608,12 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
-                                        // TODO Auto-generated method stub
-
                                     }
                                 });
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-
-                        /* TODO callToFilterClass(Sessions, class)
-                         * alters Sessions to contain the correct values
-                         * move all this to another method
-                         *
-                         */
-
-                        updateMarkers();
                         createClassButtons();
+                        updateMarkers();
                         /*
                         for (StudySession s : Sessions) {
                             if (s != null) {
