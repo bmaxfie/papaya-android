@@ -553,9 +553,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         // then add sessions and classes from the database
                         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
                                 + AccountData.getAuthKey()
-                                + "&user_id=" + AccountData.getUserID()
-                                + "&service=" + AccountData.getService()
-                                + "&service_user_id=" + AccountData.getAuthKey(); //todo: fix hardcoding
+                                + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                                + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                                + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B"); //todo: fix hard coding
                         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                     @Override
