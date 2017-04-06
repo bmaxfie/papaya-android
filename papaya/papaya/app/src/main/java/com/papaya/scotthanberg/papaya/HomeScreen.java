@@ -262,7 +262,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         new Thread(new Runnable() {
             @Override
             public void run() {
-                /*final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey();;
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey();
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
                 final JSONObject newJSONStudySession = new JSONObject();
                 JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
@@ -278,9 +278,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 } catch (InterruptedException e) {
                 } catch (TimeoutException e) {
                     System.out.println(e.toString());
-                }*/
-              //  currentStudySession = AccountData.getCurrentSession();
-                currentStudySession = "'Gc8QfLpJIJ6V1dsR9EEQ5w=='";
+                }
+              //  currentStudySession = AccountData.getCurrentSession().getSessionID();
+              //  currentStudySession = "'Gc8QfLpJIJ6V1dsR9EEQ5w=='";
                 for (int i =0; i< Sessions.size(); i++) {
                     if (Sessions.get(i).getSessionID().equals(currentStudySession)) {
                         StudySession current = Sessions.get(i);
@@ -476,7 +476,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public boolean checkIfUsersInStudySessionAreFriends(String session_id) {
         // Get a list of friends (an array of userid)
         final ArrayList<String> friends = new ArrayList<String>();
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/friends/" + "?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/friends/" + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -502,7 +502,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
 
         final Boolean[] thereAreFriends = {false};
-        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
         JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -549,7 +549,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                 + AccountData.getAuthKey()
                                 + "&user_id=" + AccountData.getUserID()
                                 + "&service=" + AccountData.getService()
-                                + "&service_user_id=" + "0123456789012345678901234567890123456789"; //todo: fix hardcoding
+                                + "&service_user_id=" + AccountData.getAuthKey(); //todo: fix hardcoding
                         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                     @Override
@@ -749,7 +749,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service_user_id=" + AccountData.getAuthKey() + "&service=" + AccountData.getService();
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
