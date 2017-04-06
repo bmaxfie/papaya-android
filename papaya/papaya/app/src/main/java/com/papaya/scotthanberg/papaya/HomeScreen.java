@@ -138,15 +138,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         manageClasses = (Button) findViewById(R.id.ManageClasses);
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
-
-        //setListOfClasses();
-  //      createClassButtons();
-        //set filtered
-        for (StudySession s : Sessions) {
-            filtered.add(s);
-        }
-
-
     }
 
 /*    public void addStudySession(View view) {
@@ -193,7 +184,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 for (StudySession s: Sessions){
                     filtered.add(s);
                 }
-                updateMarkers();
+                updateMarkers(Sessions);
             }
         });
         ll.addView(all, lp);
@@ -210,38 +201,33 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             myButton.setTag(currentClass.getClassName());
             myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    //Object x = v.getTag();
-                    filterClass(classes.get(index));
+                    updateMarkers(filterClass(classes.get(index)));
                 }
             });
             ll.addView(myButton, lp);
         }
-        updateMarkers();
+        //updateMarkers();
     }
 
 
-    public void filterClass(Class a_class) {
+    public ArrayList<StudySession> filterClass(Class a_class) {
         filtered.clear();
-        mMap.clear();
         for (StudySession s: Sessions){
             if(s.getClassObject().getClassID().equals(a_class.getClassID())){
                 filtered.add(s);
             }
         }
-        Sessions.clear();
-        Sessions.addAll(filtered);
 
         if (filtered.isEmpty()) {
-            for (StudySession s: Sessions){
-                filtered.add(s);
-            }
             Toast toast = Toast.makeText(this.getApplicationContext() ,"No study sessions for this class", Toast.LENGTH_SHORT);
             toast.show();
         }
+        return filtered;
     }
 
-    public void updateMarkers() {
-        for (StudySession s : Sessions) {
+    public void updateMarkers(ArrayList<StudySession> listOfSessions) {
+        mMap.clear();
+        for (StudySession s : listOfSessions) {
             if (s != null) {
                 if (s.getLocation() != null) {
                     Marker marker = mMap.addMarker(new MarkerOptions()
@@ -545,7 +531,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 runOnUiThread(new Runnable() {
                     public void run() {
                         // first delete everything
-                        mMap.clear();
+                        //mMap.clear();
                         // then add sessions and classes from the database
                         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
                                 + AccountData.getAuthKey()
@@ -613,7 +599,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         // Access the RequestQueue through your singleton class.
                         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                         createClassButtons();
-                        updateMarkers();
+                        //updateMarkers(f);
                         /*
                         for (StudySession s : Sessions) {
                             if (s != null) {
