@@ -17,6 +17,11 @@ public class Student extends User {
 
     }
 
+    public Student(String userid, String username) {
+        this.UserID = userid;
+        this.Name = username;
+    }
+
     public LatLng getLocation() {
         return Location;
     }

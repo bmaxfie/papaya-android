@@ -540,7 +540,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                                 classes.add(tempClass);
 
                                                 //push temp onto Sessions variable
-                                                for (int a = temp.size() - 1; a > 0; a--) {
+                                                for (int a = temp.size() - 1; a >= 0; a--) {
                                                     temp.get(a).setClassObject(tempClass);
                                                     Sessions.add(temp.get(a)); //adds the study sesssion to the variable
                                                     temp.remove(a); //clears temp for next set of sessions
@@ -549,6 +549,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                             //add classes arrayList to the AccountData
                                             AccountData.setClasses(classes);
+                                            //add sessions to the arrayList
+                                            AccountData.setSessions(Sessions);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

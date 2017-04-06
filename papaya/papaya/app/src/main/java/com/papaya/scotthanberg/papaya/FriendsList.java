@@ -32,7 +32,7 @@ public class FriendsList extends AppCompatActivity {
     private HorizontalScrollView horizontalScroll;
     private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
 
-    private ArrayList<String> listOfFriends;
+    private ArrayList<User> listOfFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class FriendsList extends AppCompatActivity {
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
-        listOfFriends = new ArrayList<String>();
+        listOfFriends = new ArrayList<User>();
 
         Intent list = getIntent(); // gets the previously created intent
         getFriends(); //get friends from databse and update text views
@@ -69,9 +69,10 @@ public class FriendsList extends AppCompatActivity {
     private void getFriends() {
         //TODO: replace the hard coding
         String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends?" +
-                "user_id="+ "mX9hzcEETRVfVWqD6nKz5A==" +"&" + //GPlusFragment.getPersonId();
-                "service="+ "GOOGLE" +"&" +
-                "authentication_key=" + "1234567890123456789012345678901234567890";
+                "user_id="+ AccountData.getUserID() +
+                "&service="+ AccountData.getService() +
+                "&authentication_key=" + AccountData.getAuthKey() +
+                "&service_user_id=" + "0123456789012345678901234567890123456789"; //todo:AccountData.getServiceUserId();
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -82,13 +83,14 @@ public class FriendsList extends AppCompatActivity {
                             JSONArray arr = response.getJSONArray("friends");
                             for (int i = 0; i < arr.length(); i++) {
                                 JSONObject jsonObj2 = arr.getJSONObject(i);
-                                String temp = jsonObj2.getString("username");
+                                //we can use Students because we just need their name
+                                Student temp = new Student(jsonObj2.getString("user_id"),jsonObj2.getString("username"));
                                 listOfFriends.add(temp);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        //testing: listOfFriends.add("hello world");
+                        AccountData.setFriends(listOfFriends);
                         createFriendTextViews(); //updates the view with the new list of friends
 
                     }
@@ -118,7 +120,9 @@ public class FriendsList extends AppCompatActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0,0,0,5);
 
-        for (String name: listOfFriends) {
+        for (User user: listOfFriends) {
+            String name = user.getName();
+
             TextView myText = new TextView(this);
             myText.setText(name);
             myText.setTextSize(24);
