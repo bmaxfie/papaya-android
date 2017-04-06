@@ -86,7 +86,7 @@ public class CreateNewSession extends AppCompatActivity {
         final JSONObject newJSONStudySession = new JSONObject();
         try {
             newJSONStudySession.put("user_id", AccountData.getUserID());
-            newJSONStudySession.put("duration", timeDuration.getText().toString());
+            newJSONStudySession.put("duration", Integer.parseInt(timeDuration.getText().toString()));
             newJSONStudySession.put("location_desc", "Location Description");
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());

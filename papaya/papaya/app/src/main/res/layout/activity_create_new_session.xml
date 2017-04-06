@@ -51,6 +51,7 @@
 
         <TextView
             android:text="Enter the duration:"
+            android:inputType="number"
             android:id="@+id/durationText"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -64,18 +65,18 @@
             android:layout_marginTop="24dp" />
 
         <EditText
+            android:id="@+id/editText2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="time"
-            android:ems="10"
-            android:layout_marginTop="10dp"
-            android:id="@+id/editText2"
-            android:hint="hours:minutes"
-            android:layout_below="@+id/durationText"
             android:layout_alignLeft="@+id/durationText"
             android:layout_alignStart="@+id/durationText"
+            android:layout_below="@+id/durationText"
             android:layout_marginLeft="22dp"
-            android:layout_marginStart="22dp" />
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Enter in Minutes"
+            android:inputType="time" />
 
         <TextView
             android:layout_width="wrap_content"
