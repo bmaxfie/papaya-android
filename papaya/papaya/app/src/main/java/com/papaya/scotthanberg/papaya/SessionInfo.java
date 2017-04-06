@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -143,10 +144,47 @@ public class SessionInfo extends AppCompatActivity {
             rl.addView(sideways, lp);
 
             //add button listener
+            button.setTag(s);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     //todo: call function to add them as a friend
                     //use the userId that is held in the s.getUserID()
+                    Button b = (Button) v;
+                    Student student = (Student) b.getTag();
+                    String studentid = student.getUserID();
+
+                    JSONObject info = new JSONObject();
+                    try {
+                        info.put("user_id", AccountData.getUserID());
+                        info.put("user_id2", studentid);
+                        info.put("authentication_key",AccountData.getAuthKey());
+                        info.put("service", AccountData.getService());
+                        info.put("service_user_id", AccountData.getAuthKey());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends";
+
+                    JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                            (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    System.out.println(response);
+                                    Toast toast = Toast.makeText(SessionInfo.this ,"You are now friends", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // TODO Auto-generated method stub
+
+                                }
+                            });
+                    // Access the RequestQueue through your singleton class.
+                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+                    
+
                 }
             });
 
@@ -171,8 +209,10 @@ public class SessionInfo extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(sessionId);
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + AccountData.getTappedSession().getClassObject().getClassID() + "/sessions/" + sessionId;
+
+        String classid = AccountData.getTappedSession().getClassObject().getClassID().replaceAll("/", "%2F");
+        sessionId = sessionId.replaceAll("/", "%2F");
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid + "/sessions/" + sessionId;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
                     @Override
