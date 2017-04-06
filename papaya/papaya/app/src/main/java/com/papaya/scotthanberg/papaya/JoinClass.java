@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -30,6 +31,8 @@ public class JoinClass extends AppCompatActivity {
     private HorizontalScrollView horizontalScroll;
     private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
     private EditText edit;
+    private String successMessage = "Joined Class!";
+    private String failureMessage = "Failed to join class.  Try Again.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +83,15 @@ public class JoinClass extends AppCompatActivity {
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                 try {
                     JSONObject response = future.get(5,TimeUnit.SECONDS);
+                    int userCode = response.getInt("code");
                     System.out.println(response);
-                    backToHomescreen();
+                    if (userCode == 201) {
+                        runOnUiThread(show_toast_success);
+                        backToHomescreen();
+                    } else {
+                        runOnUiThread(show_toast_failure);
+
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -93,6 +103,8 @@ public class JoinClass extends AppCompatActivity {
                         System.out.println(volleyError.toString());
                     }
                 } catch (TimeoutException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -156,4 +168,21 @@ public class JoinClass extends AppCompatActivity {
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstancestate.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
+
+    private Runnable show_toast_success = new Runnable()
+    {
+        public void run()
+        {
+            Toast.makeText(getApplicationContext(), successMessage, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    };
+    private Runnable show_toast_failure = new Runnable()
+    {
+        public void run()
+        {
+            Toast.makeText(getApplicationContext(), failureMessage, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    };
 }
