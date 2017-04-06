@@ -59,14 +59,19 @@ public class SessionInfo extends AppCompatActivity {
 
 
     private void getInfo() {
+        //since classid and sessionid are in the url, they can't have '/' in them
+        String classid = AccountData.getTappedSession().getClassObject().getClassID();
+        String sessionid = AccountData.getTappedSession().getSessionID();
+        classid = classid.replaceAll("/", "%2F"); //
+        sessionid = sessionid.replaceAll("/", "%2F");
+
         String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" +
-                AccountData.getTappedSession().getClassObject().getClassID() + "/" +
-                "sessions/" + AccountData.getTappedSession().getSessionID() +
+                classid + "/" +
+                "sessions/" + sessionid +
                 "?user_id=" + AccountData.getUserID() +
                 "&service=" + AccountData.getService() +
                 "&authentication_key=" + AccountData.getAuthKey() +
                 "&service_user_id=" + AccountData.getAuthKey();
-
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
