@@ -72,7 +72,7 @@ public class FriendsList extends AppCompatActivity {
                 "user_id="+ AccountData.getUserID() +
                 "&service="+ AccountData.getService() +
                 "&authentication_key=" + AccountData.getAuthKey() +
-                "&service_user_id=" + "0123456789012345678901234567890123456789"; //todo:AccountData.getServiceUserId();
+                "&service_user_id=" + AccountData.getAuthKey(); //todo:AccountData.getServiceUserId();
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

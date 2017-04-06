@@ -90,6 +90,7 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("service", AccountData.getService());
             newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
             newJSONStudySession.put("sponsored", true);
+            newJSONStudySession.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
         }

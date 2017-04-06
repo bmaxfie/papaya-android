@@ -59,17 +59,13 @@ public class SessionInfo extends AppCompatActivity {
 
 
     private void getInfo() {
-        //TODO: replace the hard coding
-
-
-
-
         String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" +
                 AccountData.getTappedSession().getClassObject().getClassID() + "/" +
                 "sessions/" + AccountData.getTappedSession().getSessionID() +
                 "?user_id=" + AccountData.getUserID() +
                 "&service=" + AccountData.getService() +
-                "&authentication_key=" + AccountData.getAuthKey();
+                "&authentication_key=" + AccountData.getAuthKey() +
+                "&service_user_id=" + AccountData.getAuthKey();
 
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -161,17 +157,17 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void addUserToSession(String sessionId) {
-        // I hardcoded my user_id only because we're going to have to change it anyway with the new Data Manager
         JSONObject info = new JSONObject();
         try {
-            info.put("user_id", "GXuFK5J9RLm1SgueLKJCFg==");
+            info.put("user_id", AccountData.getUserID());
             info.put("authentication_key",AccountData.getAuthKey());
             info.put("service", AccountData.getService());
+            info.put("service_user_id", AccountData.getAuthKey());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         System.out.println(sessionId);
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + sessionId;
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + AccountData.getTappedSession().getClassObject().getClassID() + "/sessions/" + sessionId;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
                     @Override
