@@ -19,6 +19,7 @@ public class AccountData implements Serializable
         FRIENDS,
         CURRENT_SESSION,
         TAPPED_SESSION,
+        SESSIONS,
         SERVICE,
         USERID,
         USERNAME,
@@ -49,6 +50,9 @@ public class AccountData implements Serializable
     }
     public static StudySession getTappedSession() {
         return (StudySession) data.get(AccountDataType.TAPPED_SESSION);
+    }
+    public static ArrayList<StudySession> getSessions() {
+        return (ArrayList<StudySession>) data.get(AccountDataType.SESSIONS);
     }
     public static String getUsername() {
         return (String) data.get(AccountDataType.USERNAME);
@@ -85,6 +89,9 @@ public class AccountData implements Serializable
     }
     public static void setTappedSession(StudySession tappedSessionId) {
         data.put(AccountDataType.TAPPED_SESSION, tappedSessionId);
+    }
+    public static void setSessions(ArrayList<StudySession> sessions) {
+        data.put(AccountDataType.SESSIONS, sessions);
     }
     public static void setUsername(String username) {
         data.put(AccountDataType.USERNAME, username);

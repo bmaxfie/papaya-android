@@ -549,6 +549,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                             //add classes arrayList to the AccountData
                                             AccountData.setClasses(classes);
+                                            //add sessions to the arrayList
+                                            AccountData.setSessions(Sessions);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
