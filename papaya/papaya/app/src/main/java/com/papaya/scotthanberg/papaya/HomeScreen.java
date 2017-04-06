@@ -1,7 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,7 +36,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -749,10 +746,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         AccountData.data.clear();
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
-    }
-    public void buttonSessionInfo() {
-        Intent sessionInfo = new Intent(this, SessionInfo.class);
-        startActivity(sessionInfo);
     }
     /*
     public void setListOfClasses() {

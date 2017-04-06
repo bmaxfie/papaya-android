@@ -69,6 +69,7 @@ public class JoinClass extends AppCompatActivity {
                     jsObj.put("user_id", AccountData.getUserID());
                     jsObj.put("service", AccountData.getService());
                     jsObj.put("authentication_key",AccountData.getAuthKey());
+                    jsObj.put("service_user_id", AccountData.getAuthKey());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
