@@ -142,6 +142,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
+        //setListOfClasses();
         createClassButtons();
         //set filtered
         for (StudySession s : Sessions) {
@@ -182,7 +183,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void createClassButtons() {
-        setListOfClasses();
         LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -199,6 +199,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
         ll.addView(all, lp);
+        /* Below Conditional only there so it doesn't crash.  The issue will be fixed in the loading screen */
+        if (AccountData.getClasses() == null) {
+            AccountData.setClasses(new ArrayList<Class>());
+        }
         for (int i = 0; i < AccountData.getClasses().size(); i++) {
             ArrayList<Class> classes = AccountData.getClasses();
             Class currentClass = classes.get(i);
@@ -238,6 +242,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void updateMarkers() {
+   //     getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
         //getUsersInStudySession(new StudySession("91wBXfOeGxf8kOsZkG3nug==", "test", "1.2,1.3", "test", "test"));
 
         for (StudySession s : Sessions) {
@@ -333,7 +338,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    System.out.println(response.toString());
+                                    //System.out.println(response.toString());
                                     JSONArray arr = response.getJSONArray("users");
                                     for (int i = 0; i < arr.length(); i++) {
                                         System.out.println(arr.getJSONObject(i).get("user_id").toString());
@@ -349,8 +354,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 // TODO Auto-generated method stub
-                             if (true)
-                                 System.out.println("Test");
+                             //if (true)
+ //                                System.out.println("Test");
                              }
                         });
     }
@@ -482,7 +487,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            System.out.println(response.toString());
+                 //           System.out.println(response.toString());
                             JSONArray arr = response.getJSONArray("friends");
                             for (int i = 0; i < arr.length(); i++) {
                                 friends.add(arr.getJSONObject(i).get("user_id").toString());
@@ -496,8 +501,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if(true)
+        /*                if(true)
                             System.out.println("Test");
+                            */
                     }
                 });
 
@@ -508,7 +514,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            System.out.println(response.toString());
+           //                 System.out.println(response.toString());
                             JSONArray arr = response.getJSONArray("users");
                             for (int i = 0; i < arr.length(); i++) {
                                 if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
@@ -525,8 +531,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-                        if(true)
-                            System.out.println("Test");
+                       // if(true)
+                        //    System.out.println("Test");
                     }
                 });
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
@@ -624,7 +630,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         for (StudySession s : Sessions) {
                             if (s != null) {
                                 if (s.getLocation() != null) {
-                                    if (checkIfUsersInStudySessionAreFriends(s.getSessionID()) == false){
+                                    if (/*checkIfUsersInStudySessionAreFriends(s.getSessionID()) == false){
                                         mMap.addMarker(new MarkerOptions()
                                                 .position(s.getLocation())
                                                 .title(s.getSessionID())
@@ -744,34 +750,61 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
+    public void buttonSessionInfo() {
+        Intent sessionInfo = new Intent(this, SessionInfo.class);
+        startActivity(sessionInfo);
+    }
+    /*
     public void setListOfClasses() {
         final ArrayList<Class> classList = new ArrayList<Class>();
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+        /*
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service_user_id=" + AccountData.getAuthKey() + "&service=" + AccountData.getService();
-                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
 
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, future, future);
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                 try {
-                    JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
-                    JSONArray classes = response.getJSONArray("classes");
+                    JSONObject response = future.get(5, TimeUnit.SECONDS);   // This will block
+                    JSONArray classes = response.getJSONArray("class_ids");
                     for (int i = 0; i < classes.length(); i++) {
                         JSONObject jsobj = classes.getJSONObject(i);
                         classList.add(new Class(jsobj.getString("class_id"), jsobj.getString("classname"), jsobj.getString("descriptions"), null));
                     }
+                    ArrayList<Class> classListCopy = new ArrayList<Class>();
+                    classListCopy.addAll(classList);
+                    AccountData.setClasses(classList);
                 } catch (JSONException e) {
                 } catch (ExecutionException e) {
                 } catch (TimeoutException e) {
+                    e.printStackTrace();
                 } catch (InterruptedException e) {
                 }
-                // Access the RequestQueue through your singleton class
-                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
+
             }
-        });
-        ArrayList<Class> classListCopy = new ArrayList<Class>();
-        classListCopy.addAll(classList);
-        AccountData.setClasses(classList);
+        }).start();
     }
+    */
 }

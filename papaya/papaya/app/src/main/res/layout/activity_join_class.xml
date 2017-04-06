@@ -109,11 +109,25 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
         android:background="@android:color/white"
-        android:layout_marginTop="1dp">
+        android:layout_below="@+id/title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
 
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="0dp"
+            android:onClick="joinTheClass"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Join Class"
+            android:textSize="18sp" />
 
         <TextView
             android:text="Enter the class Key:"
@@ -139,20 +153,6 @@
             android:layout_below="@+id/durationText"
             android:layout_centerHorizontal="true"
             android:hint="Insert Key Here" />
-
-        <Button
-            android:text="Join Class"
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="0dp"
-            android:onClick="joinTheClass"/>
 
 
     </RelativeLayout>
