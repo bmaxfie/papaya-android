@@ -100,8 +100,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
 
     private boolean signedIn = false;
 
-
-    private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
+//DO NOT TOUCH ANY OF THE FACEBOOK FIELDS
+  /*  private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
         public void onSuccess(Sharer.Result result) {
             Log.d("GPlusFragment", "Success!");
@@ -117,7 +117,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             Log.d("GPlusFragment", String.format("Error: %s", error.toString()));
         }
     };
-
+*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -315,15 +315,6 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                /*Service = "GOOGLE";
-                                personName = acct.getDisplayName();
-                                personGivenName = acct.getGivenName();
-                                personFamilyName = acct.getFamilyName();
-                                personEmail = acct.getEmail();
-                                authentication_key = acct.getId();
-                                personPhoto = acct.getPhotoUrl();
-                                idToken = acct.getIdToken();*/
-                                // Application code
                             }
                         });
                 Bundle parameters = new Bundle();
@@ -336,9 +327,22 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 signOutButton.setVisibility(View.GONE);
                 profilePicImageView.setVisibility(View.VISIBLE);
                 continue_to_papaya.setVisibility(View.VISIBLE);
-                Profile p = Profile.getCurrentProfile();
+
+                if (Profile.getCurrentProfile() == null) {
+                    profileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile profile, Profile p) {
+                            Log.v("facebook - profile", p.getFirstName());
+                            new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200, 200).toString());
+                            profileTracker.stopTracking();
+                        }
+                    };
+                } else {
+                    Profile p = Profile.getCurrentProfile();
+                    Log.v("facebook - profile", p.getFirstName());
+                    new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200, 200).toString());
+                }
                 papayaPic.setVisibility(View.GONE);
-                new LoadProfileImage(profilePicImageView).execute(p.getProfilePictureUri(200, 200).toString());
                 updateUI();
                 connectToDatabase();
             }
@@ -346,6 +350,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
             @Override
             public void onCancel() {
                 // App code
+                Log.v("facebook - onCancel", "cancelled");
                 papayaPic.setVisibility(View.VISIBLE);
                 loginButton.setVisibility(View.VISIBLE);
                 signInButton.setVisibility(View.VISIBLE);
