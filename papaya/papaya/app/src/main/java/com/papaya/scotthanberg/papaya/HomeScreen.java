@@ -140,7 +140,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
         //setListOfClasses();
-        createClassButtons();
+  //      createClassButtons();
         //set filtered
         for (StudySession s : Sessions) {
             filtered.add(s);
@@ -623,6 +623,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                          */
 
                         updateMarkers();
+                        createClassButtons();
                         /*
                         for (StudySession s : Sessions) {
                             if (s != null) {
