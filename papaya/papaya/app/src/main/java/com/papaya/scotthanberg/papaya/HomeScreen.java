@@ -23,7 +23,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -47,9 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -137,6 +133,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
 
+        //setListOfClasses();
         createClassButtons();
         //set filtered
         for (StudySession s : Sessions) {
@@ -177,7 +174,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void createClassButtons() {
-        setListOfClasses();
         LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -194,6 +190,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
         ll.addView(all, lp);
+        /* Below Conditional only there so it doesn't crash.  The issue will be fixed in the loading screen */
+        if (AccountData.getClasses() == null) {
+            AccountData.setClasses(new ArrayList<Class>());
+        }
         for (int i = 0; i < AccountData.getClasses().size(); i++) {
             ArrayList<Class> classes = AccountData.getClasses();
             Class currentClass = classes.get(i);
@@ -635,35 +635,57 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent sessionInfo = new Intent(this, SessionInfo.class);
         startActivity(sessionInfo);
     }
+    /*
     public void setListOfClasses() {
         final ArrayList<Class> classList = new ArrayList<Class>();
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+        /*
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-                RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, future, future);
-                // Access the RequestQueue through your singleton class
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                 try {
-                    JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
-                    JSONArray classes = response.getJSONArray("classes");
+                    JSONObject response = future.get(5, TimeUnit.SECONDS);   // This will block
+                    JSONArray classes = response.getJSONArray("class_ids");
                     for (int i = 0; i < classes.length(); i++) {
                         JSONObject jsobj = classes.getJSONObject(i);
                         classList.add(new Class(jsobj.getString("class_id"), jsobj.getString("classname"), jsobj.getString("descriptions"), null));
                     }
+                    ArrayList<Class> classListCopy = new ArrayList<Class>();
+                    classListCopy.addAll(classList);
+                    AccountData.setClasses(classList);
                 } catch (JSONException e) {
                 } catch (ExecutionException e) {
                 } catch (TimeoutException e) {
+                    e.printStackTrace();
                 } catch (InterruptedException e) {
                 }
 
+
             }
         }).start();
-        ArrayList<Class> classListCopy = new ArrayList<Class>();
-        classListCopy.addAll(classList);
-        AccountData.setClasses(classList);
     }
+    */
 }
