@@ -323,7 +323,16 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         for (StudySession s : listOfSessions) {
             if (s != null) {
                 if (s.getLocation() != null) {
-                    if (s.isFriendsInSession() == false) {
+                    if (s.getSponsored()) {
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(s.getLocation())
+                                .title(s.getSessionID())
+                                .icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        );
+                        marker.setTag(s);
+                    }
+                    else if (s.isFriendsInSession() == false) {
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                         .position(s.getLocation())
                                         .title(s.getSessionID())
