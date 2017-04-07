@@ -147,7 +147,13 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-
+            <RadioGroup
+                android:id="@+id/buttonContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+            </RadioGroup>
         </LinearLayout>
     </HorizontalScrollView>
 
