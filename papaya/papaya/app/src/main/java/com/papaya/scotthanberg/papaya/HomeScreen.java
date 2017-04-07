@@ -591,6 +591,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                                         } catch (JSONException e) {
                                                             e.printStackTrace();
                                                         }
+                                                        // TODO HERE Ben! Getting 415.  Bad Message body.  Related to the Json Object?
                                                         JsonObjectRequest jsObjRequestDELETE = new JsonObjectRequest
                                                                 (Request.Method.DELETE, url, jsonObject, new Response.Listener<JSONObject>() {
                                                                     @Override
