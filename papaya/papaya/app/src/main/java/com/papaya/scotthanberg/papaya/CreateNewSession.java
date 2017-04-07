@@ -19,7 +19,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class CreateNewSession extends AppCompatActivity {
@@ -99,6 +101,15 @@ public class CreateNewSession extends AppCompatActivity {
             return;
         }
 
+        if (Integer.parseInt(timeDuration.getText().toString()) >= 1440) {
+            Toast toast = Toast.makeText(this.getApplicationContext() ,"Duration is too long", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
@@ -107,6 +118,7 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("location_desc", "Location Description");
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
+            newJSONStudySession.put("start_time", formatter.format(new Date()));
             newJSONStudySession.put("description", "This will be a description");
             newJSONStudySession.put("service", AccountData.getService());
             newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
