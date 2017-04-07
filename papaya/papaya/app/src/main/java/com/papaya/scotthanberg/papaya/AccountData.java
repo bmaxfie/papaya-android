@@ -26,7 +26,8 @@ public class AccountData implements Serializable
         EMAIL,
         PHONE,
         AUTH_KEY,
-        SERVICE_USER_ID
+        SERVICE_USER_ID,
+        SELECTED_CLASS_BUTTON
     }
 
     public static final HashMap<AccountDataType, Object> data = new HashMap<AccountDataType, Object>();
@@ -67,7 +68,9 @@ public class AccountData implements Serializable
         return (String) data.get(AccountDataType.AUTH_KEY);
     }
     public static String getServiceUserId() {return (String) data.get(AccountDataType.SERVICE_USER_ID); }
-
+    public static String getSelectedClassButton() {
+        return (String) data.get(AccountDataType.SELECTED_CLASS_BUTTON);
+    }
 
     /*
         SETTERS:
@@ -104,5 +107,8 @@ public class AccountData implements Serializable
     }
     public static void setAuthKey(String key) { data.put(AccountDataType.AUTH_KEY, key); }
     public static void setServiceUserId(String service_id) { data.put(AccountDataType.SERVICE_USER_ID, service_id); }
+    public static void setSelectedClassButton(String class_id) {
+        data.put(AccountDataType.SELECTED_CLASS_BUTTON, class_id);
+    }
 
 }
