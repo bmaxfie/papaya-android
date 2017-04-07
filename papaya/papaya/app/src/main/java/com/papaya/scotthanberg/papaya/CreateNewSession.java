@@ -33,7 +33,7 @@ public class CreateNewSession extends AppCompatActivity {
     private Double myLatitude;
     private Double myLongitude;
     
-    private EditText className, timeDuration;
+    private EditText className, timeDuration, description;
     private ArrayList<StudySession> Sessions;
 
 
@@ -46,6 +46,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         className = (EditText) findViewById(R.id.editText3);
         timeDuration = (EditText) findViewById(R.id.editText2);
+        description = (EditText) findViewById(R.id.editText4);
 
 
         if (savedInstanceState != null) {
@@ -90,7 +91,7 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("location_desc", "Location Description");
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
-            newJSONStudySession.put("description", "This will be a description");
+            newJSONStudySession.put("description", description.getText().toString());
             newJSONStudySession.put("service", AccountData.getService());
             newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
             newJSONStudySession.put("sponsored", true);
