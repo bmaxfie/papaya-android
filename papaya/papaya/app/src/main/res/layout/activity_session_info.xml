@@ -48,76 +48,93 @@
         android:layout_marginTop="1dp"
         android:elevation="1sp">
 
-        <TextView
-            android:id="@+id/descriptionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="23dp"
-            android:paddingLeft="25dp"
-            android:text="Session Description:"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
         <ScrollView
-            android:id="@+id/scrollDescription"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/descriptionTitle"
-            android:layout_marginTop="13dp"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:scrollbars="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="48dp">
 
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\nDescription goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\nDescription goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\nDescription goes here. It can get very long so be careful not to go over the page limits. I may make it overflow into other lines.\n" />
-        </ScrollView>
-
-        <TextView
-            android:id="@+id/peopleTitle"
-            android:layout_below="@+id/scrollDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
-            android:paddingLeft="25dp"
-            android:paddingBottom="15dp"
-            android:text="People in this session:"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <ScrollView
-            android:id="@+id/people"
-            android:layout_below="@+id/peopleTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:paddingBottom="48dp">
-
-            <LinearLayout
-                android:id="@+id/peopleContainer"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/location_desc_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="23dp"
+                    android:paddingLeft="25dp"
+                    android:text="Location:"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/location_desc"
+                    android:layout_below="@+id/location_desc_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="25dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:text="No Location Description" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/descriptionTitle"
+                    android:layout_below="@+id/location_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="25dp"
+                    android:text="Session Description:"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_below="@+id/descriptionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="25dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:text="No Session Description" />
+
+                <TextView
+                    android:id="@+id/peopleTitle"
+                    android:layout_below="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:paddingLeft="25dp"
+                    android:paddingBottom="15dp"
+                    android:text="People in this session:"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+
+
+                    <LinearLayout
+                        android:id="@+id/peopleContainer"
+                        android:layout_below="@+id/peopleTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="40dp"
+                        android:paddingRight="25dp"
+                        android:paddingBottom="75dp"
+                        android:orientation="vertical">
+
+
+
+                    </LinearLayout>
+
+
+
+
+            </RelativeLayout>
         </ScrollView>
-
-
         <Button
             android:text="Join Session"
             android:id="@+id/button4"
@@ -131,8 +148,6 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="0dp"
             android:onClick="buttonAddUserToSession"/>
-
-
 
 
     </RelativeLayout>
