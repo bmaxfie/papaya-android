@@ -581,32 +581,63 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                                 JSONArray sessionsArray = sessionsObject.getJSONArray("sessions");
                                                 for (int j = 0; j < sessionsArray.length(); j++) {
                                                     if (durationUp(sessionsArray.getJSONObject(j).get("start_time").toString(), sessionsArray.getJSONObject(j).get("duration").toString())) {
+                                                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
+                                                        JSONObject jsonObject = new JSONObject();
+                                                        try {
+                                                            jsonObject.put("user_id", AccountData.getUserID());
+                                                            jsonObject.put("service", AccountData.getService());
+                                                            jsonObject.put("authentication_key", AccountData.getAuthKey());
+                                                            jsonObject.put("service_user_id", AccountData.getAuthKey());
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        JsonObjectRequest jsObjRequestDELETE = new JsonObjectRequest
+                                                                (Request.Method.DELETE, url, jsonObject, new Response.Listener<JSONObject>() {
+                                                                    @Override
+                                                                    public void onResponse(JSONObject response) {
+                                                                        System.out.println(response);
+                                                                    }
+                                                                }, new Response.ErrorListener() {
+                                                                    @Override
+                                                                    public void onErrorResponse(VolleyError error) {
+
+                                                                    }
+                                                                });
+                                                        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestDELETE);
+                                                        /*
                                                         // Remove the Session
                                                         new Thread(new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentSession";
-                                                                RequestFuture<JSONObject> future = RequestFuture.newFuture();
                                                                 final JSONObject jsonObject = new JSONObject();
                                                                 try {
                                                                     jsonObject.put("user_id", AccountData.getUserID());
-                                                                    jsonObject.put("service_type", AccountData.getService());
+                                                                    jsonObject.put("service", AccountData.getService());
                                                                     jsonObject.put("authentication_key", AccountData.getAuthKey());
                                                                     jsonObject.put("service_user_id", AccountData.getAuthKey());
-                                                                    JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
-                                                                            (Request.Method.DELETE, url, jsonObject, future, future);
-                                                                    JSONObject response = future.get();
+                                                                } catch (JSONException e) {
+                                                                    e.printStackTrace();
+                                                                }
+                                                                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                                                                JsonObjectRequest jsObjRequestDELETE = new JsonObjectRequest
+                                                                        (Request.Method.DELETE, url, jsonObject, future, future);
+                                                                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestDELETE);
+                                                                try {
+                                                                    JSONObject response = future.get(10, TimeUnit.SECONDS);
                                                                     System.out.println(response);
                                                                     // Access the RequestQueue through your singleton class.
-                                                                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
-                                                                } catch (JSONException e) {
                                                                 } catch (InterruptedException e) {
                                                                     e.printStackTrace();
                                                                 } catch (ExecutionException e) {
                                                                     e.printStackTrace();
+                                                                } catch (TimeoutException e) {
+                                                                    e.printStackTrace();
+                                                                    System.out.println(e);
                                                                 }
                                                             }
                                                         }).start();
+                                                        */
                                                         System.out.println("Remove");
 
                                                     }
@@ -786,18 +817,20 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public boolean durationUp(String startTime, String duration) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date start;
+        boolean isTrue = false;
         try {
             start = sdf.parse(startTime);
             Date EndingTime = new Date(start.getTime() + (Long.parseLong(duration) * 60000));
-            if (new Date().after(EndingTime)) {
-                return true;
+            Date now = new Date();
+            if (now.after(EndingTime)) {
+                isTrue = true;
             } else {
-                return false;
+                isTrue = false;
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return false;
+        return isTrue;
     }
     /*
     public void setListOfClasses() {

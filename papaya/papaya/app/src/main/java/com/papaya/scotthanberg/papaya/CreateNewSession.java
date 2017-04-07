@@ -101,7 +101,6 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("sponsored", true);
             newJSONStudySession.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
             newJSONStudySession.put("start_time", sdf.format(new Date()));
-
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
         }
