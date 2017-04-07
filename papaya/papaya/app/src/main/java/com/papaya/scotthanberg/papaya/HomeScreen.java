@@ -43,7 +43,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -484,7 +487,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                 try {
                     JSONObject response = future.get(10, TimeUnit.SECONDS);
-                    System.out.println(response.toString());
+                    //System.out.println(response.toString());
                     JSONArray arr = response.getJSONArray("friends");
                     for (int i = 0; i < arr.length(); i++) {
                         friends.add(arr.getJSONObject(i).get("user_id").toString());
@@ -572,10 +575,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                             ArrayList<Class> classes = new ArrayList<Class>();
                                             ArrayList<StudySession> temp = new ArrayList<StudySession>();
                                             JSONArray arr = response.getJSONArray("classes");
+                                            String startTime = "";
                                             for (int i = 0; i < arr.length(); i++) {
                                                 JSONObject sessionsObject = arr.getJSONObject(i);
                                                 JSONArray sessionsArray = sessionsObject.getJSONArray("sessions");
                                                 for (int j = 0; j < sessionsArray.length(); j++) {
+                                                    if (durationUp(sessionsArray.getJSONObject(j).get("start_time").toString(), sessionsArray.getJSONObject(j).get("duration").toString())) {
+                                                        // Remove the Session
+                                                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentSession";
+                                                        System.out.println("Remove");
+
+                                                    }
                                                     //adds sessions to the temp arraylist
                                                     temp.add(new StudySession(
                                                             sessionsArray.getJSONObject(j).get("duration").toString(),
@@ -747,6 +757,23 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         AccountData.data.clear();
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
+    }
+
+    public boolean durationUp(String startTime, String duration) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start;
+        try {
+            start = sdf.parse(startTime);
+            Date EndingTime = new Date(start.getTime() + (Long.parseLong(duration) * 60000));
+            if (new Date().after(EndingTime)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
     /*
     public void setListOfClasses() {

@@ -19,7 +19,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class CreateNewSession extends AppCompatActivity {
@@ -84,6 +86,8 @@ public class CreateNewSession extends AppCompatActivity {
         }
 
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         final JSONObject newJSONStudySession = new JSONObject();
         try {
             newJSONStudySession.put("user_id", AccountData.getUserID());
@@ -96,6 +100,8 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
             newJSONStudySession.put("sponsored", true);
             newJSONStudySession.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
+            newJSONStudySession.put("start_time", sdf.format(new Date()));
+
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
         }

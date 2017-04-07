@@ -217,6 +217,8 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
+                    e.printStackTrace();
+                    System.out.println(e);
                 } catch (InterruptedException e) {
                 } catch (TimeoutException e) {
                     System.out.println(e.toString());
