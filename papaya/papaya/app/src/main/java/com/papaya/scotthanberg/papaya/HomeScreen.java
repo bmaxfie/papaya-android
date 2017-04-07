@@ -582,7 +582,31 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                                 for (int j = 0; j < sessionsArray.length(); j++) {
                                                     if (durationUp(sessionsArray.getJSONObject(j).get("start_time").toString(), sessionsArray.getJSONObject(j).get("duration").toString())) {
                                                         // Remove the Session
-                                                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentSession";
+                                                        new Thread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentSession";
+                                                                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                                                                final JSONObject jsonObject = new JSONObject();
+                                                                try {
+                                                                    jsonObject.put("user_id", AccountData.getUserID());
+                                                                    jsonObject.put("service_type", AccountData.getService());
+                                                                    jsonObject.put("authentication_key", AccountData.getAuthKey());
+                                                                    jsonObject.put("service_user_id", AccountData.getAuthKey());
+                                                                    JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
+                                                                            (Request.Method.DELETE, url, jsonObject, future, future);
+                                                                    JSONObject response = future.get();
+                                                                    System.out.println(response);
+                                                                    // Access the RequestQueue through your singleton class.
+                                                                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
+                                                                } catch (JSONException e) {
+                                                                } catch (InterruptedException e) {
+                                                                    e.printStackTrace();
+                                                                } catch (ExecutionException e) {
+                                                                    e.printStackTrace();
+                                                                }
+                                                            }
+                                                        }).start();
                                                         System.out.println("Remove");
 
                                                     }
