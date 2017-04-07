@@ -82,11 +82,13 @@ public class SessionInfo extends AppCompatActivity {
                                 String name = jsonObj2.getString("username");
                                 people.add(new Student(id, name));
                             }
+                            locationDesription = response.getString("location_desc");
+                            description = response.getString("description");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         //testing: listOfFriends.add("hello world");
-                        createPeopleTextViews(); //updates the view with the new list of friends
+                        createView(); //updates the view with the new list of friends
 
                     }
                 }, new Response.ErrorListener() {
@@ -101,8 +103,7 @@ public class SessionInfo extends AppCompatActivity {
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 
-    public void createPeopleTextViews() {
-        //testing: todo: remove this
+    public void createView() {
 
 
         LinearLayout rl = (LinearLayout) findViewById(R.id.peopleContainer);
