@@ -36,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -230,14 +231,24 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         for (StudySession s : listOfSessions) {
             if (s != null) {
                 if (s.getLocation() != null) {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(s.getLocation())
-                            .title(s.getSessionID())
-                            //.icon(BitmapDescriptorFactory
-                            //        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                    );
+                    if (s.isFriendsInSession() == false) {
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                        .position(s.getLocation())
+                                        .title(s.getSessionID())
+                                //.icon(BitmapDescriptorFactory
+                                //        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                        );
+                        marker.setTag(s);
+                    } else {
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                        .position(s.getLocation())
+                                        .title(s.getSessionID())
+                                        .icon(BitmapDescriptorFactory
+                                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                        );
+                        marker.setTag(s);
+                    }
                     //tag is used to store the session object inside each marker
-                    marker.setTag(s);
                 }
             }
 
@@ -460,65 +471,77 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
-    public boolean checkIfUsersInStudySessionAreFriends(String session_id) {
+    public void checkIfUsersInStudySessionAreFriends(final String session_id) {
         // Get a list of friends (an array of userid)
-        final ArrayList<String> friends = new ArrayList<String>();
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "/friends/" + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                 //           System.out.println(response.toString());
-                            JSONArray arr = response.getJSONArray("friends");
-                            for (int i = 0; i < arr.length(); i++) {
-                                friends.add(arr.getJSONObject(i).get("user_id").toString());
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final ArrayList<String> friends = new ArrayList<String>();
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "friends/" + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, future, future);
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);
+                    System.out.println(response.toString());
+                    JSONArray arr = response.getJSONArray("friends");
+                    for (int i = 0; i < arr.length(); i++) {
+                        friends.add(arr.getJSONObject(i).get("user_id").toString());
                     }
-                }, new Response.ErrorListener() {
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-        /*                if(true)
-                            System.out.println("Test");
-                            */
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                }
+
+                final Boolean[] thereAreFriends = {false};
+                String classId = "";
+                for (int i = 0; i < Sessions.size(); i++) {
+                    if (Sessions.get(i).getSessionID().equals(session_id)) {
+                        classId = Sessions.get(i).getClassObject().getClassID();
                     }
-                });
+                }
+                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    //                 System.out.println(response.toString());
+                                    JSONArray arr = response.getJSONArray("users");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
+                                            thereAreFriends[0] = true;
+                                            for (int j = 0; j < Sessions.size(); j++) {
+                                                if (Sessions.get(j).getSessionID().equals(session_id)) {
+                                                    Sessions.get(j).setFriendsInSession(true);
+                                                }
+                                            }
+                                        }
+                                    }
 
-        final Boolean[] thereAreFriends = {false};
-        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-        JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-           //                 System.out.println(response.toString());
-                            JSONArray arr = response.getJSONArray("users");
-                            for (int i = 0; i < arr.length(); i++) {
-                                if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
-                                    thereAreFriends[0] = true;
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
                             }
+                        }, new Response.ErrorListener() {
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                       // if(true)
-                        //    System.out.println("Test");
-                    }
-                });
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
-        return thereAreFriends[0];
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO Auto-generated method stub
+                                // if(true)
+                                //    System.out.println("Test");
+                            }
+                        });
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
+            }
+        }).start();
     }
 
     @Override
@@ -578,6 +601,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                                 for (int a = temp.size() - 1; a >= 0; a--) {
                                                     temp.get(a).setClassObject(tempClass);
                                                     Sessions.add(temp.get(a)); //adds the study sesssion to the variable
+                                                    checkIfUsersInStudySessionAreFriends(temp.get(a).getSessionID()); // This will update the session as to whether or not there is a friend in it
                                                     temp.remove(a); //clears temp for next set of sessions
                                                 }
                                             } //end loop traversing all classes
