@@ -173,6 +173,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                         newJSONStudySession.put("auth_option", 2);
                         newJSONStudySession.put("username", AccountData.getUsername());
                         newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
+                        newJSONStudySession.put("service_user_id", AccountData.getAuthKey());
                         newJSONStudySession.put("email", AccountData.getEmail());
                        // newJSONStudySession.put("email", profile.get)
                     } else {
@@ -180,6 +181,7 @@ public class GPlusFragment extends Fragment implements GoogleApiClient.OnConnect
                         newJSONStudySession.put("service", "GOOGLE");
                         newJSONStudySession.put("auth_option", 2);
                         newJSONStudySession.put("username", AccountData.getUsername());
+                        newJSONStudySession.put("service_user_id", AccountData.getAuthKey());
                         newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
                         newJSONStudySession.put("email", AccountData.getEmail());
                     }

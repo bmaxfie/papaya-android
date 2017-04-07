@@ -60,7 +60,7 @@ public class SessionMarkerDialog extends DialogFragment {
             e.printStackTrace();
         }
         System.out.println(sessionId);
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + sessionId;
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + sessionId.replaceAll("/", "%2F").replaceAll("\\+", "%2B");
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
                     @Override

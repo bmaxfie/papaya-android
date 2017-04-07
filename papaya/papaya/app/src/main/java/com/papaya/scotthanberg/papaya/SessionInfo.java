@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -29,7 +30,8 @@ public class SessionInfo extends AppCompatActivity {
 
     String locationDesription;
     String description;
-    ArrayList<String> people = new ArrayList<String>();
+    //doesn't have to be a student, just need to hold both id and username
+    ArrayList<Student> people = new ArrayList<Student>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +60,19 @@ public class SessionInfo extends AppCompatActivity {
 
 
     private void getInfo() {
-        //TODO: replace the hard coding
-        StudySession bla = AccountData.getTappedSession();
-        Class bla1 = bla.getClassObject();
-        String name = bla1.getClassID();
+        //since classid and sessionid are in the url, they can't have '/' in them
+        String classid = AccountData.getTappedSession().getClassObject().getClassID();
+        String sessionid = AccountData.getTappedSession().getSessionID();
+        classid = classid.replaceAll("/", "%2F"); //
+        sessionid = sessionid.replaceAll("/", "%2F");
 
-
-        String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/";
-
+        String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" +
+                classid + "/" +
+                "sessions/" + sessionid +
+                "?user_id=" + AccountData.getUserID() +
+                "&service=" + AccountData.getService() +
+                "&authentication_key=" + AccountData.getAuthKey() +
+                "&service_user_id=" + AccountData.getAuthKey();
 
         final JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -73,11 +80,12 @@ public class SessionInfo extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         System.out.println(response);
                         try {
-                            JSONArray arr = response.getJSONArray("friends");
+                            JSONArray arr = response.getJSONArray("users");
                             for (int i = 0; i < arr.length(); i++) {
                                 JSONObject jsonObj2 = arr.getJSONObject(i);
-                                String temp = jsonObj2.getString("username");
-                                people.add(temp);
+                                String id = jsonObj2.getString("user_id");
+                                String name = jsonObj2.getString("username");
+                                people.add(new Student(id, name));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -100,9 +108,7 @@ public class SessionInfo extends AppCompatActivity {
 
     public void createPeopleTextViews() {
         //testing: todo: remove this
-        for(int i = 0; i < 20; i++) {
-            people.add("Person " + i);
-        }
+
 
         LinearLayout rl = (LinearLayout) findViewById(R.id.peopleContainer);
         rl.setOrientation(LinearLayout.VERTICAL);
@@ -110,7 +116,7 @@ public class SessionInfo extends AppCompatActivity {
         //lp.setMargins(0,0,0,5);
 
         int counter = 0;
-        for (String name: people) {
+        for (Student s : people) {
             lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             LinearLayout sideways = new LinearLayout(this);
@@ -118,7 +124,7 @@ public class SessionInfo extends AppCompatActivity {
 
             //put person name to the left
             TextView myText = new TextView(this);
-            myText.setText(name);
+            myText.setText(s.getName());
             myText.setTextSize(20);
             //myText.setPadding(0, 0, 0, 15);
             //myText.setBackgroundColor(Color.WHITE);
@@ -138,9 +144,47 @@ public class SessionInfo extends AppCompatActivity {
             rl.addView(sideways, lp);
 
             //add button listener
+            button.setTag(s);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     //todo: call function to add them as a friend
+                    //use the userId that is held in the s.getUserID()
+                    Button b = (Button) v;
+                    Student student = (Student) b.getTag();
+                    String studentid = student.getUserID();
+
+                    JSONObject info = new JSONObject();
+                    try {
+                        info.put("user_id", AccountData.getUserID());
+                        info.put("user_id2", studentid);
+                        info.put("authentication_key",AccountData.getAuthKey());
+                        info.put("service", AccountData.getService());
+                        info.put("service_user_id", AccountData.getAuthKey());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends";
+
+                    JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                            (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    System.out.println(response);
+                                    Toast toast = Toast.makeText(SessionInfo.this ,"You are now friends", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // TODO Auto-generated method stub
+
+                                }
+                            });
+                    // Access the RequestQueue through your singleton class.
+                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+                    
+
                 }
             });
 
@@ -156,17 +200,21 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void addUserToSession(String sessionId) {
-        // I hardcoded my user_id only because we're going to have to change it anyway with the new Data Manager
         JSONObject info = new JSONObject();
         try {
-            info.put("user_id", "GXuFK5J9RLm1SgueLKJCFg==");
+            info.put("user_id", AccountData.getUserID());
             info.put("authentication_key",AccountData.getAuthKey());
             info.put("service", AccountData.getService());
+            info.put("service_user_id", AccountData.getAuthKey());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(sessionId);
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions/" + sessionId;
+
+        String classid = AccountData.getTappedSession().getClassObject().getClassID().replaceAll("/", "%2F");
+        sessionId = sessionId.replaceAll("/", "%2F");
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/"
+                + classid.replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "/sessions/" + sessionId.replaceAll("/", "%2F").replaceAll("\\+", "%2B");
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
                     @Override
@@ -223,5 +271,4 @@ public class SessionInfo extends AppCompatActivity {
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.get(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
-
 }

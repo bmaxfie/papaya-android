@@ -19,11 +19,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import android.widget.Toast;
 
 public class CreateNewSession extends AppCompatActivity {
 
@@ -36,7 +33,7 @@ public class CreateNewSession extends AppCompatActivity {
     private Double myLatitude;
     private Double myLongitude;
     
-    private EditText classID, timeDuration;
+    private EditText className, timeDuration;
     private ArrayList<StudySession> Sessions;
 
 
@@ -47,7 +44,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         Menu menu = new Menu(this);
 
-        classID = (EditText) findViewById(R.id.editText3);
+        className = (EditText) findViewById(R.id.editText3);
         timeDuration = (EditText) findViewById(R.id.editText2);
 
 
@@ -77,12 +74,19 @@ public class CreateNewSession extends AppCompatActivity {
         /* Replace Beta with /class/id/sessions or something like that
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
+        String classId = "";
 
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + "111" + "/sessions";
+        for (int i = 0; i < AccountData.getClasses().size(); i++) {
+            if (AccountData.getClasses().get(i).getClassName().equals(className.getText().toString())) {
+                classId = AccountData.getClasses().get(i).getClassID();
+            }
+        }
+
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions";
         final JSONObject newJSONStudySession = new JSONObject();
         try {
             newJSONStudySession.put("user_id", AccountData.getUserID());
-            newJSONStudySession.put("duration", 0.0);
+            newJSONStudySession.put("duration", Integer.parseInt(timeDuration.getText().toString()));
             newJSONStudySession.put("location_desc", "Location Description");
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
@@ -90,6 +94,7 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("service", AccountData.getService());
             newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
             newJSONStudySession.put("sponsored", true);
+            newJSONStudySession.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
         }
@@ -100,7 +105,7 @@ public class CreateNewSession extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             if (response.getInt("code") == 201) {
-                                Toast.makeText(CreateNewSession.this, classID.getText() + " created for " + timeDuration.getText() + " hour(s)", Toast.LENGTH_LONG).show();
+                                Toast.makeText(CreateNewSession.this, className.getText() + " created for " + timeDuration.getText() + " hour(s)", Toast.LENGTH_LONG).show();
                                 Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
 
                                 // Confirm session_id and class_id in response probably.
