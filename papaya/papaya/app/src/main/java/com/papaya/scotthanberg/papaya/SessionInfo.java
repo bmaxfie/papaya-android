@@ -101,6 +101,9 @@ public class SessionInfo extends AppCompatActivity {
                 });
 
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            //wait until it has responeded
+        }
     }
 
     public void createView() {
