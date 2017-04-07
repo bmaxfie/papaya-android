@@ -79,7 +79,7 @@
                     android:paddingRight="25dp"
                     android:paddingTop="14dp"
                     android:paddingBottom="14dp"
-                    android:text="Hardcoded Description of location goes here. make it multiple lines hopefully after enough words\n\nwords\nmore words\nguess what?\n\n\n\n\nmore words :)" />
+                    android:text="No Location Description" />
 
                 <TextView
                     android:id="@+id/descriptionTitle"
@@ -100,7 +100,7 @@
                     android:paddingRight="25dp"
                     android:paddingTop="14dp"
                     android:paddingBottom="14dp"
-                    android:text="Hardcoded Description goes here. make it multiple lines hopefully after enough words\n\nwords\nmore words\nguess what?\n\n\n\n\nmore words :)" />
+                    android:text="No Session Description" />
 
                 <TextView
                     android:id="@+id/peopleTitle"
