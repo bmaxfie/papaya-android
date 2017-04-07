@@ -48,8 +48,8 @@ public class AccountData implements Serializable
     public static String getUserID() {
         return (String) data.get(AccountDataType.USERID);
     }
-    public static StudySession getCurrentSession() {
-        return (StudySession) data.get(AccountDataType.CURRENT_SESSION);
+    public static String getCurrentSession() {
+        return (String) data.get(AccountDataType.CURRENT_SESSION);
     }
     public static StudySession getTappedSession() {
         return (StudySession) data.get(AccountDataType.TAPPED_SESSION);

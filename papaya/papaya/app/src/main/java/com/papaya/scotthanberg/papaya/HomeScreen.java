@@ -349,11 +349,12 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void myCurrentStudySession() {
-        new Thread(new Runnable() {
+        Thread run1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey();
-                final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
+                String currentStudySession = null;
+                String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + user_id + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey();
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
                 JSONObject newJSONStudySession = new JSONObject();
                 JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
@@ -370,9 +371,28 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 } catch (TimeoutException e) {
                     System.out.println(e.toString());
                 }
+                if (currentStudySession != null)
+                    AccountData.setCurrentSession(currentStudySession);
               //  currentStudySession = AccountData.getCurrentSession().getSessionID();
               //  currentStudySession = "'Gc8QfLpJIJ6V1dsR9EEQ5w=='";
-                for (int i =0; i< Sessions.size(); i++) {
+
+            }
+        });
+        run1.start();
+        /*try {
+            run1.join();
+        } catch (InterruptedException ie) {
+            Log.d("run1 Thread", "Join on run1 failed? ");
+            ie.getStackTrace();
+        }*/
+
+        Thread run2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String currentStudySession = AccountData.getCurrentSession();
+                if (currentStudySession == null || currentStudySession == "")
+                    return;
+                for (int i = 0; i < Sessions.size(); i++) {
                     if (Sessions.get(i).getSessionID().equals(currentStudySession)) {
                         StudySession current = Sessions.get(i);
                         Location locationA = new Location("point A");
@@ -405,6 +425,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     });
                                 }
                             } else if (distance >= 15 && currentStudySession != null) {
+                                //String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                                final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
+                                System.out.println(url1);
+                                //final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?";
                                 RequestFuture<JSONObject> future1 = RequestFuture.newFuture();
                                 JSONObject newJSONStudySession1 = new JSONObject();
                                 try {
@@ -416,31 +440,44 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     e.printStackTrace();
                                 }
                                 JsonObjectRequest jsObjRequestDEL = new JsonObjectRequest
-                                        (Request.Method.DELETE, url1, newJSONStudySession1, future1, future1);
-                                MySingleton.getInstance(HomeScreen.this).addToRequestQueue(jsObjRequestDEL);
+                                        (Request.Method.PUT, url1, newJSONStudySession1, future1, future1);
+                                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestDEL);
                                 try {
                                     JSONObject response = future1.get(10, TimeUnit.SECONDS);   // This will block
-                                    System.out.println(response.getString("code"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    System.out.println(response.toString());
+                                    System.out.println("IT WORKS! BY GOD IT WORKS! EUREKA!");
+                                /*} catch (JSONException e) {
+                                    e.printStackTrace();*/
                                 } catch (ExecutionException e) {
                                     e.printStackTrace();
+                                    VolleyError ve = (VolleyError) e.getCause();
+                                    System.out.println("ve = " + ve.toString());
+                                    System.out.println("ve.networkResponse = " + ve.networkResponse.toString());
+                                    System.out.println("ve.networkResponse.status = " + ve.networkResponse.statusCode);
+                                    System.out.println("ve.networkResponse.data = " + new String(ve.networkResponse.data));
                                 } catch (InterruptedException e) {
                                 } catch (TimeoutException e) {
                                     System.out.println(e.toString());
                                 }
-                            /* runOnUiThread(new Runnable() {
-                                 public void run() {
-                                     Toast leaving = Toast.makeText(getApplicationContext(), "You have left the study session", Toast.LENGTH_SHORT);
-                                     leaving.show();
-                                 }
-                             });*/
+                                    /* runOnUiThread(new Runnable() {
+                                         public void run() {
+                                             Toast leaving = Toast.makeText(getApplicationContext(), "You have left the study session", Toast.LENGTH_SHORT);
+                                             leaving.show();
+                                         }
+                                     });*/
                             }
                         }
                     }
                 }
             }
-        }).start();
+        });
+        run2.start();
+        /*try {
+            run2.join();
+        } catch (InterruptedException ie) {
+            Log.d("run2 Thread", "Join on run2 failed? ");
+            ie.getStackTrace();
+        }*/
     }
 
     public void getUsersInStudySession(StudySession session) {
