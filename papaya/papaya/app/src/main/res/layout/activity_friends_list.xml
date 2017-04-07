@@ -8,84 +8,19 @@
 
     tools:context="com.papaya.scotthanberg.papaya.CreateNewSession">
 
-    <RelativeLayout
+    <include
         android:id="@+id/view"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/white">
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/menuButton"
-            android:src="@drawable/menuicon"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:onClick="openMenu"/>
-
-        <TextView
-            android:text="papaya"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:id="@+id/textView"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:fontFamily="sans-serif"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"/>
-    </RelativeLayout>
-
-    <RelativeLayout
+        layout="@layout/main_menu1" />
+    <include
         android:id="@+id/dropDown"
-        android:layout_width="fill_parent"
-        android:layout_height="250dp"
-        android:layout_weight="2.5"
-        android:background="@android:color/holo_orange_light"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentTop="true"
-        android:visibility="invisible"
-        android:elevation="2sp">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/view"
+        layout="@layout/main_menu2" />
 
-        <Button
-            android:id="@+id/NewStudySession"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="0dp"
-            android:text="New Study Session"
-            android:visibility="invisible"
-            android:onClick="addStudySession"
-            android:elevation="2sp"/>
 
-        <Button
-            android:id="@+id/SortByClass"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="50dp"
-            android:text="Sort By Class"
-            android:visibility="invisible"/>
-        <Button
-            android:id="@+id/ManageClasses"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="100dp"
-            android:text="Manage Classes"
-            android:visibility="invisible"/>
-        <Button
-            android:id="@+id/FindFriends"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="150dp"
-            android:text="Find Friends"
-            android:visibility="invisible" />
-        <Button
-            android:id="@+id/JoinNewClass"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="200dp"
-            android:text="Join A New Class"
-            android:visibility="invisible"/>
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/title"

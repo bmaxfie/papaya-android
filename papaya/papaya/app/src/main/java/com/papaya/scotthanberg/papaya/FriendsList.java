@@ -26,11 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FriendsList extends AppCompatActivity {
-    //Main Menu Buttons
-    private RelativeLayout dropDown;
-    private View backdrop;
-    private HorizontalScrollView horizontalScroll;
-    private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
+
 
     private ArrayList<User> listOfFriends;
 
@@ -50,14 +46,7 @@ public class FriendsList extends AppCompatActivity {
             //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
         }
 
-        dropDown = (RelativeLayout) findViewById(R.id.dropDown);
-        horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
-        backdrop = (View) findViewById(R.id.horizontalBackdrop);
-        newStudySession = (Button) findViewById(R.id.NewStudySession);
-        sortByClass = (Button) findViewById(R.id.SortByClass);
-        manageClasses = (Button) findViewById(R.id.ManageClasses);
-        findFriends = (Button) findViewById(R.id.FindFriends);
-        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+        Menu menu = new Menu(FriendsList.this);
 
         listOfFriends = new ArrayList<User>();
 

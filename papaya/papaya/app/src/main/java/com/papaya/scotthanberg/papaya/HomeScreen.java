@@ -580,6 +580,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void onLocationChanged(Location location) {
         myLatitude = location.getLatitude();
         myLongitude = location.getLongitude();
+        AccountData.setLocation(new LatLng(myLatitude, myLongitude));
         myCurrentStudySession();
         /*
         * Use the below for debugging if need be

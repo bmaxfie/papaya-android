@@ -35,7 +35,7 @@ public class CreateNewSession extends AppCompatActivity {
     private Double myLatitude;
     private Double myLongitude;
     
-    private EditText className, timeDuration;
+    private EditText className, timeDuration, description;
     private ArrayList<StudySession> Sessions;
 
 
@@ -48,6 +48,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         className = (EditText) findViewById(R.id.editText3);
         timeDuration = (EditText) findViewById(R.id.editText2);
+        description = (EditText) findViewById(R.id.editText4);
 
 
         if (savedInstanceState != null) {
@@ -65,8 +66,8 @@ public class CreateNewSession extends AppCompatActivity {
         Log.d("AccountData", "username: " + AccountData.getUsername());
 
         Intent studySession = getIntent(); // gets the previously created intent
-        myLatitude = studySession.getDoubleExtra("lat", 0);
-        myLongitude = studySession.getDoubleExtra("lon", 0);
+        myLatitude = AccountData.getLocation().latitude;
+        myLongitude = AccountData.getLocation().longitude;
     }
 
 
@@ -111,6 +112,8 @@ public class CreateNewSession extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         final JSONObject newJSONStudySession = new JSONObject();
         try {
             newJSONStudySession.put("user_id", AccountData.getUserID());
@@ -119,11 +122,12 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
             newJSONStudySession.put("start_time", formatter.format(new Date()));
-            newJSONStudySession.put("description", "This will be a description");
+            newJSONStudySession.put("description", description.getText().toString());
             newJSONStudySession.put("service", AccountData.getService());
             newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
             newJSONStudySession.put("sponsored", AccountData.getSponsored());
             newJSONStudySession.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
+            newJSONStudySession.put("start_time", sdf.format(new Date()));
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
         }
