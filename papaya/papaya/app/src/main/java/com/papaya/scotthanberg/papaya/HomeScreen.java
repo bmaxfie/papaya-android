@@ -1,15 +1,20 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.accounts.Account;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -51,7 +56,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
     /**
@@ -91,6 +96,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private HorizontalScrollView horizontalScroll;
     private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
     private String currentStudySession;
+    private Boolean leaveWarning = false;
+    private CountDownTimer sponsoredSessionTimer;
 
 
     @Override
@@ -137,8 +144,95 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         manageClasses = (Button) findViewById(R.id.ManageClasses);
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+
+        /*newStudySession.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        v.setPressed(true);
+                        sponsoredSessionTimer = new CountDownTimer(2000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                //Nothing to do
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        AlertDialog alertDialog = new AlertDialog.Builder(HomeScreen.this).create();
+                                        alertDialog.setTitle("Alert");
+                                        alertDialog.setMessage("You are too far from the study session. Going any further will make you leave the session");
+                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                });
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                        alertDialog.show();
+                                    }
+                                });
+                            }
+                        }.start();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        v.setPressed(false);
+                        sponsoredSessionTimer.cancel();
+                    case MotionEvent.ACTION_CANCEL:
+                        break;
+                }
+                return true;
+            }
+        });*/
     }
 
+    @Override
+    public void onMapLongClick(final LatLng latLng) {
+        AlertDialog alertDialog = new AlertDialog.Builder(HomeScreen.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("Create sponsored study session at this location?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AccountData.setSponsored(true);
+                        Intent StudySession = new Intent(mapView.getContext(), CreateNewSession.class);
+                        StudySession.putExtra("lat",latLng.latitude);
+                        StudySession.putExtra("lon",latLng.longitude);
+                        StudySession.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+                        startActivity(StudySession);
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public void buttonAddStudySession(View view){
+        AccountData.setSponsored(false);
+        Intent studySession = new Intent(this, CreateNewSession.class);
+        studySession.putExtra("lat",myLatitude);
+        studySession.putExtra("lon",myLongitude);
+        //  studySession.putExtra("session",Sessions);
+        studySession.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        startActivity(studySession);
+    }
 /*    public void addStudySession(View view) {
         Intent studySession = new Intent(this, CreateNewSession.class);
         dropDown.setVisibility(View.GONE);
@@ -259,8 +353,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void run() {
                 final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService() + "&authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey();
+                final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
-                final JSONObject newJSONStudySession = new JSONObject();
+                JSONObject newJSONStudySession = new JSONObject();
                 JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
                         (Request.Method.GET, url, newJSONStudySession, future, future);
                 // Access the RequestQueue through your singleton class.
@@ -287,8 +382,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         locationB.setLatitude(current.getLocation().latitude);
                         locationB.setLongitude(current.getLocation().longitude);
                         float distance = locationA.distanceTo(locationB);
-                        if (distance >= 5) {
-                            /*
+                        if (distance < 5){
+                            leaveWarning = false;
+                        }
+                        else if (distance >= 5 && distance <= 15) {
+                            if (!leaveWarning) {
                             runOnUiThread(new Runnable() {
                                 public void run() {
                                     AlertDialog alertDialog = new AlertDialog.Builder(HomeScreen.this).create();
@@ -302,18 +400,42 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                                 }
                                             });
                                     alertDialog.show();
+                                    leaveWarning = true;
                                 }
                             });
-                            */
-
-                        }
-                        else if (distance >= 15) {
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast leaving = Toast.makeText(getApplicationContext(), "You have left the study session", Toast.LENGTH_SHORT);
-                                    leaving.show();
                             }
-                            });
+                        }
+                        else if (distance >= 15 && currentStudySession != null) {
+                            RequestFuture<JSONObject> future1 = RequestFuture.newFuture();
+                            JSONObject newJSONStudySession1 = new JSONObject();
+                            try {
+                                newJSONStudySession1.put("user_id", AccountData.getUserID());
+                                newJSONStudySession1.put("service_user_id", AccountData.getAuthKey());
+                                newJSONStudySession1.put("service", AccountData.getService());
+                                newJSONStudySession1.put("authentication_key", AccountData.getAuthKey());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            JsonObjectRequest jsObjRequestDEL = new JsonObjectRequest
+                                    (Request.Method.DELETE, url1, newJSONStudySession1, future1, future1);
+                            MySingleton.getInstance(HomeScreen.this).addToRequestQueue(jsObjRequestDEL);
+                            try {
+                                JSONObject response = future1.get(10, TimeUnit.SECONDS);   // This will block
+                                System.out.println(response.getString("code"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch(ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                            } catch (TimeoutException e) {
+                                System.out.println(e.toString());
+                            }
+                            /* runOnUiThread(new Runnable() {
+                                 public void run() {
+                                     Toast leaving = Toast.makeText(getApplicationContext(), "You have left the study session", Toast.LENGTH_SHORT);
+                                     leaving.show();
+                                 }
+                             });*/
                         }
                     }
                 }
@@ -406,6 +528,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 return true;
             }
         });
+
+        mMap.setOnMapLongClickListener(HomeScreen.this);
     }
 
     /**
@@ -593,7 +717,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                                 //populates the classes arrayList one at a time
                                                 Class tempClass = new Class(
-                                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"),sessionsObject.getString("descriptions"), temp
+                                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"),sessionsObject.getString("descriptions"), temp, sessionsObject.getInt("user_role")
                                                 );
                                                 classes.add(tempClass);
 
@@ -680,14 +804,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mGoogleApiClient.disconnect();
     }
 
-    public void buttonAddStudySession(View view){
-        Intent studySession = new Intent(this, CreateNewSession.class);
-        studySession.putExtra("lat",myLatitude);
-        studySession.putExtra("lon",myLongitude);
-      //  studySession.putExtra("session",Sessions);
-        studySession.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
-        startActivity(studySession);
-    }
+
+
 
     public int dp_to_pixels(int dp) {
         final float scale = getResources().getDisplayMetrics().density;
@@ -748,6 +866,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
+
+
     /*
     public void setListOfClasses() {
         final ArrayList<Class> classList = new ArrayList<Class>();

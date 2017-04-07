@@ -26,7 +26,8 @@ public class AccountData implements Serializable
         EMAIL,
         PHONE,
         AUTH_KEY,
-        SERVICE_USER_ID
+        SERVICE_USER_ID,
+        SPONSORED
     }
 
     public static final HashMap<AccountDataType, Object> data = new HashMap<AccountDataType, Object>();
@@ -66,6 +67,7 @@ public class AccountData implements Serializable
     public static String getAuthKey() {
         return (String) data.get(AccountDataType.AUTH_KEY);
     }
+    public static boolean getSponsored() { return (Boolean) data.get(AccountDataType.SPONSORED); }
     public static String getServiceUserId() {return (String) data.get(AccountDataType.SERVICE_USER_ID); }
 
 
@@ -96,6 +98,7 @@ public class AccountData implements Serializable
     public static void setUsername(String username) {
         data.put(AccountDataType.USERNAME, username);
     }
+    public static void setSponsored(Boolean sponsored) {data.put(AccountDataType.SPONSORED, sponsored); }
     public static void setEmail(String email) {
         data.put(AccountDataType.EMAIL, email);
     }

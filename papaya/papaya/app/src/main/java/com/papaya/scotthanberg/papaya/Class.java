@@ -18,12 +18,13 @@ public class Class implements Serializable {
     private String classID;
     private String className;
     private String description;
+    private int role;
 
-
-    public Class(String classID, String className, String description, List<StudySession> sessions) {
+    public Class(String classID, String className, String description, List<StudySession> sessions, int role) {
         this.classID = classID;
         this.className = className;
         this.description = description;
+        this.role = role;
         this.activeStudySessions = sessions;
     }
 
@@ -38,6 +39,8 @@ public class Class implements Serializable {
     public String getClassName() { return className; }
 
     public String getDescription() { return description; }
+
+    public int getRole() {return role; }
 
     public List<StudySession> getActiveStudySessions() {
         return activeStudySessions;

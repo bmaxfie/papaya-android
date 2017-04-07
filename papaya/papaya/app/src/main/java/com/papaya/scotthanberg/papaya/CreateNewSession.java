@@ -74,12 +74,29 @@ public class CreateNewSession extends AppCompatActivity {
         /* Replace Beta with /class/id/sessions or something like that
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
-        String classId = "";
-
+        String classId = null;
+        if (AccountData.getClasses().isEmpty()) {
+            Toast toast = Toast.makeText(this.getApplicationContext() ,"You are not registered for any classes", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
         for (int i = 0; i < AccountData.getClasses().size(); i++) {
             if (AccountData.getClasses().get(i).getClassName().equals(className.getText().toString())) {
                 classId = AccountData.getClasses().get(i).getClassID();
+                if(AccountData.getSponsored()) {
+                    if (AccountData.getClasses().get(i).getRole() == 1) {
+                        Toast toast = Toast.makeText(this.getApplicationContext() ,"You are not authorized to create a sponsored session for this class", Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
+                }
             }
+        }
+
+        if (classId == null) {
+            Toast toast = Toast.makeText(this.getApplicationContext() ,"You are not enrolled in this class", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
         }
 
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions";
@@ -93,7 +110,7 @@ public class CreateNewSession extends AppCompatActivity {
             newJSONStudySession.put("description", "This will be a description");
             newJSONStudySession.put("service", AccountData.getService());
             newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
-            newJSONStudySession.put("sponsored", true);
+            newJSONStudySession.put("sponsored", AccountData.getSponsored());
             newJSONStudySession.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
         } catch (JSONException e) {
             System.out.println("LOL you got a JSONException");
