@@ -382,60 +382,60 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         locationB.setLatitude(current.getLocation().latitude);
                         locationB.setLongitude(current.getLocation().longitude);
                         float distance = locationA.distanceTo(locationB);
-                        if (distance < 5){
-                            leaveWarning = false;
-                        }
-                        else if (distance >= 5 && distance <= 15) {
-                            if (!leaveWarning) {
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    AlertDialog alertDialog = new AlertDialog.Builder(HomeScreen.this).create();
-                                    alertDialog.setTitle("Alert");
-                                    alertDialog.setMessage("You are too far from the study session. Going any further will make you leave the session");
-                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    alertDialog.show();
-                                    leaveWarning = true;
+                        if (Sessions.get(i).getClassObject().getRole() == 1) {
+                            if (distance < 5) {
+                                leaveWarning = false;
+                            } else if (distance >= 5 && distance <= 15) {
+                                if (!leaveWarning) {
+                                    runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            AlertDialog alertDialog = new AlertDialog.Builder(HomeScreen.this).create();
+                                            alertDialog.setTitle("Alert");
+                                            alertDialog.setMessage("You are too far from the study session. Going any further will make you leave the session");
+                                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                            alertDialog.show();
+                                            leaveWarning = true;
+                                        }
+                                    });
                                 }
-                            });
-                            }
-                        }
-                        else if (distance >= 15 && currentStudySession != null) {
-                            RequestFuture<JSONObject> future1 = RequestFuture.newFuture();
-                            JSONObject newJSONStudySession1 = new JSONObject();
-                            try {
-                                newJSONStudySession1.put("user_id", AccountData.getUserID());
-                                newJSONStudySession1.put("service_user_id", AccountData.getAuthKey());
-                                newJSONStudySession1.put("service", AccountData.getService());
-                                newJSONStudySession1.put("authentication_key", AccountData.getAuthKey());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            JsonObjectRequest jsObjRequestDEL = new JsonObjectRequest
-                                    (Request.Method.DELETE, url1, newJSONStudySession1, future1, future1);
-                            MySingleton.getInstance(HomeScreen.this).addToRequestQueue(jsObjRequestDEL);
-                            try {
-                                JSONObject response = future1.get(10, TimeUnit.SECONDS);   // This will block
-                                System.out.println(response.getString("code"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch(ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                            } catch (TimeoutException e) {
-                                System.out.println(e.toString());
-                            }
+                            } else if (distance >= 15 && currentStudySession != null) {
+                                RequestFuture<JSONObject> future1 = RequestFuture.newFuture();
+                                JSONObject newJSONStudySession1 = new JSONObject();
+                                try {
+                                    newJSONStudySession1.put("user_id", AccountData.getUserID());
+                                    newJSONStudySession1.put("service_user_id", AccountData.getAuthKey());
+                                    newJSONStudySession1.put("service", AccountData.getService());
+                                    newJSONStudySession1.put("authentication_key", AccountData.getAuthKey());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                JsonObjectRequest jsObjRequestDEL = new JsonObjectRequest
+                                        (Request.Method.DELETE, url1, newJSONStudySession1, future1, future1);
+                                MySingleton.getInstance(HomeScreen.this).addToRequestQueue(jsObjRequestDEL);
+                                try {
+                                    JSONObject response = future1.get(10, TimeUnit.SECONDS);   // This will block
+                                    System.out.println(response.getString("code"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                } catch (InterruptedException e) {
+                                } catch (TimeoutException e) {
+                                    System.out.println(e.toString());
+                                }
                             /* runOnUiThread(new Runnable() {
                                  public void run() {
                                      Toast leaving = Toast.makeText(getApplicationContext(), "You have left the study session", Toast.LENGTH_SHORT);
                                      leaving.show();
                                  }
                              });*/
+                            }
                         }
                     }
                 }
