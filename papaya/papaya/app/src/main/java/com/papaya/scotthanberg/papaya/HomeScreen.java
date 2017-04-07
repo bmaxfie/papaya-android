@@ -456,6 +456,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     public void onLocationChanged(Location location) {
         myLatitude = location.getLatitude();
         myLongitude = location.getLongitude();
+        AccountData.setLocation(new LatLng(myLatitude, myLongitude));
         myCurrentStudySession();
         /*
         * Use the below for debugging if need be
@@ -682,8 +683,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public void buttonAddStudySession(View view){
         Intent studySession = new Intent(this, CreateNewSession.class);
-        studySession.putExtra("lat",myLatitude);
-        studySession.putExtra("lon",myLongitude);
       //  studySession.putExtra("session",Sessions);
         studySession.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(studySession);

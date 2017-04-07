@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,8 +65,8 @@ public class CreateNewSession extends AppCompatActivity {
         Log.d("AccountData", "username: " + AccountData.getUsername());
 
         Intent studySession = getIntent(); // gets the previously created intent
-        myLatitude = studySession.getDoubleExtra("lat", 0);
-        myLongitude = studySession.getDoubleExtra("lon", 0);
+        myLatitude = AccountData.getLocation().latitude;
+        myLongitude = AccountData.getLocation().longitude;
     }
 
 

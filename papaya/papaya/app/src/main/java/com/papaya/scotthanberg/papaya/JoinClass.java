@@ -24,12 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class JoinClass extends AppCompatActivity {
-
-    //Main Menu Buttons
-    private RelativeLayout dropDown;
-    private View backdrop;
-    private HorizontalScrollView horizontalScroll;
-    private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
     private EditText edit;
     private String successMessage = "Joined Class!";
     private String failureMessage = "Failed to join class.  Try Again.";
@@ -38,12 +32,8 @@ public class JoinClass extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_class);
-        dropDown = (RelativeLayout) findViewById(R.id.dropDown);
-        newStudySession = (Button) findViewById(R.id.NewStudySession);
-        sortByClass = (Button) findViewById(R.id.SortByClass);
-        manageClasses = (Button) findViewById(R.id.ManageClasses);
-        findFriends = (Button) findViewById(R.id.FindFriends);
-        joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+
+        Menu menu = new Menu(JoinClass.this);
 
         if (savedInstanceState != null) {
             AccountData.data.clear();
@@ -115,28 +105,6 @@ public class JoinClass extends AppCompatActivity {
         home.putExtra("from", "JoinClass");
         home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(home);
-    }
-    public void openMenu(View view) {
-        if (dropDown.getVisibility()==View.VISIBLE) {
-            dropDown.setVisibility(View.GONE);
-            System.out.println("THIS IS WORKING");
-            //   horizontalScroll.setVisibility(View.VISIBLE);
-            //  backdrop.setVisibility(View.VISIBLE);
-            newStudySession.setVisibility(View.GONE);
-            sortByClass.setVisibility(View.GONE);
-            manageClasses.setVisibility(View.GONE);
-            findFriends.setVisibility(View.GONE);
-            joinNewClass.setVisibility(View.GONE);
-        } else {
-            dropDown.setVisibility(View.VISIBLE);
-            // backdrop.setVisibility(View.GONE);
-            // horizontalScroll.setVisibility(View.GONE);
-            newStudySession.setVisibility(View.VISIBLE);
-            sortByClass.setVisibility(View.VISIBLE);
-            manageClasses.setVisibility(View.VISIBLE);
-            findFriends.setVisibility(View.VISIBLE);
-            joinNewClass.setVisibility(View.VISIBLE);
-        }
     }
 
     /**

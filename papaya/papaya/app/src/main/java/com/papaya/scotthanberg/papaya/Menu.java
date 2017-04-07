@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import static com.papaya.scotthanberg.papaya.R.id.NewStudySession;
 import static com.papaya.scotthanberg.papaya.R.id.view;
 
 /**
@@ -42,7 +43,7 @@ public class Menu extends AppCompatActivity {
         final Button newStudySessionButton = (Button) ((Activity)context).findViewById(R.id.NewStudySession);
         newStudySessionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                toggleMenu(v.getContext());
+                buttonNewStudySession(v);
             }
         });
 
@@ -130,13 +131,17 @@ public class Menu extends AppCompatActivity {
         }
     }
 
+    public void buttonNewStudySession(View view) {
+        Intent newStudySession = new Intent(context, CreateNewSession.class);
+        context.startActivity(newStudySession);
+    }
+
     public void buttonJoinClass(View view) {
         Intent joinClass = new Intent(context, JoinClass.class);
         context.startActivity(joinClass);
     }
 
     public void buttonMyFriends(View view) {
-        System.out.println("\n" + view.toString());
         Intent friendsList = new Intent(context, FriendsList.class);
         context.startActivity(friendsList);
     }

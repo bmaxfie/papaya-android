@@ -1,5 +1,7 @@
 package com.papaya.scotthanberg.papaya;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +16,6 @@ public class AccountData implements Serializable
     public static final String ACCOUNT_DATA = "ACCOUNT_DATA";
 
     public enum AccountDataType {
-        //todo: add arraylist study sessions that is used a lot in Homescreen.java
         CLASSES,
         FRIENDS,
         CURRENT_SESSION,
@@ -26,7 +27,8 @@ public class AccountData implements Serializable
         EMAIL,
         PHONE,
         AUTH_KEY,
-        SERVICE_USER_ID
+        SERVICE_USER_ID,
+        LOCATION
     }
 
     public static final HashMap<AccountDataType, Object> data = new HashMap<AccountDataType, Object>();
@@ -67,6 +69,9 @@ public class AccountData implements Serializable
         return (String) data.get(AccountDataType.AUTH_KEY);
     }
     public static String getServiceUserId() {return (String) data.get(AccountDataType.SERVICE_USER_ID); }
+    public static LatLng getLocation() {
+        return (LatLng) data.get(AccountDataType.LOCATION);
+    }
 
 
     /*
@@ -104,5 +109,8 @@ public class AccountData implements Serializable
     }
     public static void setAuthKey(String key) { data.put(AccountDataType.AUTH_KEY, key); }
     public static void setServiceUserId(String service_id) { data.put(AccountDataType.SERVICE_USER_ID, service_id); }
+    public static void setLocation(LatLng location) {
+        data.put(AccountDataType.LOCATION, location);
+    }
 
 }
