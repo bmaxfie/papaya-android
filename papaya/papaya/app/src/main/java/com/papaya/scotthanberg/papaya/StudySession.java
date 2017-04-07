@@ -1,11 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.android.gms.maps.model.LatLng;
-
-import com.papaya.scotthanberg.papaya.Class;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,8 +23,15 @@ public class StudySession implements Serializable {
     private String host_id;
     private String location_long;
     private String location_lat;
+    private boolean friendsInSession;
 
+    public boolean isFriendsInSession() {
+        return friendsInSession;
+    }
 
+    public void setFriendsInSession(boolean friendsInSession) {
+        this.friendsInSession = friendsInSession;
+    }
 
     public StudySession(String duration, String location_long, String start_time, String session_id, String location_desc,
                         String description, String sponsored, String host_id, String location_lat) {
