@@ -1,14 +1,11 @@
 package com.papaya.scotthanberg.papaya;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +20,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SessionInfo extends AppCompatActivity {
 
@@ -169,9 +164,16 @@ public class SessionInfo extends AppCompatActivity {
                             (Request.Method.POST, url, info, new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
-                                    System.out.println(response);
-                                    Toast toast = Toast.makeText(SessionInfo.this ,"You are now friends", Toast.LENGTH_SHORT);
-                                    toast.show();
+                                    try {
+                                        int code = response.getInt("code");
+                                        System.out.println(response);
+                                        if (code == 201) {
+                                            Toast toast = Toast.makeText(SessionInfo.this, "You are now friends", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }, new Response.ErrorListener() {
 
