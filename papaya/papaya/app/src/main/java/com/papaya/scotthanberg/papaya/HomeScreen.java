@@ -173,7 +173,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void createClassButtons() {
-        RadioGroup ll = (RadioGroup) findViewById(R.id.buttonContainer);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ll.removeAllViews();
@@ -182,6 +182,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         all.setText("All");
         all.setTextOff("All");
         all.setTextOn("All");
+        all.setId(0);
         all.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 filtered.clear();
@@ -189,14 +190,19 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     filtered.add(s);
                 }
                 updateMarkers(Sessions);
-                RadioGroup rg = (RadioGroup) v.getParent();
-                for (int i = 0; i < rg.getChildCount(); i++) {
-                    ToggleButton button = (ToggleButton) rg.getChildAt(i);
+                LinearLayout layout_parent = (LinearLayout) v.getParent();
+                for (int i = 0; i < layout_parent.getChildCount(); i++) {
+                    ToggleButton button = (ToggleButton) layout_parent.getChildAt(i);
                     Log.d("onClicked", button.getId() + ":" + v.getId());
-                    if (button.getId() != v.getId())
+                    Log.d("allID", "buttonALLids (" + button.getId() + ", " + v.getId());
+                    if (button.getId() != v.getId()) {
                         button.setChecked(false);
-                    else
+                        button.setBackgroundColor(Color.BLUE);
+                    }
+                    else {
                         button.setChecked(true);
+                        button.setBackgroundColor(Color.GREEN);
+                    }
                 }
             }
         });
@@ -214,19 +220,27 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             myButton.setTextOff(currentClass.getClassName());
             myButton.setTextOn(currentClass.getClassName());
             myButton.setTag(currentClass.getClassName());
+            myButton.setId(i+1);
             myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     updateMarkers(filterClass(classes.get(index)));
                     v.setPressed(true);
 
-                    RadioGroup rg = (RadioGroup) v.getParent();
+                    LinearLayout rg = (LinearLayout) v.getParent();
                     for (int i = 0; i < rg.getChildCount(); i++) {
                         ToggleButton button = (ToggleButton) rg.getChildAt(i);
                         Log.d("onClicked", button.getId() + ":" + v.getId());
-                        if (button.getId() != v.getId())
+                        Log.d("otherIDS", "buttonOTHERids (" + button.getId() + ", " + v.getId());
+
+                        if (button.getId() != v.getId()) {
                             button.setChecked(false);
-                        else
+                            button.setBackgroundColor(Color.BLUE);
+                        }
+                        else {
                             button.setChecked(true);
+                            button.setBackgroundColor(Color.GREEN);
+
+                        }
                     }
                 }
             });
