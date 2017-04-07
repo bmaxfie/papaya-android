@@ -2,6 +2,7 @@ package com.papaya.scotthanberg.papaya;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,9 +16,11 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -148,7 +151,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
  */
 
     public void openMenu(View view) {
-        if (dropDown.getVisibility()==View.VISIBLE) {
+        if (dropDown.getVisibility() == View.VISIBLE) {
             dropDown.setVisibility(View.GONE);
             horizontalScroll.setVisibility(View.VISIBLE);
             backdrop.setVisibility(View.VISIBLE);
@@ -170,13 +173,15 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     public void createClassButtons() {
-        LinearLayout ll = (LinearLayout) findViewById(R.id.scrollContainer);
+        RadioGroup ll = (RadioGroup) findViewById(R.id.buttonContainer);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ll.removeAllViews();
-        Button all = new Button(this);
-        all.setText("All");
+        ToggleButton all = new ToggleButton(this);
         all.setTag("all_button");
+        all.setText("All");
+        all.setTextOff("All");
+        all.setTextOn("All");
         all.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 filtered.clear();
@@ -184,6 +189,15 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     filtered.add(s);
                 }
                 updateMarkers(Sessions);
+                RadioGroup rg = (RadioGroup) v.getParent();
+                for (int i = 0; i < rg.getChildCount(); i++) {
+                    ToggleButton button = (ToggleButton) rg.getChildAt(i);
+                    Log.d("onClicked", button.getId() + ":" + v.getId());
+                    if (button.getId() != v.getId())
+                        button.setChecked(false);
+                    else
+                        button.setChecked(true);
+                }
             }
         });
         ll.addView(all, lp);
@@ -195,12 +209,25 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             final ArrayList<Class> classes = AccountData.getClasses();
             final int index = i;
             Class currentClass = classes.get(i);
-            Button myButton = new Button(this);
+            ToggleButton myButton = new ToggleButton(this);
             myButton.setText(currentClass.getClassName());
+            myButton.setTextOff(currentClass.getClassName());
+            myButton.setTextOn(currentClass.getClassName());
             myButton.setTag(currentClass.getClassName());
             myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     updateMarkers(filterClass(classes.get(index)));
+                    v.setPressed(true);
+
+                    RadioGroup rg = (RadioGroup) v.getParent();
+                    for (int i = 0; i < rg.getChildCount(); i++) {
+                        ToggleButton button = (ToggleButton) rg.getChildAt(i);
+                        Log.d("onClicked", button.getId() + ":" + v.getId());
+                        if (button.getId() != v.getId())
+                            button.setChecked(false);
+                        else
+                            button.setChecked(true);
+                    }
                 }
             });
             ll.addView(myButton, lp);
