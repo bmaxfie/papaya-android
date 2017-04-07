@@ -32,8 +32,7 @@ public class CreateNewSession extends AppCompatActivity {
     private HorizontalScrollView horizontalScroll;
     private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
 
-    private Double myLatitude;
-    private Double myLongitude;
+    private Double myLatitude, myLongitude;
     
     private EditText className, timeDuration, description;
     private ArrayList<StudySession> Sessions;
@@ -66,8 +65,8 @@ public class CreateNewSession extends AppCompatActivity {
         Log.d("AccountData", "username: " + AccountData.getUsername());
 
         Intent studySession = getIntent(); // gets the previously created intent
-        myLatitude = AccountData.getLocation().latitude;
-        myLongitude = AccountData.getLocation().longitude;
+        myLatitude = studySession.getDoubleExtra("lat", 0);
+        myLongitude = studySession.getDoubleExtra("lon", 0);
     }
 
 

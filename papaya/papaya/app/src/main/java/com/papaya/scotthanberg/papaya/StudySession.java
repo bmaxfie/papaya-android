@@ -16,7 +16,7 @@ public class StudySession implements Serializable {
     private String description;
     /*  List<Post> Posts; */
     private String sessionID;
-    private String sponsored;
+    private boolean sponsored;
     private Class classObject;
     private String startTime;
     private String location_desc;
@@ -43,7 +43,7 @@ public class StudySession implements Serializable {
         this.sessionID = session_id;
         this.location_desc = location_desc;
         this.description = description;
-        this.sponsored = sponsored;
+        this.sponsored = Boolean.parseBoolean(sponsored);
         this.host_id = host_id;
     }
 
@@ -72,7 +72,7 @@ public class StudySession implements Serializable {
         return sessionID;
     }
 
-    public String getSponsored() {
+    public boolean getSponsored() {
         return sponsored;
     }
 
