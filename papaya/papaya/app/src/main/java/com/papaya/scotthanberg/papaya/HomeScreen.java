@@ -576,6 +576,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         });
 
         mMap.setOnMapLongClickListener(HomeScreen.this);
+        mMap.setOnMapLoadedCallback(
+        new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                setUp();
+            }
+        });
     }
 
     /**
@@ -724,105 +731,91 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             public void run() {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        // first delete everything
-                        //mMap.clear();
-                        // then add sessions and classes from the database
-                        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
-                                + AccountData.getAuthKey()
-                                + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                                + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                                + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B"); //todo: fix hard coding
-                        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-
-                                        try {
-                                            //update the arrayList Sessions and corresponding classes
-                                            Sessions.clear();
-                                            ArrayList<Class> classes = new ArrayList<Class>();
-                                            ArrayList<StudySession> temp = new ArrayList<StudySession>();
-                                            JSONArray arr = response.getJSONArray("classes");
-                                            for (int i = 0; i < arr.length(); i++) {
-                                                JSONObject sessionsObject = arr.getJSONObject(i);
-                                                JSONArray sessionsArray = sessionsObject.getJSONArray("sessions");
-                                                for (int j = 0; j < sessionsArray.length(); j++) {
-                                                    //adds sessions to the temp arraylist
-                                                    temp.add(new StudySession(
-                                                            sessionsArray.getJSONObject(j).get("duration").toString(),
-                                                            sessionsArray.getJSONObject(j).get("location_long").toString(),
-                                                            sessionsArray.getJSONObject(j).get("start_time").toString(),
-                                                            sessionsArray.getJSONObject(j).get("session_id").toString(),
-                                                            sessionsArray.getJSONObject(j).get("location_desc").toString(),
-                                                            sessionsArray.getJSONObject(j).get("description").toString(),
-                                                            sessionsArray.getJSONObject(j).get("sponsored").toString(),
-                                                            sessionsArray.getJSONObject(j).get("host_id").toString(),
-                                                            sessionsArray.getJSONObject(j).get("location_lat").toString()
-                                                            )
-                                                    );
-                                                } //end loop that traverses all sessions in a class
-
-                                                //populates the classes arrayList one at a time
-                                                Class tempClass = new Class(
-                                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"),sessionsObject.getString("descriptions"), temp, sessionsObject.getInt("user_role")
-                                                );
-                                                classes.add(tempClass);
-
-                                                //push temp onto Sessions variable
-                                                for (int a = temp.size() - 1; a >= 0; a--) {
-                                                    temp.get(a).setClassObject(tempClass);
-                                                    Sessions.add(temp.get(a)); //adds the study sesssion to the variable
-                                                    checkIfUsersInStudySessionAreFriends(temp.get(a).getSessionID()); // This will update the session as to whether or not there is a friend in it
-                                                    temp.remove(a); //clears temp for next set of sessions
-                                                }
-                                            } //end loop traversing all classes
-
-                                            //add classes arrayList to the AccountData
-                                            AccountData.setClasses(classes);
-                                            //add sessions to the arrayList
-                                            AccountData.setSessions(Sessions);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }, new Response.ErrorListener() {
-
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                    }
-                                });
-                        // Access the RequestQueue through your singleton class.
-                        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-                        createClassButtons();
-                        //updateMarkers(f);
-                        /*
-                        for (StudySession s : Sessions) {
-                            if (s != null) {
-                                if (s.getLocation() != null) {
-                                    if (/*checkIfUsersInStudySessionAreFriends(s.getSessionID()) == false){
-                                        mMap.addMarker(new MarkerOptions()
-                                                .position(s.getLocation())
-                                                .title(s.getSessionID())
-                                        );
-                                    } else {
-                                        mMap.addMarker(new MarkerOptions()
-                                                .position(s.getLocation())
-                                                .title(s.getSessionID())
-                                                .icon(BitmapDescriptorFactory
-                                                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                                        );
-                                    }
-                                }
-                            }
-
-                        }
-                        */
-
+                        setUp();
                     }
+
                 });
             }
         };
-        oneMinute.schedule(markStudySessions, 0, 6000);
+        oneMinute.schedule(markStudySessions, 0, 10000);
+    }
+
+    public void setUp() {
+        // first delete everything
+        mMap.clear();
+        // then add sessions and classes from the database
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
+                + AccountData.getAuthKey()
+                + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B"); //todo: fix hard coding
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            //update the arrayList Sessions and corresponding classes
+                            Sessions.clear();
+                            ArrayList<Class> classes = new ArrayList<Class>();
+                            ArrayList<StudySession> temp = new ArrayList<StudySession>();
+                            JSONArray arr = response.getJSONArray("classes");
+                            for (int i = 0; i < arr.length(); i++) {
+                                JSONObject sessionsObject = arr.getJSONObject(i);
+                                JSONArray sessionsArray = sessionsObject.getJSONArray("sessions");
+                                for (int j = 0; j < sessionsArray.length(); j++) {
+                                    //adds sessions to the temp arraylist
+                                    temp.add(new StudySession(
+                                                    sessionsArray.getJSONObject(j).get("duration").toString(),
+                                                    sessionsArray.getJSONObject(j).get("location_long").toString(),
+                                                    sessionsArray.getJSONObject(j).get("start_time").toString(),
+                                                    sessionsArray.getJSONObject(j).get("session_id").toString(),
+                                                    sessionsArray.getJSONObject(j).get("location_desc").toString(),
+                                                    sessionsArray.getJSONObject(j).get("description").toString(),
+                                                    sessionsArray.getJSONObject(j).get("sponsored").toString(),
+                                                    sessionsArray.getJSONObject(j).get("host_id").toString(),
+                                                    sessionsArray.getJSONObject(j).get("location_lat").toString()
+                                            )
+                                    );
+                                } //end loop that traverses all sessions in a class
+
+                                //populates the classes arrayList one at a time
+                                Class tempClass = new Class(
+                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"),sessionsObject.getString("descriptions"), temp, sessionsObject.getInt("user_role")
+                                );
+                                classes.add(tempClass);
+
+                                //push temp onto Sessions variable
+                                for (int a = temp.size() - 1; a >= 0; a--) {
+                                    temp.get(a).setClassObject(tempClass);
+                                    Sessions.add(temp.get(a)); //adds the study sesssion to the variable
+                                    checkIfUsersInStudySessionAreFriends(temp.get(a).getSessionID()); // This will update the session as to whether or not there is a friend in it
+                                    temp.remove(a); //clears temp for next set of sessions
+                                }
+                            } //end loop traversing all classes
+
+                            //add classes arrayList to the AccountData
+                            AccountData.setClasses(classes);
+                            //add sessions to the arrayList
+                            AccountData.setSessions(Sessions);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            System.out.println("waiting...\n");
+            //wait until it has responded
+        }
+        createClassButtons();
+        //updateMarkers(f);
     }
 
     @Override
