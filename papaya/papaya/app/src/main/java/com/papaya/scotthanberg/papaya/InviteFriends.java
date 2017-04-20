@@ -1,5 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class InviteFriends extends AppCompatActivity {
@@ -155,6 +157,49 @@ public class InviteFriends extends AppCompatActivity {
                     Button b = (Button) v;
                     Student student = (Student) b.getTag();
                     String studentid = student.getUserID();
+                    StudySession session = AccountData.getTappedSession();
+                    String sessionid = session.getSessionID();
+                    String classid = session.getClassObject().getClassID();
+
+                    String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" +
+                            classid.replaceAll("/", "%2F").replaceAll("\\+", "%2B") +
+                            "/sessions/" +
+                            sessionid.replaceAll("/", "%2F").replaceAll("\\+", "%2B") +
+                            "/invitations";
+
+                    final JSONObject newJSONInvite = new JSONObject();
+                    try {
+                        newJSONInvite.put("user_id", AccountData.getUserID()); //sender
+                        newJSONInvite.put("user_id2", studentid); //receiver
+                        newJSONInvite.put("service", AccountData.getService());
+                        newJSONInvite.put("authentication_key", AccountData.getAuthKey());
+                        newJSONInvite.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
+                    } catch (JSONException e) {
+                        System.out.println("LOL you got a JSONException");
+                    }
+
+                    final JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                            (Request.Method.POST, url, newJSONInvite, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    System.out.println(response);
+//                                    try {
+//
+//
+//                                    } catch (JSONException e) {
+//
+//                                    }
+                                }
+                            }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // TODO Auto-generated method stub
+                                    System.out.println("error:");
+                                }
+                            });
+
+                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
 
 
                 }
