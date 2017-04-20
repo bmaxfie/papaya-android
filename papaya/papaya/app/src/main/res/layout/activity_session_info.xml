@@ -149,6 +149,19 @@
             android:layout_marginRight="0dp"
             android:onClick="buttonAddUserToSession"/>
 
+        <Button
+            android:text="Invite Friends"
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="0dp"
+            android:onClick="buttonAddUserToSession"/>
+
 
     </RelativeLayout>
 
