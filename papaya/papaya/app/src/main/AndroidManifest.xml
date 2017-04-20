@@ -34,8 +34,9 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".LoginActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SplashScreen"
             android:label="@string/app_name"
@@ -46,29 +47,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateNewSession"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".HomeScreen"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".CreateNewSession"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HomeScreen"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="android:theme"
-            android:screenOrientation="portrait"/>
+            tools:replace="android:theme" />
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider148851038810437"
             android:exported="true" />
 
-        <activity android:name=".JoinClass"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".FriendsList"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".SessionInfo"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".JoinClass"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FriendsList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SessionInfo"
+            android:screenOrientation="portrait" />
+        <activity android:name=".InviteFriends"></activity>
     </application>
 
 </manifest>

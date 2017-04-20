@@ -259,6 +259,12 @@ public class SessionInfo extends AppCompatActivity {
         startActivity(home);
     }
 
+    public void buttonInviteFriends(View view) {
+        Intent inviteFriends = new Intent(this, InviteFriends.class);
+        inviteFriends.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        startActivity(inviteFriends);
+    }
+
     /**
      * Android callback
      * Invoked when the activity may be temporarily destroyed, save the instance state here.
