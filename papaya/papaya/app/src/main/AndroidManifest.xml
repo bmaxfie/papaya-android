@@ -75,7 +75,8 @@
         <activity
             android:name=".SessionInfo"
             android:screenOrientation="portrait" />
-        <activity android:name=".InviteFriends"></activity>
+        <activity android:name=".InviteFriends"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
