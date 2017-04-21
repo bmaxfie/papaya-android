@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
+import android.widget.Button;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -105,7 +106,51 @@ public class ExampleInstrumentedTest {
         while(!jsObjRequest.hasHadResponseDelivered()) {
             //wait...
         }
-        assert(true);
+    }
 
+    @Test
+    public void testInviteFriends() throws Exception{
+        AccountData.setUserID("MO8Ls4UfgB2lk81HV4YBqg==");
+        AccountData.setService("GOOGLE");
+        AccountData.setAuthKey("0123456789012345678901234567890123456789");
+
+        String classId = "value2";
+        String sessionId = "Inhkfyrv0fEzH1te%2BySYXg==";
+
+        String studentid = "sFW27p447QDzKhHd7d7BvA==";
+
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + sessionId+"/invitations";
+
+        final JSONObject newJSONStudySession = new JSONObject();
+        try {
+            newJSONStudySession.put("user_id", AccountData.getUserID());
+            newJSONStudySession.put("user_id2", studentid);
+            newJSONStudySession.put("service", AccountData.getService());
+            newJSONStudySession.put("authentication_key", AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B"));
+            newJSONStudySession.put("service_user_id", AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")); //todo: replace with correct service_user_id
+        } catch (JSONException e) {
+            System.out.println("LOL you got a JSONException");
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response);
+                        assert(true);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        assert(false);
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            //wait...
+        }
     }
 }
