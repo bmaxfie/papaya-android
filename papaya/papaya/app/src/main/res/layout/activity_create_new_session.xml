@@ -127,6 +127,30 @@
             android:layout_alignLeft="@+id/editText3"
             android:layout_alignStart="@+id/editText3" />
 
+        <TextView
+            android:id="@+id/locationDescriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Description:"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_below="@+id/editText4"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:layout_marginTop="10dp"
+            android:id="@+id/editText5"
+            android:hint="Where are you?"
+            android:layout_below="@+id/locationDescriptionText"
+            android:layout_alignLeft="@+id/editText3"
+            android:layout_alignStart="@+id/editText3" />
+
         <Button
             android:text="Create Session"
             android:id="@+id/button4"
