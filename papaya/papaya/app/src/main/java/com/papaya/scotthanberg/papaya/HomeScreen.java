@@ -102,7 +102,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private Boolean leaveWarning = false;
     private CountDownTimer sponsoredSessionTimer;
 
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -689,39 +688,43 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         classId = Sessions.get(i).getClassObject().getClassID();
                     }
                 }
-                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-                JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
-                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    //                 System.out.println(response.toString());
-                                    JSONArray arr = response.getJSONArray("users");
-                                    for (int i = 0; i < arr.length(); i++) {
-                                        if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
-                                            thereAreFriends[0] = true;
-                                            for (int j = 0; j < Sessions.size(); j++) {
-                                                if (Sessions.get(j).getSessionID().equals(session_id)) {
-                                                    Sessions.get(j).setFriendsInSession(true);
+                if (classId == null || session_id == null || AccountData.getAuthKey() == null || AccountData.getUserID() == null || AccountData.getService() == null) {
+
+                } else {
+                    url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                    JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
+                            (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        //                 System.out.println(response.toString());
+                                        JSONArray arr = response.getJSONArray("users");
+                                        for (int i = 0; i < arr.length(); i++) {
+                                            if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
+                                                thereAreFriends[0] = true;
+                                                for (int j = 0; j < Sessions.size(); j++) {
+                                                    if (Sessions.get(j).getSessionID().equals(session_id)) {
+                                                        Sessions.get(j).setFriendsInSession(true);
+                                                    }
                                                 }
                                             }
                                         }
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
                                 }
-                            }
-                        }, new Response.ErrorListener() {
+                            }, new Response.ErrorListener() {
 
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // TODO Auto-generated method stub
-                                // if(true)
-                                //    System.out.println("Test");
-                            }
-                        });
-                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // TODO Auto-generated method stub
+                                    // if(true)
+                                    //    System.out.println("Test");
+                                }
+                            });
+                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
+                }
             }
         }).start();
     }
@@ -738,31 +741,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     public void run() {
                         setUp();
                     }
-
                 });
             }
         };
         oneMinute.schedule(markStudySessions, 0, 10000);
-        /* Testing Purposes */
-        /*
-        NotificationClass not = new NotificationClass();
-        not.sendNotification(this.getApplicationContext());
-        */
-        //Get an instance of NotificationManager//
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.notification_icon)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
-        // Gets an instance of the NotificationManager service//
-
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        //When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
-
-
-        mNotificationManager.notify(001, mBuilder.build());
+        sendNotification("This is a title", "This is content");
     }
 
     public void setUp() {
@@ -932,6 +915,25 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void sendNotification(String title, String content) {
+
+        //Get an instance of NotificationManager//
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.notification_icon)
+                        .setContentTitle(title)
+                        .setContentText(content);
+        // Gets an instance of the NotificationManager service//
+
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
+
+
+        mNotificationManager.notify(001, mBuilder.build());
+    }
 
     /*
     public void setListOfClasses() {
