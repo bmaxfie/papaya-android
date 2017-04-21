@@ -34,7 +34,7 @@ public class CreateNewSession extends AppCompatActivity {
 
     private Double myLatitude, myLongitude;
     
-    private EditText className, timeDuration, description;
+    private EditText className, timeDuration, description, locationDescription;
     private ArrayList<StudySession> Sessions;
 
 
@@ -48,6 +48,8 @@ public class CreateNewSession extends AppCompatActivity {
         className = (EditText) findViewById(R.id.editText3);
         timeDuration = (EditText) findViewById(R.id.editText2);
         description = (EditText) findViewById(R.id.editText4);
+        locationDescription = (EditText) findViewById(R.id.editText5);
+
 
 
         if (savedInstanceState != null) {
@@ -117,7 +119,7 @@ public class CreateNewSession extends AppCompatActivity {
         try {
             newJSONStudySession.put("user_id", AccountData.getUserID());
             newJSONStudySession.put("duration", Integer.parseInt(timeDuration.getText().toString()));
-            newJSONStudySession.put("location_desc", "Location Description");
+            newJSONStudySession.put("location_desc", locationDescription.getText().toString());
             newJSONStudySession.put("location_lat", myLatitude.floatValue());
             newJSONStudySession.put("location_long", myLongitude.floatValue());
             newJSONStudySession.put("start_time", formatter.format(new Date()));
@@ -137,7 +139,7 @@ public class CreateNewSession extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             if (response.getInt("code") == 201) {
-                                Toast.makeText(CreateNewSession.this, className.getText() + " created for " + timeDuration.getText() + " hour(s)", Toast.LENGTH_LONG).show();
+                                Toast.makeText(CreateNewSession.this, className.getText() + " created for " + timeDuration.getText() + " minute(s)", Toast.LENGTH_LONG).show();
                                 Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
 
                                 // Confirm session_id and class_id in response probably.
