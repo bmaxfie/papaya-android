@@ -48,6 +48,32 @@
         android:elevation="1sp">
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Class:"
+            android:id="@+id/classText"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="24dp"/>
+
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/classText"
+            android:layout_alignLeft="@+id/editText2"
+            android:layout_alignStart="@+id/editText2"
+            android:layout_marginTop="10dp"
+            android:ems="10"/>
+
 
         <TextView
             android:text="Enter the duration:"
@@ -57,51 +83,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_below="@id/spinner"
             android:layout_marginLeft="28dp"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="24dp" />
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:id="@+id/editText2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/durationText"
             android:layout_alignStart="@+id/durationText"
             android:layout_below="@+id/durationText"
             android:layout_marginLeft="22dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginEnd="50dp"
             android:layout_marginStart="22dp"
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Enter in Minutes"
             android:inputType="time" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter Class:"
-            android:id="@+id/classText"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_below="@+id/editText2"
-            android:layout_marginLeft="28dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="12dp"/>
 
-        <!-- Look into spinners?? -->
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:ems="10"
-            android:layout_marginTop="10dp"
-            android:id="@+id/editText3"
-            android:hint="CS307"
-            android:layout_below="@+id/classText"
-            android:layout_alignLeft="@+id/editText2"
-            android:layout_alignStart="@+id/editText2" />
 
         <TextView
             android:id="@+id/descriptionText"
@@ -110,22 +113,24 @@
             android:text="Enter Description:"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:layout_below="@+id/editText3"
+            android:layout_below="@+id/editText2"
             android:layout_marginLeft="28dp"
             android:layout_marginStart="28dp"
             android:layout_marginTop="12dp"/>
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:layout_marginTop="10dp"
             android:id="@+id/editText4"
-            android:hint="Please enter a description of your study session here"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/spinner"
+            android:layout_alignStart="@+id/spinner"
             android:layout_below="@+id/descriptionText"
-            android:layout_alignLeft="@+id/editText3"
-            android:layout_alignStart="@+id/editText3" />
+            android:layout_marginRight="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Ex: Studying for exam"
+            android:inputType="text" />
 
         <TextView
             android:id="@+id/locationDescriptionText"
@@ -136,20 +141,23 @@
             android:textSize="18sp"
             android:layout_below="@+id/editText4"
             android:layout_marginLeft="28dp"
+
             android:layout_marginStart="28dp"
             android:layout_marginTop="12dp"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
+            android:inputType="text"
             android:ems="10"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginEnd="50dp"
             android:id="@+id/editText5"
             android:hint="Where are you?"
             android:layout_below="@+id/locationDescriptionText"
-            android:layout_alignLeft="@+id/editText3"
-            android:layout_alignStart="@+id/editText3" />
+            android:layout_alignLeft="@+id/spinner"
+            android:layout_alignStart="@+id/spinner" />
 
         <Button
             android:text="Create Session"

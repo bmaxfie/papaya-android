@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,7 +36,9 @@ public class CreateNewSession extends AppCompatActivity {
 
     private Double myLatitude, myLongitude;
     
-    private EditText className, timeDuration, description, locationDescription;
+    private EditText timeDuration, description, locationDescription;
+    private Spinner spinner;
+    private String className;
     private ArrayList<StudySession> Sessions;
 
 
@@ -45,7 +49,7 @@ public class CreateNewSession extends AppCompatActivity {
 
         Menu menu = new Menu(this);
 
-        className = (EditText) findViewById(R.id.editText3);
+        spinner = (Spinner) findViewById(R.id.spinner);
         timeDuration = (EditText) findViewById(R.id.editText2);
         description = (EditText) findViewById(R.id.editText4);
         locationDescription = (EditText) findViewById(R.id.editText5);
@@ -69,6 +73,22 @@ public class CreateNewSession extends AppCompatActivity {
         Intent studySession = getIntent(); // gets the previously created intent
         myLatitude = studySession.getDoubleExtra("lat", 0);
         myLongitude = studySession.getDoubleExtra("lon", 0);
+
+        //create dropdown for classes
+        addItemsToSpinner();
+
+    }
+
+    public void addItemsToSpinner() {
+        spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayList<String> list = new ArrayList<String>();
+        for (Class c : AccountData.getClasses()) {
+            list.add(c.getClassName());
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
     }
 
 
@@ -78,6 +98,8 @@ public class CreateNewSession extends AppCompatActivity {
         /* Replace Beta with /class/id/sessions or something like that
         *  https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/
         *  */
+
+        className = String.valueOf(spinner.getSelectedItem());
         String classId = null;
         if (AccountData.getClasses().isEmpty()) {
             Toast toast = Toast.makeText(this.getApplicationContext() ,"You are not registered for any classes", Toast.LENGTH_SHORT);
@@ -85,7 +107,7 @@ public class CreateNewSession extends AppCompatActivity {
             return;
         }
         for (int i = 0; i < AccountData.getClasses().size(); i++) {
-            if (AccountData.getClasses().get(i).getClassName().equals(className.getText().toString())) {
+            if (AccountData.getClasses().get(i).getClassName().equals(className)) {
                 classId = AccountData.getClasses().get(i).getClassID();
                 if(AccountData.getSponsored()) {
                     if (AccountData.getClasses().get(i).getRole() == 1) {
@@ -139,7 +161,7 @@ public class CreateNewSession extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             if (response.getInt("code") == 201) {
-                                Toast.makeText(CreateNewSession.this, className.getText() + " created for " + timeDuration.getText() + " minute(s)", Toast.LENGTH_LONG).show();
+                                Toast.makeText(CreateNewSession.this, className + " created for " + timeDuration.getText() + " minute(s)", Toast.LENGTH_LONG).show();
                                 Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
 
                                 // Confirm session_id and class_id in response probably.
