@@ -131,7 +131,7 @@
             android:id="@+id/locationDescriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enter Description:"
+            android:text="Enter Location:"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_below="@+id/editText4"
