@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -152,55 +153,57 @@ public class InviteFriends extends AppCompatActivity {
             button.setTag(user);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    //todo: call function to invite them to study session
-                    //use the userId that is held in the s.getUserID()
                     Button b = (Button) v;
                     Student student = (Student) b.getTag();
-                    String studentid = student.getUserID();
+                    String studentid = student.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                     StudySession session = AccountData.getTappedSession();
-                    String sessionid = session.getSessionID();
-                    String classid = session.getClassObject().getClassID();
+                    String sessionId = session.getSessionID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                    String classId = session.getClassObject().getClassID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
 
-                    String url="https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" +
-                            classid.replaceAll("/", "%2F").replaceAll("\\+", "%2B") +
-                            "/sessions/" +
-                            sessionid.replaceAll("/", "%2F").replaceAll("\\+", "%2B") +
-                            "/invitations";
+                    String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/"
+                            + classId + "/sessions/" +
+                            sessionId + "/invitations";
 
-                    final JSONObject newJSONInvite = new JSONObject();
+                    final JSONObject newJSONStudySession = new JSONObject();
                     try {
-                        newJSONInvite.put("user_id", AccountData.getUserID()); //sender
-                        newJSONInvite.put("user_id2", studentid); //receiver
-                        newJSONInvite.put("service", AccountData.getService());
-                        newJSONInvite.put("authentication_key", AccountData.getAuthKey());
-                        newJSONInvite.put("service_user_id", AccountData.getAuthKey()); //todo: replace with correct service_user_id
+                        newJSONStudySession.put("user_id", AccountData.getUserID());
+                        newJSONStudySession.put("user_id2", studentid);
+                        newJSONStudySession.put("service", AccountData.getService());
+                        newJSONStudySession.put("authentication_key", AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B"));
+                        newJSONStudySession.put("service_user_id", AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")); //todo: replace with correct service_user_id
                     } catch (JSONException e) {
                         System.out.println("LOL you got a JSONException");
                     }
 
-                    final JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                            (Request.Method.POST, url, newJSONInvite, new Response.Listener<JSONObject>() {
+                    JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                            (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
-                                    System.out.println(response);
-//                                    try {
-//
-//
-//                                    } catch (JSONException e) {
-//
-//                                    }
+                                    try {
+                                        System.out.println(response);
+                                        if (response.getInt("code") == 201) {
+                                            Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
+
+                                            // Confirm session_id and class_id in response probably.
+                                        }
+                                        else {
+                                            Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
+                                        }
+                                    } catch (JSONException jsone) {
+                                        Log.d("CREATE_NEW_SESSION", "Malformed JSON Response ERROR.");
+                                    }
                                 }
                             }, new Response.ErrorListener() {
 
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    // TODO Auto-generated method stub
-                                    System.out.println("error:");
+                                    Log.d("CREATE_NEW_SESSION", "onErrorResponse: " + error.getMessage());
+
                                 }
                             });
 
-                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-
+                    // Access the RequestQueue through your singleton class.
+                    MySingleton.getInstance(InviteFriends.this).addToRequestQueue(jsObjRequest);
 
                 }
             });
