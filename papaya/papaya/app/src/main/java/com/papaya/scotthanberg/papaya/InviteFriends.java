@@ -154,7 +154,7 @@ public class InviteFriends extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Button b = (Button) v;
-                    Student student = (Student) b.getTag();
+                    final Student student = (Student) b.getTag();
                     String studentid = student.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                     StudySession session = AccountData.getTappedSession();
                     String sessionId = session.getSessionID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
@@ -182,15 +182,15 @@ public class InviteFriends extends AppCompatActivity {
                                     try {
                                         System.out.println(response);
                                         if (response.getInt("code") == 201) {
-                                            Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
-
-                                            // Confirm session_id and class_id in response probably.
+                                            Toast.makeText(InviteFriends.this, "Invitation sent to " + student.getName(), Toast.LENGTH_LONG).show();
                                         }
                                         else {
-                                            Log.d("CREATE_NEW_SESSION", response.getString("code_description"));
+                                            Toast.makeText(InviteFriends.this, response.getString("code_description"), Toast.LENGTH_LONG).show();
+                                            Log.d("INVITEFRIENDS", response.getString("code_description"));
                                         }
                                     } catch (JSONException jsone) {
-                                        Log.d("CREATE_NEW_SESSION", "Malformed JSON Response ERROR.");
+                                        Toast.makeText(InviteFriends.this, "Malformed JSON Response ERROR.", Toast.LENGTH_LONG).show();
+                                        Log.d("INVITEFRIENDS", "Malformed JSON Response ERROR.");
                                     }
                                 }
                             }, new Response.ErrorListener() {
