@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SessionInfo extends AppCompatActivity {
-
+    ArrayList<commentPost> commentPostsArray = new ArrayList<commentPost>();
+    ArrayAdapter<commentPost> adapter;
+    private ListView lv;
     String locationDesription;
     String description;
     //doesn't have to be a student, just need to hold both id and username
@@ -32,6 +36,8 @@ public class SessionInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_info);
+        lv = (ListView) findViewById(R.id.commentsBoardView);
+        adapter = new ArrayAdapter<commentPost>( this, R.layout.list_item, commentPostsArray);
 
         //sets up the menu and all its buttons
         Menu menu = new Menu(SessionInfo.this);
@@ -209,6 +215,17 @@ public class SessionInfo extends AppCompatActivity {
 
 
         }
+    }
+
+    public void viewCommentsButton(View view) {
+        setContentView(R.layout.comments_board);
+        addComment("Hellohello", 0);
+        lv.setAdapter(adapter);
+    }
+
+    public void addComment(String comment, int Access) { // Access determines if they are a student(0), TA(1), or prof(2)
+        commentPostsArray.add(new commentPost(comment, Access));
+
     }
 
     public void buttonAddUserToSession(View view) {
