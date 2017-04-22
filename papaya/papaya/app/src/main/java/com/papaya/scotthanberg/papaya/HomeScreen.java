@@ -1,5 +1,6 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -973,13 +974,20 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         //Get an instance of NotificationManager//
 
         //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarker.getPosition(), 14));
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, new Intent(this, HomeScreen.class), PendingIntent.FLAG_UPDATE_CURRENT
+        );
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle(title)
-                        .setContentText(content);
-                        //.addAction(R.drawable.notification_icon, "See Session", pendingIntent);
+                        .setContentText(content)
+                        .setOnlyAlertOnce(true)
+                        .setTicker("New Invitation")
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .addAction(R.drawable.notification_icon, "See Session", pendingIntent);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
