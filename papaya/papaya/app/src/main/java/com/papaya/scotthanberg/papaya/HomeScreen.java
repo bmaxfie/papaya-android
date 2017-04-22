@@ -694,7 +694,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 if (classId == null || session_id == null || AccountData.getAuthKey() == null || AccountData.getUserID() == null || AccountData.getService() == null) {
 
                 } else {
-                    url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                    classId.replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                    session_id.replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                    url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id
+                            + "?authentication_key=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                            + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                            + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                            + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                     JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
                             (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                 @Override
@@ -827,7 +833,49 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         }
         createClassButtons();
         updateMarkers(Sessions);
-        sendNotification("This is a title", "This is content");
+
+        /*Check for notifications*/
+
+        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes//sessions//invitations?"
+                + "user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&service_user_id=" + AccountData.getAuthKey()
+                + "&service=" + AccountData.getService()
+                + "&authentication_key=" + AccountData.getAuthKey();
+
+        jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response);
+                            JSONArray arr = response.getJSONArray("posts");
+                            if (arr.length() != 0) {
+                                for(int i = 0; i < arr.length(); i++) {
+                                    JSONObject inviteObject = arr.getJSONObject(i);
+                                    String className = inviteObject.get("classname").toString();
+                                    String class_id = inviteObject.get("class_id").toString();
+                                    String session_id = inviteObject.get("session_id").toString();
+                                    String username = inviteObject.get("username").toString();
+                                    sendNotification(i+1, "New Invitation for " + className, username + " invited you to a study session");
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            //System.out.println("waiting...\n");
+            //wait until it has responded
+        }
+
     }
 
     @Override
@@ -920,7 +968,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void sendNotification(String title, String content) {
+    public void sendNotification(int notificationId, String title, String content) {
 
         //Get an instance of NotificationManager//
 
@@ -940,7 +988,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
 
 
-        mNotificationManager.notify(001, mBuilder.build());
+        mNotificationManager.notify(notificationId, mBuilder.build());
     }
 
     /*
