@@ -821,11 +821,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
         while(!jsObjRequest.hasHadResponseDelivered()) {
-            System.out.println("waiting...\n");
+            //System.out.println("waiting...\n");
             //wait until it has responded
         }
         createClassButtons();
-        //updateMarkers(f);
+        updateMarkers(Sessions);
     }
 
     @Override
