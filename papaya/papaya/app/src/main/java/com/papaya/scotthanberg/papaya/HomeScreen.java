@@ -1,6 +1,7 @@
 package com.papaya.scotthanberg.papaya;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -582,6 +583,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMapLongClickListener(HomeScreen.this);
         mMap.setOnMapLoadedCallback(
         new GoogleMap.OnMapLoadedCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onMapLoaded() {
                 setUp();
@@ -747,12 +749,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             }
         };
         oneMinute.schedule(markStudySessions, 0, 10000);
-        sendNotification("This is a title", "This is content");
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void setUp() {
         // first delete everything
-        mMap.clear();
+        //mMap.clear();
         // then add sessions and classes from the database
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user?authentication_key="
                 + AccountData.getAuthKey()
@@ -826,6 +827,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         }
         createClassButtons();
         updateMarkers(Sessions);
+        sendNotification("This is a title", "This is content");
     }
 
     @Override
@@ -922,16 +924,20 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         //Get an instance of NotificationManager//
 
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarker.getPosition(), 14));
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle(title)
                         .setContentText(content);
+                        //.addAction(R.drawable.notification_icon, "See Session", pendingIntent);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         //When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
+
 
 
         mNotificationManager.notify(001, mBuilder.build());
