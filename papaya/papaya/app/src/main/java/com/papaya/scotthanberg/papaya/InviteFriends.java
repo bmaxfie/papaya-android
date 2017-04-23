@@ -155,7 +155,7 @@ public class InviteFriends extends AppCompatActivity {
                 public void onClick(View v) {
                     Button b = (Button) v;
                     final Student student = (Student) b.getTag();
-                    String studentid = student.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                    String studentid = student.getUserID();
                     StudySession session = AccountData.getTappedSession();
                     String sessionId = session.getSessionID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                     String classId = session.getClassObject().getClassID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
