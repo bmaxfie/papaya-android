@@ -105,6 +105,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private Boolean leaveWarning = false;
     private CountDownTimer sponsoredSessionTimer;
 
+    private HashMap<Integer, Long> notificationTimes = new HashMap<Integer, Long>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -755,7 +757,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
             }
         };
-        oneMinute.schedule(markStudySessions, 0, 10000);
+        oneMinute.schedule(markStudySessions, 0, 3000);
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void setUp() {
@@ -848,7 +850,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            System.out.println(response);
                             JSONArray arr = response.getJSONArray("posts");
                             if (arr.length() != 0) {
                                 for(int i = 0; i < arr.length(); i++) {
@@ -994,9 +995,19 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         //When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
 
+        Notification notification = mBuilder.build();
 
 
-        mNotificationManager.notify(notificationId, mBuilder.build());
+        if (notificationTimes.get(notificationId) == null) {
+            notificationTimes.put(notificationId, notification.when);
+        }
+        else {
+            notification.when = notificationTimes.get(notificationId);
+        }
+
+
+
+        mNotificationManager.notify(notificationId, notification);
     }
 
     /*
