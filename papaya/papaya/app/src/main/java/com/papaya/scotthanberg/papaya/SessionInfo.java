@@ -250,7 +250,7 @@ public class SessionInfo extends AppCompatActivity {
         if (commentPostsArray.size()>5) {
             scrollableText.setVisibility(View.VISIBLE);
         }
-        Thread run1 = new Thread(new Runnable() {
+ /*       Thread run1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
@@ -273,7 +273,7 @@ public class SessionInfo extends AppCompatActivity {
                 }
             }
         });
-        run1.start();
+        run1.start();*/
         adapter.notifyDataSetChanged();
     }
 
