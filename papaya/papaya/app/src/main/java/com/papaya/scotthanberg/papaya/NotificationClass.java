@@ -12,8 +12,12 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class NotificationClass extends AppCompatActivity{
-    public NotificationClass() {
-
+    private String className, class_id, session_id, username;
+    public NotificationClass(String className, String class_id, String session_id, String username) {
+        this.className = className;
+        this.class_id = class_id;
+        this.session_id = session_id;
+        this.username = username;
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void sendNotification(String title, String content) {
@@ -33,5 +37,30 @@ public class NotificationClass extends AppCompatActivity{
 
 
         mNotificationManager.notify(001, mBuilder.build());
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public String getClass_id() {
+        return class_id;
+    }
+
+    public String getSession_id() {
+        return session_id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean equals(NotificationClass test) {
+        if (this.className != test.getClassName())
+            return false;
+        if (this.class_id != test.getClass_id())
+            return false;
+
+        return true;
     }
 }

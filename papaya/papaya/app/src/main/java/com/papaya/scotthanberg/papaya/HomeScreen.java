@@ -979,16 +979,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 this, 0, new Intent(this, HomeScreen.class), PendingIntent.FLAG_UPDATE_CURRENT
         );
 
+        //pendingIntent.putExtra("from", "CreateNewSession");
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle(title)
                         .setContentText(content)
-                        .setOnlyAlertOnce(true)
                         .setTicker("New Invitation")
                         .setDefaults(Notification.DEFAULT_VIBRATE)
                         .setPriority(Notification.PRIORITY_HIGH)
-                        .addAction(R.drawable.notification_icon, "See Session", pendingIntent);
+                        .setAutoCancel(true);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -1000,14 +1001,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         if (notificationTimes.get(notificationId) == null) {
             notificationTimes.put(notificationId, notification.when);
-        }
-        else {
-            notification.when = notificationTimes.get(notificationId);
+            mNotificationManager.notify(notificationId, notification); //only add the notificaiton the first time called
         }
 
 
 
-        mNotificationManager.notify(notificationId, notification);
+
+
     }
 
     /*
