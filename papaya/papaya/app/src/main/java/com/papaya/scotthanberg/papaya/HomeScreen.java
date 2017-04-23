@@ -847,7 +847,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     String class_id = inviteObject.get("class_id").toString();
                                     String session_id = inviteObject.get("session_id").toString();
                                     String username = inviteObject.get("username").toString();
-                                    sendNotification(i + 1, "New Invitation for " + className, username + " invited you to a study session");
+                                    sendNotification(i + 1, "New Invitation for " + className, username + " invited you to a study session", session_id);
                                 }
                             }
                         } catch (JSONException e) {
@@ -878,10 +878,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         System.out.println("THIS ACTIVITY IS" + activity);
         if (activity.equals("CreateNewSession")) {
             //updateMarkers();
-        }
-        if (activity.equals("Notification")) {
-            String notificationSession = homeScreen.getStringExtra("session");
-            //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarker.getPosition(), 14));
         }
         if (mGoogleApiClient.isConnected()) {
             requestLocationUpdates();
@@ -982,7 +978,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void sendNotification(int notificationId, String title, String content) {
+    public void sendNotification(int notificationId, String title, String content, String sessionId) {
 
         //Get an instance of NotificationManager//
 
@@ -994,7 +990,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent mainIntent = new Intent(this, HomeScreen.class);
         //mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mainIntent.putExtra("from", "Notification");
-        mainIntent.putExtra("session", "TNBQUYMN5yrADAoJFliAyA==");
+        mainIntent.putExtra("session", sessionId);
         mainIntent.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
