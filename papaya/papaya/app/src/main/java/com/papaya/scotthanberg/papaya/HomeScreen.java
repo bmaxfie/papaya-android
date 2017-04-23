@@ -692,10 +692,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     }
                 }
                 url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id
-                + "?authentication_key=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                        + "?authentication_key=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                 JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override
@@ -728,7 +728,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             }
                         });
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
-                
+
             }
         }).start();
     }
@@ -841,13 +841,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         try {
                             JSONArray arr = response.getJSONArray("posts");
                             if (arr.length() != 0) {
-                                for(int i = 0; i < arr.length(); i++) {
+                                for (int i = 0; i < arr.length(); i++) {
                                     JSONObject inviteObject = arr.getJSONObject(i);
                                     String className = inviteObject.get("classname").toString();
                                     String class_id = inviteObject.get("class_id").toString();
                                     String session_id = inviteObject.get("session_id").toString();
                                     String username = inviteObject.get("username").toString();
-                                    sendNotification(i+1, "New Invitation for " + className, username + " invited you to a study session");
+                                    sendNotification(i + 1, "New Invitation for " + className, username + " invited you to a study session", session_id);
                                 }
                             }
                         } catch (JSONException e) {
@@ -862,13 +862,14 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-        while(!jsObjRequest.hasHadResponseDelivered()) {
+        while (!jsObjRequest.hasHadResponseDelivered()) {
             //System.out.println("waiting...\n");
             //wait until it has responded
         }
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onResume() {
         super.onResume();
@@ -877,6 +878,24 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         System.out.println("THIS ACTIVITY IS" + activity);
         if (activity.equals("CreateNewSession")) {
             //updateMarkers();
+        }
+        if (mGoogleApiClient.isConnected()) {
+            requestLocationUpdates();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onResume();
+        String activity = intent.getStringExtra("from");
+        if (activity.equals("Notification")) {
+            String notificationSession = intent.getStringExtra("session");
+            for (StudySession s : Sessions) {
+                if (s.getSessionID().equals(notificationSession)) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(s.getLocation(), 18));
+                }
+            }
         }
         if (mGoogleApiClient.isConnected()) {
             requestLocationUpdates();
@@ -959,16 +978,22 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void sendNotification(int notificationId, String title, String content) {
+    public void sendNotification(int notificationId, String title, String content, String sessionId) {
 
         //Get an instance of NotificationManager//
 
         //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarker.getPosition(), 14));
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, new Intent(this, HomeScreen.class), PendingIntent.FLAG_UPDATE_CURRENT
-        );
+//        PendingIntent pendingIntent = PendingIntent.getActivity(
+//                this, 0, new Intent(this, HomeScreen.class), PendingIntent.FLAG_UPDATE_CURRENT
+//        );
 
-        //pendingIntent.putExtra("from", "CreateNewSession");
+        Intent mainIntent = new Intent(this, HomeScreen.class);
+        //mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mainIntent.putExtra("from", "Notification");
+        mainIntent.putExtra("session", sessionId);
+        mainIntent.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -978,7 +1003,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         .setTicker("New Invitation")
                         .setDefaults(Notification.DEFAULT_VIBRATE)
                         .setPriority(Notification.PRIORITY_HIGH)
-                        .setAutoCancel(true);
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -992,8 +1018,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             notificationTimes.put(notificationId, notification.when);
             mNotificationManager.notify(notificationId, notification); //only add the notificaiton the first time called
         }
-
-
 
 
     }
