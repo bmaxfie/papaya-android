@@ -1,13 +1,17 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,12 +27,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static android.view.View.VISIBLE;
 
 public class SessionInfo extends AppCompatActivity {
     ArrayList<commentPost> commentPostsArray = new ArrayList<commentPost>();
     ArrayAdapter<commentPost> adapter;
     String locationDesription;
-    String description;
+    String description, classid, sessionid;
+    Button post;
+    InputMethodManager mgr;
+    EditText commentText;
+    RelativeLayout scrollableText;
     //doesn't have to be a student, just need to hold both id and username
     ArrayList<Student> people = new ArrayList<Student>();
 
@@ -40,6 +54,7 @@ public class SessionInfo extends AppCompatActivity {
         Menu menu = new Menu(SessionInfo.this);
 
         Intent studySession = getIntent(); // gets the previously created intent
+        mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (savedInstanceState != null) {
             AccountData.data.clear();
@@ -59,8 +74,8 @@ public class SessionInfo extends AppCompatActivity {
 
     private void getInfo() {
         //since classid and sessionid are in the url, they can't have '/' in them
-        String classid = AccountData.getTappedSession().getClassObject().getClassID();
-        String sessionid = AccountData.getTappedSession().getSessionID();
+        classid = AccountData.getTappedSession().getClassObject().getClassID();
+        sessionid = AccountData.getTappedSession().getSessionID();
         classid = classid.replaceAll("/", "%2F"); //
         sessionid = sessionid.replaceAll("/", "%2F");
 
@@ -216,14 +231,50 @@ public class SessionInfo extends AppCompatActivity {
 
     public void viewCommentsButton(View view) {
         setContentView(R.layout.comments_board);
+        commentText = (EditText) findViewById(R.id.commentText);
+        scrollableText = (RelativeLayout) findViewById(R.id.scrollableText);
         ListView lv = (ListView) findViewById(R.id.commentsBoardView);
         adapter = new commentsAdapter(this, commentPostsArray);
         lv.setAdapter(adapter);
     }
 
-    public void addComment(String comment, int Access) { // Access determines if they are a student(0), TA(1), or prof(2)
-        commentPostsArray.add(new commentPost(comment, Access));
+    public void postComment(View view) {
+        addComment(commentText.getText().toString());
+        commentText.setText("");
+        mgr.hideSoftInputFromWindow(commentText.getWindowToken(), 0);
 
+    }
+
+    public void addComment(String comment) { // Access determines if they are a student(0), TA(1), or prof(2)
+        commentPostsArray.add(new commentPost(comment));
+        if (commentPostsArray.size()>5) {
+            scrollableText.setVisibility(View.VISIBLE);
+        }
+        Thread run1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts/" +commentText.getText().toString()+ "/&authentication_key=" +AccountData.getAuthKey() "/&service=" + "/&service_user_id=" + AccountData.getAuthKey();
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                JSONObject newJSONStudySession = new JSONObject();
+                JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
+                        (Request.Method.GET, url, newJSONStudySession, future, future);
+                // Access the RequestQueue through your singleton class.
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
+                    currentStudySession = response.getString("current_session_id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                } catch (InterruptedException e) {
+                } catch (TimeoutException e) {
+                    System.out.println(e.toString());
+                }
+            }
+        });
+        run1.start();
+        adapter.notifyDataSetChanged();
     }
 
     public void buttonAddUserToSession(View view) {

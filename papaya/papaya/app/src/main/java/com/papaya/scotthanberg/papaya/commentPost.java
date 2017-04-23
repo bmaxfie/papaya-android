@@ -7,17 +7,13 @@ package com.papaya.scotthanberg.papaya;
 public class commentPost {
     public String USERNAME;
     public String COMMENT;
-    public int USERACCESS;
 
-    public commentPost(String COMMENT, int USERACCESS) {
+    public commentPost(String COMMENT) {
         this.USERNAME = AccountData.getUsername();
         this.COMMENT = COMMENT;
-        this.USERACCESS = USERACCESS;
     }
 
     public String getUserName(){ return USERNAME;}
 
     public String getComment() { return COMMENT;}
-
-    public int getUserAccess() {return USERACCESS;}
 }
