@@ -847,6 +847,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     String session_id = inviteObject.get("session_id").toString();
                                     String username = inviteObject.get("username").toString();
                                     sendNotification(i + 1, "New Invitation for " + className, username + " invited you to a study session", session_id);
+                                    deleteInvite(class_id,session_id);
                                 }
                             }
                         } catch (JSONException e) {
@@ -855,6 +856,22 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     }
                 }, new Response.ErrorListener() {
 
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+    }
+    public void deleteInvite(String class_id, String session_id) {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + class_id + "/sessions/ + " + session_id + "/invitations";
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                    }
+                }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }
