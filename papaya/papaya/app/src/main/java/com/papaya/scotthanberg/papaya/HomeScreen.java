@@ -354,10 +354,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     }
                     //tag is used to store the session object inside each marker
                 }
+                checkForInvite(s.getClassObject().getClassID(), s.getSessionID());
             }
-
         }
-
     }
 
     public void myCurrentStudySession() {
@@ -689,45 +688,79 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         classId = Sessions.get(i).getClassObject().getClassID();
                     }
                 }
-                if (classId == null || session_id == null || AccountData.getAuthKey() == null || AccountData.getUserID() == null || AccountData.getService() == null) {
-
-                } else {
-                    url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-                    JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
-                            (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        //                 System.out.println(response.toString());
-                                        JSONArray arr = response.getJSONArray("users");
-                                        for (int i = 0; i < arr.length(); i++) {
-                                            if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
-                                                thereAreFriends[0] = true;
-                                                for (int j = 0; j < Sessions.size(); j++) {
-                                                    if (Sessions.get(j).getSessionID().equals(session_id)) {
-                                                        Sessions.get(j).setFriendsInSession(true);
-                                                    }
+                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    //                 System.out.println(response.toString());
+                                    JSONArray arr = response.getJSONArray("users");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
+                                            thereAreFriends[0] = true;
+                                            for (int j = 0; j < Sessions.size(); j++) {
+                                                if (Sessions.get(j).getSessionID().equals(session_id)) {
+                                                    Sessions.get(j).setFriendsInSession(true);
                                                 }
                                             }
                                         }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
                                     }
-                                }
-                            }, new Response.ErrorListener() {
 
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    // TODO Auto-generated method stub
-                                    // if(true)
-                                    //    System.out.println("Test");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
-                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO Auto-generated method stub
+                                // if(true)
+                                //    System.out.println("Test");
+                            }
+                        });
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
             }
         }).start();
+    }
+    public void checkForInvite(String classId, String sessionId) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", AccountData.getUserID());
+            jsonObject.put("service_user_id", AccountData.getServiceUserId());
+            jsonObject.put("service", AccountData.getService());
+            jsonObject.put("authentication_key", AccountData.getAuthKey());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" +
+                classId + "/" +
+                "sessions/" +
+                sessionId +
+                "/invitations?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+        JsonObjectRequest jsonObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray arr = response.getJSONArray("posts");
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject js = arr.getJSONObject(i);
+                        String username = js.getString("username");
+                        sendNotification("Papaya", username);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjRequest);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -821,7 +854,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
         createClassButtons();
         updateMarkers(Sessions);
-        sendNotification("This is a title", "This is content");
     }
 
     @Override
@@ -912,9 +944,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
         //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstancestate.get(AccountData.ACCOUNT_DATA);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void sendNotification(String title, String content) {
+    public void sendNotification(String title, String name) {
 
         //Get an instance of NotificationManager//
 
@@ -924,8 +955,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle(title)
-                        .setContentText(content);
-                        //.addAction(R.drawable.notification_icon, "See Session", pendingIntent);
+                        .setContentText(name + "invites you to a study session!");
+        //.addAction(R.drawable.notification_icon, "See Session", pendingIntent);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -936,58 +967,4 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         mNotificationManager.notify(001, mBuilder.build());
     }
-
-    /*
-    public void setListOfClasses() {
-        final ArrayList<Class> classList = new ArrayList<Class>();
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-        /*
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/classes?authentication_key=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-
-                RequestFuture<JSONObject> future = RequestFuture.newFuture();
-                JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                        (Request.Method.GET, url, null, future, future);
-                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-                try {
-                    JSONObject response = future.get(5, TimeUnit.SECONDS);   // This will block
-                    JSONArray classes = response.getJSONArray("class_ids");
-                    for (int i = 0; i < classes.length(); i++) {
-                        JSONObject jsobj = classes.getJSONObject(i);
-                        classList.add(new Class(jsobj.getString("class_id"), jsobj.getString("classname"), jsobj.getString("descriptions"), null));
-                    }
-                    ArrayList<Class> classListCopy = new ArrayList<Class>();
-                    classListCopy.addAll(classList);
-                    AccountData.setClasses(classList);
-                } catch (JSONException e) {
-                } catch (ExecutionException e) {
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                }
-
-
-            }
-        }).start();
-    }
-    */
 }
