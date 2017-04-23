@@ -1,10 +1,8 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
-import android.widget.Button;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -18,8 +16,6 @@ import org.junit.runner.RunWith;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -134,6 +130,37 @@ public class TestLambdaFunctions {
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.POST, url, newJSONStudySession, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response);
+                        assert(true);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        assert(false);
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            //wait...
+        }
+    }
+    @Test
+    public void testSessionDump() throws Exception {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/website/sessions&professor_access_key=" + "12341236";
+/*
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }) */
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         System.out.println(response);
