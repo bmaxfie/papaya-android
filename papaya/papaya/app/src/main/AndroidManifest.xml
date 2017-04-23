@@ -52,7 +52,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".HomeScreen"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
