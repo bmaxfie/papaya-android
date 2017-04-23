@@ -1,6 +1,8 @@
 package com.papaya.scotthanberg.papaya;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -101,6 +103,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private String currentStudySession;
     private Boolean leaveWarning = false;
     private CountDownTimer sponsoredSessionTimer;
+
+    private HashMap<Integer, Long> notificationTimes = new HashMap<Integer, Long>();
 
 
     @Override
@@ -687,7 +691,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         classId = Sessions.get(i).getClassObject().getClassID();
                     }
                 }
-                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id
+                + "?authentication_key=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                 JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                             @Override
@@ -741,7 +749,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
             }
         };
-        oneMinute.schedule(markStudySessions, 0, 10000);
+        oneMinute.schedule(markStudySessions, 0, 3000);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -817,7 +825,48 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
         createClassButtons();
         updateMarkers(Sessions);
-        sendNotification("This is a title", "This is content");
+
+        /*Check for notifications*/
+
+        url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes//sessions//invitations?"
+                + "user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&service_user_id=" + AccountData.getAuthKey()
+                + "&service=" + AccountData.getService()
+                + "&authentication_key=" + AccountData.getAuthKey();
+
+        jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray arr = response.getJSONArray("posts");
+                            if (arr.length() != 0) {
+                                for(int i = 0; i < arr.length(); i++) {
+                                    JSONObject inviteObject = arr.getJSONObject(i);
+                                    String className = inviteObject.get("classname").toString();
+                                    String class_id = inviteObject.get("class_id").toString();
+                                    String session_id = inviteObject.get("session_id").toString();
+                                    String username = inviteObject.get("username").toString();
+                                    sendNotification(i+1, "New Invitation for " + className, username + " invited you to a study session");
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            //System.out.println("waiting...\n");
+            //wait until it has responded
+        }
+
     }
 
     @Override
@@ -910,26 +959,43 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void sendNotification(String title, String content) {
+    public void sendNotification(int notificationId, String title, String content) {
 
         //Get an instance of NotificationManager//
 
         //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarker.getPosition(), 14));
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, new Intent(this, HomeScreen.class), PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        //pendingIntent.putExtra("from", "CreateNewSession");
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle(title)
-                        .setContentText(content);
-        //.addAction(R.drawable.notification_icon, "See Session", pendingIntent);
+                        .setContentText(content)
+                        .setTicker("New Invitation")
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setAutoCancel(true);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         //When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
 
+        Notification notification = mBuilder.build();
 
-        mNotificationManager.notify(001, mBuilder.build());
+
+        if (notificationTimes.get(notificationId) == null) {
+            notificationTimes.put(notificationId, notification.when);
+            mNotificationManager.notify(notificationId, notification); //only add the notificaiton the first time called
+        }
+
+
+
+
     }
 
     /*
