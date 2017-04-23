@@ -123,8 +123,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             AccountData.data.clear();
             AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA));
             //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) savedInstanceState.getSerializable(AccountData.ACCOUNT_DATA);
-        }
-        else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
+        } else if (getIntent().hasExtra(AccountData.ACCOUNT_DATA)) {
             AccountData.data.clear();
             AccountData.data.putAll((HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA));
             //AccountData.data = (HashMap<AccountData.AccountDataType, Object>) getIntent().getSerializableExtra(AccountData.ACCOUNT_DATA);
@@ -211,8 +210,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     public void onClick(DialogInterface dialog, int which) {
                         AccountData.setSponsored(true);
                         Intent StudySession = new Intent(mapView.getContext(), CreateNewSession.class);
-                        StudySession.putExtra("lat",latLng.latitude);
-                        StudySession.putExtra("lon",latLng.longitude);
+                        StudySession.putExtra("lat", latLng.latitude);
+                        StudySession.putExtra("lon", latLng.longitude);
                         StudySession.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
                         startActivity(StudySession);
                     }
@@ -227,11 +226,11 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         alertDialog.show();
     }
 
-    public void buttonAddStudySession(View view){
+    public void buttonAddStudySession(View view) {
         AccountData.setSponsored(false);
         Intent studySession = new Intent(this, CreateNewSession.class);
-        studySession.putExtra("lat",myLatitude);
-        studySession.putExtra("lon",myLongitude);
+        studySession.putExtra("lat", myLatitude);
+        studySession.putExtra("lon", myLongitude);
         //  studySession.putExtra("session",Sessions);
         studySession.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(studySession);
@@ -245,7 +244,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
  */
 
     public void openMenu(View view) {
-        if (dropDown.getVisibility()==View.VISIBLE) {
+        if (dropDown.getVisibility() == View.VISIBLE) {
             dropDown.setVisibility(View.GONE);
             horizontalScroll.setVisibility(View.VISIBLE);
             backdrop.setVisibility(View.VISIBLE);
@@ -277,7 +276,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         all.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 filtered.clear();
-                for (StudySession s: Sessions){
+                for (StudySession s : Sessions) {
                     filtered.add(s);
                 }
                 updateMarkers(Sessions);
@@ -308,14 +307,14 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
     public ArrayList<StudySession> filterClass(Class a_class) {
         filtered.clear();
-        for (StudySession s: Sessions){
-            if(s.getClassObject().getClassID().equals(a_class.getClassID())){
+        for (StudySession s : Sessions) {
+            if (s.getClassObject().getClassID().equals(a_class.getClassID())) {
                 filtered.add(s);
             }
         }
 
         if (filtered.isEmpty()) {
-            Toast toast = Toast.makeText(this.getApplicationContext() ,"No study sessions for this class", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this.getApplicationContext(), "No study sessions for this class", Toast.LENGTH_SHORT);
             toast.show();
         }
         return filtered;
@@ -334,8 +333,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                         .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                         );
                         marker.setTag(s);
-                    }
-                    else if (s.isFriendsInSession() == false) {
+                    } else if (s.isFriendsInSession() == false) {
                         Marker marker = mMap.addMarker(new MarkerOptions()
                                         .position(s.getLocation())
                                         .title(s.getSessionID())
@@ -345,10 +343,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         marker.setTag(s);
                     } else {
                         Marker marker = mMap.addMarker(new MarkerOptions()
-                                        .position(s.getLocation())
-                                        .title(s.getSessionID())
-                                        .icon(BitmapDescriptorFactory
-                                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                .position(s.getLocation())
+                                .title(s.getSessionID())
+                                .icon(BitmapDescriptorFactory
+                                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                         );
                         marker.setTag(s);
                     }
@@ -385,8 +383,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 }
                 if (currentStudySession != null)
                     AccountData.setCurrentSession(currentStudySession);
-              //  currentStudySession = AccountData.getCurrentSession().getSessionID();
-              //  currentStudySession = "'Gc8QfLpJIJ6V1dsR9EEQ5w=='";
+                //  currentStudySession = AccountData.getCurrentSession().getSessionID();
+                //  currentStudySession = "'Gc8QfLpJIJ6V1dsR9EEQ5w=='";
 
             }
         });
@@ -518,9 +516,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 // TODO Auto-generated method stub
-                             //if (true)
- //                                System.out.println("Test");
-                             }
+                                //if (true)
+                                //                                System.out.println("Test");
+                            }
                         });
     }
 
@@ -555,8 +553,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                StudySession sess = (StudySession)marker.getTag();
-                AccountData.setTappedSession((StudySession)marker.getTag());
+                StudySession sess = (StudySession) marker.getTag();
+                AccountData.setTappedSession((StudySession) marker.getTag());
                 buttonSessionInfo();
 
                 /*
@@ -580,13 +578,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         mMap.setOnMapLongClickListener(HomeScreen.this);
         mMap.setOnMapLoadedCallback(
-        new GoogleMap.OnMapLoadedCallback() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onMapLoaded() {
-                setUp();
-            }
-        });
+                new GoogleMap.OnMapLoadedCallback() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onMapLoaded() {
+                        setUp();
+                    }
+                });
     }
 
     /**
@@ -645,7 +643,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         longitudeText.setText("Longitude :" + String.valueOf(myLongitude));
         */
         // Change the camera to follow you!
-        if(shouldMove) {
+        if (shouldMove) {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myLatitude, myLongitude)));
             shouldMove = false;
         }
@@ -689,43 +687,40 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         classId = Sessions.get(i).getClassObject().getClassID();
                     }
                 }
-                if (classId == null || session_id == null || AccountData.getAuthKey() == null || AccountData.getUserID() == null || AccountData.getService() == null) {
-
-                } else {
-                    url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
-                    JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
-                            (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        //                 System.out.println(response.toString());
-                                        JSONArray arr = response.getJSONArray("users");
-                                        for (int i = 0; i < arr.length(); i++) {
-                                            if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
-                                                thereAreFriends[0] = true;
-                                                for (int j = 0; j < Sessions.size(); j++) {
-                                                    if (Sessions.get(j).getSessionID().equals(session_id)) {
-                                                        Sessions.get(j).setFriendsInSession(true);
-                                                    }
+                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                JsonObjectRequest jsObjRequest1 = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    //                 System.out.println(response.toString());
+                                    JSONArray arr = response.getJSONArray("users");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        if (friends.contains((arr.getJSONObject(i).getString("user_id")))) {
+                                            thereAreFriends[0] = true;
+                                            for (int j = 0; j < Sessions.size(); j++) {
+                                                if (Sessions.get(j).getSessionID().equals(session_id)) {
+                                                    Sessions.get(j).setFriendsInSession(true);
                                                 }
                                             }
                                         }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
                                     }
-                                }
-                            }, new Response.ErrorListener() {
 
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    // TODO Auto-generated method stub
-                                    // if(true)
-                                    //    System.out.println("Test");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                    MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
-                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO Auto-generated method stub
+                                // if(true)
+                                //    System.out.println("Test");
+                            }
+                        });
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest1);
+                
             }
         }).start();
     }
@@ -748,6 +743,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         };
         oneMinute.schedule(markStudySessions, 0, 10000);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void setUp() {
         // first delete everything
@@ -790,7 +786,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
                                 //populates the classes arrayList one at a time
                                 Class tempClass = new Class(
-                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"),sessionsObject.getString("descriptions"), temp, sessionsObject.getInt("user_role")
+                                        sessionsObject.getString("class_id"), sessionsObject.getString("classname"), sessionsObject.getString("descriptions"), temp, sessionsObject.getInt("user_role")
                                 );
                                 classes.add(tempClass);
 
@@ -830,7 +826,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent homeScreen = getIntent(); // gets the previously created intent
         String activity = homeScreen.getStringExtra("from");
         System.out.println("THIS ACTIVITY IS" + activity);
-        if(activity.equals("CreateNewSession")){
+        if (activity.equals("CreateNewSession")) {
             //updateMarkers();
         }
         if (mGoogleApiClient.isConnected()) {
@@ -849,8 +845,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         super.onStop();
         mGoogleApiClient.disconnect();
     }
-
-
 
 
     public int dp_to_pixels(int dp) {
@@ -883,6 +877,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     /**
      * Android callback
      * Invoked when the activity may be temporarily destroyed, save the instance state here.
+     *
      * @param outState - supplised by Android OS
      */
     @Override
@@ -900,6 +895,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
      * onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
      * other state here, possibly usable after onStart() has completed.
      * The savedInstanceState Bundle is same as the one used in onCreate().
+     *
      * @param savedInstanceState - supplied by Android OS
      */
     @Override
@@ -925,13 +921,12 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle(title)
                         .setContentText(content);
-                        //.addAction(R.drawable.notification_icon, "See Session", pendingIntent);
+        //.addAction(R.drawable.notification_icon, "See Session", pendingIntent);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         //When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
-
 
 
         mNotificationManager.notify(001, mBuilder.build());
