@@ -5,9 +5,9 @@ package com.papaya.scotthanberg.papaya;
  */
 
 public class commentPost {
-    private String USERNAME;
-    private String COMMENT;
-    private int USERACCESS;
+    public String USERNAME;
+    public String COMMENT;
+    public int USERACCESS;
 
     public commentPost(String COMMENT, int USERACCESS) {
         this.USERNAME = AccountData.getUsername();

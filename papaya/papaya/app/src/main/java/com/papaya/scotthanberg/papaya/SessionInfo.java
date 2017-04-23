@@ -26,7 +26,6 @@ import java.util.HashMap;
 public class SessionInfo extends AppCompatActivity {
     ArrayList<commentPost> commentPostsArray = new ArrayList<commentPost>();
     ArrayAdapter<commentPost> adapter;
-    private ListView lv;
     String locationDesription;
     String description;
     //doesn't have to be a student, just need to hold both id and username
@@ -36,8 +35,6 @@ public class SessionInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_info);
-        lv = (ListView) findViewById(R.id.commentsBoardView);
-        adapter = new ArrayAdapter<commentPost>( this, R.layout.list_item, commentPostsArray);
 
         //sets up the menu and all its buttons
         Menu menu = new Menu(SessionInfo.this);
@@ -219,7 +216,8 @@ public class SessionInfo extends AppCompatActivity {
 
     public void viewCommentsButton(View view) {
         setContentView(R.layout.comments_board);
-        addComment("Hellohello", 0);
+        ListView lv = (ListView) findViewById(R.id.commentsBoardView);
+        adapter = new commentsAdapter(this, commentPostsArray);
         lv.setAdapter(adapter);
     }
 
