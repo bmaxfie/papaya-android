@@ -441,7 +441,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                             } else if (distance >= 15 && currentStudySession != null) {
                                 //String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                                 final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
-                                System.out.println(url1);
+                                //System.out.println(url1);
                                 //final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession/?";
                                 RequestFuture<JSONObject> future1 = RequestFuture.newFuture();
                                 JSONObject newJSONStudySession1 = new JSONObject();
@@ -458,8 +458,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestDEL);
                                 try {
                                     JSONObject response = future1.get(10, TimeUnit.SECONDS);   // This will block
-                                    System.out.println(response.toString());
-                                    System.out.println("IT WORKS! BY GOD IT WORKS! EUREKA!");
+                                    //System.out.println(response.toString());
+                                    //System.out.println("IT WORKS! BY GOD IT WORKS! EUREKA!");
                                 /*} catch (JSONException e) {
                                     e.printStackTrace();*/
                                 } catch (ExecutionException e) {
@@ -507,8 +507,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                     //System.out.println(response.toString());
                                     JSONArray arr = response.getJSONArray("users");
                                     for (int i = 0; i < arr.length(); i++) {
-                                        System.out.println(arr.getJSONObject(i).get("user_id").toString());
-                                        System.out.println(arr.getJSONObject(i).get("username").toString());
+                                       // System.out.println(arr.getJSONObject(i).get("user_id").toString());
+                                        //System.out.println(arr.getJSONObject(i).get("username").toString());
                                     }
 
                                 } catch (JSONException e) {
@@ -668,7 +668,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                 try {
                     JSONObject response = future.get(10, TimeUnit.SECONDS);
-                    System.out.println(response.toString());
+                    //System.out.println(response.toString());
                     JSONArray arr = response.getJSONArray("friends");
                     for (int i = 0; i < arr.length(); i++) {
                         friends.add(arr.getJSONObject(i).get("user_id").toString());
@@ -691,7 +691,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         classId = Sessions.get(i).getClassObject().getClassID();
                     }
                 }
-                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id
+                url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + session_id.replaceAll("/", "%2F").replaceAll("\\+", "%2B")
                         + "?authentication_key=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
                         + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
                         + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
@@ -862,11 +862,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-        while (!jsObjRequest.hasHadResponseDelivered()) {
-            //System.out.println("waiting...\n");
-            //wait until it has responded
-        }
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
