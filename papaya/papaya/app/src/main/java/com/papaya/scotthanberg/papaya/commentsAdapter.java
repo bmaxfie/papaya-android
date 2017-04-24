@@ -14,8 +14,12 @@ import java.util.ArrayList;
  */
 
 public class commentsAdapter extends ArrayAdapter<commentPost> {
+
+    int size;
+
     public commentsAdapter(Context context, ArrayList<commentPost> comments) {
         super(context, 0, comments);
+        size = comments.size();
     }
 
     @Override
