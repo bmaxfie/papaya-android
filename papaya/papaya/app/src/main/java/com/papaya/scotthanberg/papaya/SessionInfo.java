@@ -246,10 +246,7 @@ public class SessionInfo extends AppCompatActivity {
                 final commentPost item = (commentPost) lv.getItemAtPosition(position);
                 for (int i = 0; i < AccountData.getClasses().size(); i++) {
                     if (AccountData.getClasses().get(i).getClassID().equals(classid)) {
-                        if (AccountData.getClasses().get(i).getRole() == 1) {
-                            System.out.println("Do not have the permissins to delete a comment");
-                            return;
-                        } else {
+                        if (AccountData.getClasses().get(i).getRole() != 1 || AccountData.getUsername().equals(item.getUserName())) {
                             // Create a dialog
                             AlertDialog alertDialog = new AlertDialog.Builder(SessionInfo.this).create();
                             alertDialog.setTitle("Alert");
@@ -298,6 +295,9 @@ public class SessionInfo extends AppCompatActivity {
                                         }
                                     });
                             alertDialog.show();
+                        } else {
+                            System.out.println("Do not have the permissins to delete a comment");
+                            return;
                         }
                     }
                 }
