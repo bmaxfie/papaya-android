@@ -280,7 +280,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 for (StudySession s : Sessions) {
                     filtered.add(s);
                 }
-                updateMarkers(Sessions);
+                updateMarkers();
             }
         });
         ll.addView(all, lp);
@@ -294,10 +294,21 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             Class currentClass = classes.get(i);
             Button myButton = new Button(this);
             myButton.setText(currentClass.getClassName());
-            myButton.setTag(currentClass.getClassName());
+            myButton.setTag(currentClass.getClassID());
             myButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    updateMarkers(filterClass(classes.get(index)));
+                    Button b = (Button) v;
+                    filtered.clear();
+                    for (StudySession s : Sessions) {
+                        if (s.getClassObject().getClassID().equals(b.getTag())) {
+                            filtered.add(s);
+                        }
+                    }
+                    if (filtered.isEmpty()) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "No study sessions for this class", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                    updateMarkers();
                 }
             });
             ll.addView(myButton, lp);
@@ -321,9 +332,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         return filtered;
     }
 
-    public void updateMarkers(ArrayList<StudySession> listOfSessions) {
+    public void updateMarkers() {
         mMap.clear();
-        for (StudySession s : listOfSessions) {
+        for (StudySession s : filtered) {
             if (s != null) {
                 if (s.getLocation() != null) {
                     if (s.getSponsored()) {
@@ -584,6 +595,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                     @Override
                     public void onMapLoaded() {
                         setUp();
+                        for(StudySession s : Sessions) {
+                            filtered.add(s);
+                        }
                     }
                 });
     }
@@ -746,6 +760,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
             }
         };
+
         oneMinute.schedule(markStudySessions, 0, 3000);
     }
 
@@ -821,6 +836,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
         createClassButtons();
+        updateMarkers();
 
         /*Check for notifications*/
 
@@ -859,6 +875,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+        updateMarkers();
     }
 
 
