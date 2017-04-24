@@ -21,5 +21,7 @@
         android:paddingLeft="10dp"
         android:textSize="20dp"
         android:text="COMMENT COMMENT COMMENT COMMENT COMMENT"
-        android:textColor="@color/blue_grey_900"/>
+        android:textColor="@color/blue_grey_900"
+        android:onClick="deleteComment"
+        />
 </RelativeLayout>

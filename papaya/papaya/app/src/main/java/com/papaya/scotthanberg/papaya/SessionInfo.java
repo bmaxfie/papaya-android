@@ -1,8 +1,10 @@
 package com.papaya.scotthanberg.papaya;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,7 +21,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,11 +28,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import static android.view.View.VISIBLE;
 
 public class SessionInfo extends AppCompatActivity {
     ArrayList<commentPost> commentPostsArray = new ArrayList<commentPost>();
@@ -243,6 +239,38 @@ public class SessionInfo extends AppCompatActivity {
         commentText.setText("");
         mgr.hideSoftInputFromWindow(commentText.getWindowToken(), 0);
 
+    }
+
+    public void deleteComment(View view) {
+        for (int i = 0; i < AccountData.getClasses().size(); i++) {
+            if (AccountData.getClasses().get(i).getClassID().equals(classid)) {
+                if (AccountData.getClasses().get(i).getRole() == 1) {
+                    System.out.println("Do not have the permissins to delete a comment");
+                    return;
+                } else {
+                    // Create a dialog
+                    AlertDialog alertDialog = new AlertDialog.Builder(SessionInfo.this).create();
+                    alertDialog.setTitle("Alert");
+                    alertDialog.setMessage("Delete this comment?");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // HTTP Request call to delete it
+                                    System.out.println("DELETED");
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
+            }
+        }
     }
 
     public void addComment(String comment) { // Access determines if they are a student(0), TA(1), or prof(2)
