@@ -922,7 +922,12 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     @Override
     protected void onPause() {
         super.onPause();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        try {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+        catch (IllegalStateException e) {
+            //don't worry about it
+        }
     }
 
     @Override
