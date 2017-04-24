@@ -367,8 +367,13 @@ public class SessionInfo extends AppCompatActivity {
                     commentPostsArray.clear();
                     for (int i =0;i<posts.length();i++) {
                         JSONObject jsonobject = (JSONObject) posts.get(i);
-                        commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message"), jsonobject.optString("post_id")));
-                        System.out.println("Please Work");
+                        if (Integer.parseInt(jsonobject.optString("post_user_role")) == 1) {
+                            commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message"), jsonobject.optString("post_id")));
+                        } else if (Integer.parseInt(jsonobject.optString("post_user_role")) == 2) {
+                            commentPostsArray.add(new commentPost(jsonobject.optString("username") + " (TA)", jsonobject.optString("message"), jsonobject.optString("post_id")));
+                        } else {
+                            commentPostsArray.add(new commentPost(jsonobject.optString("username") + " (Professor)", jsonobject.optString("message"), jsonobject.optString("post_id")));
+                        }
                     }
                 } catch (JSONException e) {
                 } catch (ExecutionException e) {
