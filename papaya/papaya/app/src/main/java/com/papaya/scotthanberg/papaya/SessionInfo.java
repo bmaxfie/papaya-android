@@ -245,27 +245,32 @@ public class SessionInfo extends AppCompatActivity {
 
     }
 
-    public void addComment(String comment) { // Access determines if they are a student(0), TA(1), or prof(2)
+    public void addComment(final String comment) { // Access determines if they are a student(0), TA(1), or prof(2)
         commentPostsArray.add(new commentPost(comment));
         if (commentPostsArray.size()>5) {
             scrollableText.setVisibility(View.VISIBLE);
         }
- /*       Thread run1 = new Thread(new Runnable() {
+        Thread run1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
-                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts/" +commentText.getText().toString()+ "/&authentication_key=" +AccountData.getAuthKey() "/&service=" + "/&service_user_id=" + AccountData.getAuthKey();
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts";
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
                 JSONObject newJSONStudySession = new JSONObject();
-                JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
-                        (Request.Method.GET, url, newJSONStudySession, future, future);
+                try {
+                    newJSONStudySession.put("service", AccountData.getService());
+                    newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
+                    newJSONStudySession.put("service_user_id", AccountData.getAuthKey());
+                    newJSONStudySession.put("user_id", user_id);
+                    newJSONStudySession.put("message", comment);
+                } catch (JSONException e) {}
+                JsonObjectRequest jsObjRequestPOST = new JsonObjectRequest
+                        (Request.Method.POST, url, newJSONStudySession, future, future);
                 // Access the RequestQueue through your singleton class.
-                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestPOST);
                 try {
                     JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
-                    currentStudySession = response.getString("current_session_id");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    System.out.println("IT WORKED");
                 } catch (ExecutionException e) {
                 } catch (InterruptedException e) {
                 } catch (TimeoutException e) {
@@ -273,7 +278,7 @@ public class SessionInfo extends AppCompatActivity {
                 }
             }
         });
-        run1.start();*/
+        run1.start();
         adapter.notifyDataSetChanged();
     }
 
