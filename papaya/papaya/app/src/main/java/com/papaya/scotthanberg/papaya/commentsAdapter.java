@@ -31,10 +31,10 @@ public class commentsAdapter extends ArrayAdapter<commentPost> {
         }
 
         TextView UserID = (TextView) convertView.findViewById(R.id.UserID);
-        TextView commentBody = (TextView) convertView.findViewById(R.id.commentBody);
+        TextView commentText = (TextView) convertView.findViewById(R.id.commentBody);
 
         UserID.setText(comment.USERNAME);
-        commentBody.setText(comment.COMMENT);
+        commentText.setText(comment.COMMENT);
 
         return convertView;
     }

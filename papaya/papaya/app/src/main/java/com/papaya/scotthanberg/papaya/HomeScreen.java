@@ -1,6 +1,5 @@
 package com.papaya.scotthanberg.papaya;
 
-import android.accounts.Account;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -810,10 +808,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                 });
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
-        while(!jsObjRequest.hasHadResponseDelivered()) {
-            System.out.println("waiting...\n");
-            //wait until it has responded
-        }
+
         createClassButtons();
         //updateMarkers(f);
     }
