@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_create_new_session"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray">
+
+    <include
+        android:id="@+id/view"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        layout="@layout/main_menu1" />
+    <include
+        android:id="@+id/dropDown"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/view"
+        layout="@layout/main_menu2" />
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/view"
+        android:background="@android:color/white"
+        android:layout_marginTop="1dp">
+        <TextView
+            android:text="Comments"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleText"
+            android:textSize="24sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="1dp"
+        android:layout_below="@+id/title">
+        <ListView
+            android:id="@+id/commentsBoardView"
+            android:layout_width="fill_parent"
+            android:layout_height="343dp"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="#CCCCCC"
+            android:dividerHeight="1dp">
+        </ListView>
+        <RelativeLayout
+            android:layout_marginTop="-1.5dp"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@android:color/background_light"
+            android:id="@+id/scrollableText"
+            android:visibility="invisible"
+            android:divider="#CCCCCC"
+            android:dividerHeight="1dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Scroll to view more"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/postComment"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@android:color/white"
+        android:layout_marginTop="475dp">
+        <TextView
+            android:text="Enter Comment:"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/commentHeader"
+            android:textSize="24sp"
+            android:textColor="@color/blue_grey_900"
+             />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/commentText"
+            android:hint="Write your comment here"
+            android:layout_alignParentBottom="true" />
+        <Button
+            android:text="Post Comment"
+            android:id="@+id/postButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="0dp"
+            android:onClick="postComment"/>
+    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/getComments"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="70dp"
+        android:paddingRight="5dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/refresh"
+        android:scaleType="fitCenter"
+        android:background="@android:color/white"
+        android:onClick="refresh"
+        />
+</RelativeLayout>

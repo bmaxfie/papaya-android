@@ -148,6 +148,19 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="0dp"
             android:onClick="buttonAddUserToSession"/>
+        <Button
+            android:text="View Comments"
+            android:id= "@+id/viewComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="0dp"
+            android:onClick="viewCommentsButton"/>
 
         <Button
             android:text="Invite Friends"
