@@ -66,7 +66,7 @@
     <RelativeLayout
         android:id="@+id/dropDown"
         android:layout_width="fill_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:layout_weight="2.5"
         android:background="@android:color/holo_orange_light"
         android:layout_marginTop="50dp"
@@ -74,33 +74,26 @@
         android:visibility="invisible">
 
         <Button
-            android:id="@+id/NewStudySession"
+            android:id="@+id/Map"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="0dp"
-            android:text="New Study Session"
+            android:text="Map"
             android:visibility="invisible"
-            android:onClick="buttonAddStudySession"/>
-
+            android:onClick="buttonMap"/>
         <Button
-            android:id="@+id/SortByClass"
+            android:id="@+id/NewStudySession"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="50dp"
-            android:text="Sort By Class"
-            android:visibility="invisible"/>
-        <Button
-            android:id="@+id/ManageClasses"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="100dp"
-            android:text="Manage Classes"
-            android:visibility="invisible"/>
+            android:text="New Study Session"
+            android:visibility="invisible"
+            android:onClick="buttonAddStudySession"/>
         <Button
             android:id="@+id/FindFriends"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="100dp"
             android:text="My Friends"
             android:visibility="invisible"
             android:onClick="buttonMyFriends"/>
@@ -108,7 +101,7 @@
             android:id="@+id/JoinNewClass"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="150dp"
             android:text="Join A New Class"
             android:visibility="invisible"
             android:onClick="buttonJoinClass"/>

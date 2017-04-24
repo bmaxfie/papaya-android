@@ -27,7 +27,7 @@ public class Menu extends AppCompatActivity {
     private RelativeLayout dropDown, title;
     private View backdrop;
     private HorizontalScrollView horizontalScroll;
-    private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
+    private Button newStudySession, findFriends, joinNewClass, map;
     private Context context;
 
     public Menu(Context context) {
@@ -47,20 +47,6 @@ public class Menu extends AppCompatActivity {
             }
         });
 
-        final Button sortByClassButton = (Button) ((Activity)context).findViewById(R.id.SortByClass);
-        sortByClassButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                toggleMenu(v.getContext());
-            }
-        });
-
-        final Button manageClassesButton = (Button) ((Activity)context).findViewById(R.id.ManageClasses);
-        manageClassesButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                toggleMenu(v.getContext());
-            }
-        });
-
         final Button myFriendsButton = (Button) ((Activity)context).findViewById(R.id.FindFriends);
         myFriendsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -75,6 +61,13 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+        final Button mapButton = (Button) ((Activity)context).findViewById(R.id.Map);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                buttonMap(v);
+            }
+        });
+
 
 
 
@@ -82,13 +75,10 @@ public class Menu extends AppCompatActivity {
         dropDown = (RelativeLayout) ((Activity)context).findViewById(R.id.dropDown);
         //horizontalScroll = (HorizontalScrollView) ((Activity)context).findViewById(R.id.horizontalScroll);
         //backdrop = (View) ((Activity)context).findViewById(R.id.horizontalBackdrop);
-
-
         newStudySession = (Button) ((Activity)context).findViewById(R.id.NewStudySession);
-        sortByClass = (Button) ((Activity)context).findViewById(R.id.SortByClass);
-        manageClasses = (Button) ((Activity)context).findViewById(R.id.ManageClasses);
         findFriends = (Button) ((Activity)context).findViewById(R.id.FindFriends);
         joinNewClass = (Button) ((Activity)context).findViewById(R.id.JoinNewClass);
+        map = (Button) ((Activity)context).findViewById(R.id.Map);
 
         title = (RelativeLayout) ((Activity)context).findViewById(R.id.title);
 
@@ -103,10 +93,9 @@ public class Menu extends AppCompatActivity {
             //horizontalScroll.setVisibility(View.VISIBLE);
             //backdrop.setVisibility(View.VISIBLE);
             newStudySession.setVisibility(View.GONE);
-            sortByClass.setVisibility(View.GONE);
-            manageClasses.setVisibility(View.GONE);
             findFriends.setVisibility(View.GONE);
             joinNewClass.setVisibility(View.GONE);
+            map.setVisibility(View.GONE);
 
 //            final float scale = context.getResources().getDisplayMetrics().density;
 //            int pixels = (int) (50 * scale + 0.5f);
@@ -120,13 +109,10 @@ public class Menu extends AppCompatActivity {
             //horizontalScroll.setVisibility(View.GONE);
             newStudySession.setVisibility(View.VISIBLE);
             //newStudySession.bringToFront();
-            sortByClass.setVisibility(View.VISIBLE);
-            //sortByClass.bringToFront();
-            manageClasses.setVisibility(View.VISIBLE);
-            //manageClasses.bringToFront();
             findFriends.setVisibility(View.VISIBLE);
             //findFriends.bringToFront();
             joinNewClass.setVisibility(View.VISIBLE);
+            map.setVisibility(View.VISIBLE);
 
         }
     }
@@ -144,6 +130,13 @@ public class Menu extends AppCompatActivity {
     public void buttonMyFriends(View view) {
         Intent friendsList = new Intent(context, FriendsList.class);
         context.startActivity(friendsList);
+    }
+
+    public void buttonMap(View view) {
+        Intent home = new Intent(context, HomeScreen.class);
+        home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        home.putExtra("from", "menu");
+        context.startActivity(home);
     }
 
 }

@@ -53,6 +53,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -99,7 +100,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private RelativeLayout dropDown;
     private View backdrop;
     private HorizontalScrollView horizontalScroll;
-    private Button newStudySession, sortByClass, manageClasses, findFriends, joinNewClass;
+    private Button newStudySession, findFriends, joinNewClass, mapButton;
     private String currentStudySession;
     private Boolean leaveWarning = false;
     private CountDownTimer sponsoredSessionTimer;
@@ -143,10 +144,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         horizontalScroll = (HorizontalScrollView) findViewById(R.id.horizontalScroll);
         backdrop = (View) findViewById(R.id.horizontalBackdrop);
         newStudySession = (Button) findViewById(R.id.NewStudySession);
-        sortByClass = (Button) findViewById(R.id.SortByClass);
-        manageClasses = (Button) findViewById(R.id.ManageClasses);
         findFriends = (Button) findViewById(R.id.FindFriends);
         joinNewClass = (Button) findViewById(R.id.JoinNewClass);
+        mapButton = (Button) findViewById(R.id.Map);
 
         /*newStudySession.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -250,19 +250,17 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             horizontalScroll.setVisibility(View.VISIBLE);
             backdrop.setVisibility(View.VISIBLE);
             newStudySession.setVisibility(View.GONE);
-            sortByClass.setVisibility(View.GONE);
-            manageClasses.setVisibility(View.GONE);
             findFriends.setVisibility(View.GONE);
             joinNewClass.setVisibility(View.GONE);
+            mapButton.setVisibility(View.GONE);
         } else {
             dropDown.setVisibility(View.VISIBLE);
             backdrop.setVisibility(View.GONE);
             horizontalScroll.setVisibility(View.GONE);
             newStudySession.setVisibility(View.VISIBLE);
-            sortByClass.setVisibility(View.VISIBLE);
-            manageClasses.setVisibility(View.VISIBLE);
             findFriends.setVisibility(View.VISIBLE);
             joinNewClass.setVisibility(View.VISIBLE);
+            mapButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -957,6 +955,13 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Intent sessionInfo = new Intent(this, SessionInfo.class);
         sessionInfo.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
         startActivity(sessionInfo);
+    }
+
+    public void buttonMap(View view) {
+        Intent home = new Intent(this, HomeScreen.class);
+        home.putExtra(AccountData.ACCOUNT_DATA, AccountData.data);
+        home.putExtra("from", "HomeScreen");
+        startActivity(home);
     }
 
     /**
