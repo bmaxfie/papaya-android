@@ -235,6 +235,7 @@ public class SessionInfo extends AppCompatActivity {
     public void viewCommentsButton(View view) {
         commentPostsArray.clear();
         setContentView(R.layout.comments_board);
+        Menu menu = new Menu(SessionInfo.this);
         commentText = (EditText) findViewById(R.id.commentText);
         scrollableText = (RelativeLayout) findViewById(R.id.scrollableText);
         final ListView lv = (ListView) findViewById(R.id.commentsBoardView);
