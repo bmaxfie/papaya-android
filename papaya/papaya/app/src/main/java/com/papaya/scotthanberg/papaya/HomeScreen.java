@@ -885,10 +885,16 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         String activity = intent.getStringExtra("from");
         if (activity.equals("Notification")) {
             String notificationSession = intent.getStringExtra("session");
+            boolean found = false;
             for (StudySession s : Sessions) {
                 if (s.getSessionID().equals(notificationSession)) {
+                    found = true;
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(s.getLocation(), 18));
                 }
+            }
+            if (!found) {
+                Toast toast = Toast.makeText(this.getApplicationContext(), "Session no longer exists", Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if (mGoogleApiClient.isConnected()) {
@@ -1004,12 +1010,15 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
+        for(StudySession s : Sessions) {
+            if (s.getSessionID().equals(sessionId)) {
+                Notification notification = mBuilder.build();
+                mNotificationManager.notify(notificationId, notification); //only add the notificaiton the first time called
+                break;
+            }
+        }
 
-        Notification notification = mBuilder.build();
 
-
-        mNotificationManager.notify(notificationId, notification); //only add the notificaiton the first time called
 
 
 
