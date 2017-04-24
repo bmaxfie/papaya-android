@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public class NotificationClass extends AppCompatActivity{
     private String className, class_id, session_id, username;
+    private static int counter = 0;
     public NotificationClass(String className, String class_id, String session_id, String username) {
         this.className = className;
         this.class_id = class_id;
@@ -62,5 +63,15 @@ public class NotificationClass extends AppCompatActivity{
             return false;
 
         return true;
+    }
+
+    public static int getCounter() {
+        return counter;
+    }
+
+    public synchronized static void incrementCounter() {
+        if (counter == Integer.MAX_VALUE)
+            counter = 0;
+        counter++;
     }
 }
