@@ -34,8 +34,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static android.view.View.VISIBLE;
-
 public class SessionInfo extends AppCompatActivity {
     ArrayList<commentPost> commentPostsArray = new ArrayList<commentPost>();
     ArrayAdapter<commentPost> adapter;
@@ -247,7 +245,7 @@ public class SessionInfo extends AppCompatActivity {
                 final commentPost item = (commentPost) lv.getItemAtPosition(position);
                 for (int i = 0; i < AccountData.getClasses().size(); i++) {
                     if (AccountData.getClasses().get(i).getClassID().equals(classid)) {
-                        if (AccountData.getClasses().get(i).getRole() == 1) {
+                        if (AccountData.getClasses().get(i).getRole() == 0) {
                             System.out.println("Do not have the permissins to delete a comment");
                             return;
                         } else {
@@ -266,18 +264,17 @@ public class SessionInfo extends AppCompatActivity {
                                                 info.put("authentication_key",AccountData.getAuthKey());
                                                 info.put("service", AccountData.getService());
                                                 info.put("service_user_id", AccountData.getAuthKey());
-                                                info.put("visibility", 1);
-                                             /* info.put("post_id", item.getPostID); */
+                                                info.put("visibility", "1");
+                                                info.put("post_id", item.getPostId());
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
-                                            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends";
+                                            final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts";
                                             JsonObjectRequest jsObjRequest = new JsonObjectRequest
                                                     (Request.Method.PUT, url, info, new Response.Listener<JSONObject>() {
                                                         @Override
                                                         public void onResponse(JSONObject response) {
-                                                            commentPostsArray.remove(item);
-                                                            adapter.notifyDataSetChanged();
+                                                            System.out.println("Deleted from the table");
                                                         }
                                                     }, new Response.ErrorListener() {
 
@@ -324,10 +321,9 @@ public class SessionInfo extends AppCompatActivity {
                     JSONArray posts = response.getJSONArray("posts");
                     for (int i =0;i<posts.length();i++) {
                         JSONObject jsonobject = (JSONObject) posts.get(i);
-                        commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message")));
+                        commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message"), jsonobject.optString("post_id")));
                         System.out.println("Please Work");
                     }
-                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                 } catch (ExecutionException e) {
                 } catch (InterruptedException e) {
@@ -337,6 +333,7 @@ public class SessionInfo extends AppCompatActivity {
             }
         });
         run.start();
+        adapter.notifyDataSetChanged();
     }
 
     public void postComment(View view) {
@@ -347,10 +344,6 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void addComment(final String comment) { // Access determines if they are a student(0), TA(1), or prof(2)
-        commentPostsArray.add(new commentPost(AccountData.getUsername(), comment));
-        if (commentPostsArray.size()>5) {
-            scrollableText.setVisibility(View.VISIBLE);
-        }
         Thread run1 = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -371,16 +364,25 @@ public class SessionInfo extends AppCompatActivity {
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestPOST);
                 try {
                     JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
+                    addCommentToarray(comment,response.getString("post_id"));
                     System.out.println("IT WORKED");
                 } catch (ExecutionException e) {
                 } catch (InterruptedException e) {
                 } catch (TimeoutException e) {
                     System.out.println(e.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
         run1.start();
+        if (commentPostsArray.size()>5) {
+            scrollableText.setVisibility(View.VISIBLE);
+        }
         adapter.notifyDataSetChanged();
+    }
+    public void addCommentToarray(String comment, String postId) {
+        commentPostsArray.add(new commentPost(AccountData.getUsername(), comment, postId));
     }
 
     public void buttonAddUserToSession(View view) {
