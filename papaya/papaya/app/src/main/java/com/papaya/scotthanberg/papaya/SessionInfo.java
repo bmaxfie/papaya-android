@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -344,31 +342,37 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void updateComments() {
-            final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts/"
-                    + "?user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                    + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                    + "&authentication_key=12345123451234512345123451234512345123451234512345"
-                    + "&service_user_id=12345123451234512345123451234512345123451234512345";
-            RequestFuture<JSONObject> future = RequestFuture.newFuture();
-            JSONObject newJSONStudySession = new JSONObject();
-            JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
-                    (Request.Method.GET, url, newJSONStudySession, future, future);
-            // Access the RequestQueue through your singleton class.
-            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
-            try {
-                JSONObject response = future.get(10, TimeUnit.SECONDS);  // This will block
-                JSONArray posts = response.getJSONArray("posts");
-                for (int i =0;i<posts.length();i++) {
-                    JSONObject jsonobject = (JSONObject) posts.get(i);
-                    commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message")));
-                    System.out.println("Please Work");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts/"
+                        + "?user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&authentication_key=12345123451234512345123451234512345123451234512345"
+                        + "&service_user_id=12345123451234512345123451234512345123451234512345";
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                JSONObject newJSONStudySession = new JSONObject();
+                JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
+                        (Request.Method.GET, url, newJSONStudySession, future, future);
+                // Access the RequestQueue through your singleton class.
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);  // This will block
+                    JSONArray posts = response.getJSONArray("posts");
+                    for (int i =0;i<posts.length();i++) {
+                        JSONObject jsonobject = (JSONObject) posts.get(i);
+                        commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message"), jsonobject.optString("post_id")));
+                        System.out.println("Please Work");
+                    }
+                } catch (JSONException e) {
+                } catch (ExecutionException e) {
+                } catch (InterruptedException e) {
+                } catch (TimeoutException e) {
+                    System.out.println(e.toString());
                 }
-            } catch (JSONException e) {
-            } catch (ExecutionException e) {
-            } catch (InterruptedException e) {
-            } catch (TimeoutException e) {
-                System.out.println(e.toString());
             }
+        }).start();
+
     }
 
     public void refresh(View view) {
