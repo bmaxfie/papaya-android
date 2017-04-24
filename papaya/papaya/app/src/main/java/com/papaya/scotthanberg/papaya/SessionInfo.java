@@ -252,9 +252,36 @@ public class SessionInfo extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             // HTTP Request call to delete it
+                                            JSONObject info = new JSONObject();
+                                            try {
+                                                info.put("user_id", AccountData.getUserID());
+                                                info.put("authentication_key",AccountData.getAuthKey());
+                                                info.put("service", AccountData.getService());
+                                                info.put("service_user_id", AccountData.getAuthKey());
+                                                info.put("visibility", 1);
+                                             /* info.put("post_id", item.getPostID); */
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends";
+                                            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                                                    (Request.Method.PUT, url, info, new Response.Listener<JSONObject>() {
+                                                        @Override
+                                                        public void onResponse(JSONObject response) {
+                                                            commentPostsArray.remove(item);
+                                                            adapter.notifyDataSetChanged();
+                                                        }
+                                                    }, new Response.ErrorListener() {
+
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            // TODO Auto-generated method stub
+
+                                                        }
+                                                    });
+                                            // Access the RequestQueue through your singleton class.
+                                            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
                                             System.out.println("DELETED");
-                                            commentPostsArray.remove(item);
-                                            adapter.notifyDataSetChanged();
                                         }
                                     });
                             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
