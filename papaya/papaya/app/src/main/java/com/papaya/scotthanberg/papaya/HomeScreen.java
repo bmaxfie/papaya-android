@@ -104,9 +104,6 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
     private Boolean leaveWarning = false;
     private CountDownTimer sponsoredSessionTimer;
 
-    private HashMap<Integer, Long> notificationTimes = new HashMap<Integer, Long>();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -417,9 +414,9 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         locationB.setLongitude(current.getLocation().longitude);
                         float distance = locationA.distanceTo(locationB);
                         if (Sessions.get(i).getClassObject().getRole() == 1) {
-                            if (distance < 5) {
+                            if (distance < 15) {
                                 leaveWarning = false;
-                            } else if (distance >= 5 && distance <= 15) {
+                            } else if (distance >= 15 && distance <= 30) {
                                 if (!leaveWarning) {
                                     runOnUiThread(new Runnable() {
                                         public void run() {
@@ -438,7 +435,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                         }
                                     });
                                 }
-                            } else if (distance >= 15 && currentStudySession != null) {
+                            } else if (distance >= 30 && currentStudySession != null) {
                                 //String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                                 final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
                                 //System.out.println(url1);
@@ -897,6 +894,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         if (mGoogleApiClient.isConnected()) {
             requestLocationUpdates();
         }
+        setUp();
     }
 
     @Override
@@ -1011,10 +1009,8 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
         Notification notification = mBuilder.build();
 
 
-        if (notificationTimes.get(notificationId) == null) {
-            notificationTimes.put(notificationId, notification.when);
-            mNotificationManager.notify(notificationId, notification); //only add the notificaiton the first time called
-        }
+        mNotificationManager.notify(notificationId, notification); //only add the notificaiton the first time called
+
 
 
     }
