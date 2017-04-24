@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -229,9 +230,46 @@ public class SessionInfo extends AppCompatActivity {
         setContentView(R.layout.comments_board);
         commentText = (EditText) findViewById(R.id.commentText);
         scrollableText = (RelativeLayout) findViewById(R.id.scrollableText);
-        ListView lv = (ListView) findViewById(R.id.commentsBoardView);
+        final ListView lv = (ListView) findViewById(R.id.commentsBoardView);
         adapter = new commentsAdapter(this, commentPostsArray);
         lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final commentPost item = (commentPost) lv.getItemAtPosition(position);
+                for (int i = 0; i < AccountData.getClasses().size(); i++) {
+                    if (AccountData.getClasses().get(i).getClassID().equals(classid)) {
+                        if (AccountData.getClasses().get(i).getRole() == 1) {
+                            System.out.println("Do not have the permissins to delete a comment");
+                            return;
+                        } else {
+                            // Create a dialog
+                            AlertDialog alertDialog = new AlertDialog.Builder(SessionInfo.this).create();
+                            alertDialog.setTitle("Alert");
+                            alertDialog.setMessage("Delete this comment?");
+                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // HTTP Request call to delete it
+                                            System.out.println("DELETED");
+                                            commentPostsArray.remove(item);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    });
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void postComment(View view) {
@@ -239,38 +277,6 @@ public class SessionInfo extends AppCompatActivity {
         commentText.setText("");
         mgr.hideSoftInputFromWindow(commentText.getWindowToken(), 0);
 
-    }
-
-    public void deleteComment(View view) {
-        for (int i = 0; i < AccountData.getClasses().size(); i++) {
-            if (AccountData.getClasses().get(i).getClassID().equals(classid)) {
-                if (AccountData.getClasses().get(i).getRole() == 1) {
-                    System.out.println("Do not have the permissins to delete a comment");
-                    return;
-                } else {
-                    // Create a dialog
-                    AlertDialog alertDialog = new AlertDialog.Builder(SessionInfo.this).create();
-                    alertDialog.setTitle("Alert");
-                    alertDialog.setMessage("Delete this comment?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // HTTP Request call to delete it
-                                    System.out.println("DELETED");
-                                }
-                            });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
-                }
-            }
-        }
     }
 
     public void addComment(String comment) { // Access determines if they are a student(0), TA(1), or prof(2)
