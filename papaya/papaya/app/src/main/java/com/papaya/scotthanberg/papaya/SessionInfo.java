@@ -246,7 +246,7 @@ public class SessionInfo extends AppCompatActivity {
                 final commentPost item = (commentPost) lv.getItemAtPosition(position);
                 for (int i = 0; i < AccountData.getClasses().size(); i++) {
                     if (AccountData.getClasses().get(i).getClassID().equals(classid)) {
-                        if (AccountData.getClasses().get(i).getRole() == 0) {
+                        if (AccountData.getClasses().get(i).getRole() == 1) {
                             System.out.println("Do not have the permissins to delete a comment");
                             return;
                         } else {
@@ -359,6 +359,7 @@ public class SessionInfo extends AppCompatActivity {
                 try {
                     JSONObject response = future.get(10, TimeUnit.SECONDS);  // This will block
                     JSONArray posts = response.getJSONArray("posts");
+                    commentPostsArray.clear();
                     for (int i =0;i<posts.length();i++) {
                         JSONObject jsonobject = (JSONObject) posts.get(i);
                         commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message"), jsonobject.optString("post_id")));
@@ -372,7 +373,6 @@ public class SessionInfo extends AppCompatActivity {
                 }
             }
         }).start();
-
     }
 
     public void refresh(View view) {
@@ -430,6 +430,7 @@ public class SessionInfo extends AppCompatActivity {
         if (commentPostsArray.size()>5) {
             scrollableText.setVisibility(View.VISIBLE);
         }
+        updateComments();
         adapter.notifyDataSetChanged();
     }
     public void addCommentToarray(String comment, String postId) {
