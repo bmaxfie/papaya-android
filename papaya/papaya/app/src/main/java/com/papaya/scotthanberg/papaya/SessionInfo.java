@@ -258,6 +258,7 @@ public class SessionInfo extends AppCompatActivity {
                     for (int i =0;i<posts.length();i++) {
                         JSONObject jsonobject = (JSONObject) posts.get(i);
                         commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message")));
+                        System.out.println("Please Work");
                     }
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
