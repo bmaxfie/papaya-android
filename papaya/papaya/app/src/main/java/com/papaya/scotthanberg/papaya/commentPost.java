@@ -8,12 +8,13 @@ public class commentPost {
     public String USERNAME;
     public String COMMENT;
 
-    public commentPost(String COMMENT) {
-        this.USERNAME = AccountData.getUsername();
+    public commentPost(String USERNAME, String COMMENT) {
+        this.USERNAME = USERNAME;
         this.COMMENT = COMMENT;
     }
 
     public String getUserName(){ return USERNAME;}
 
     public String getComment() { return COMMENT;}
+
 }

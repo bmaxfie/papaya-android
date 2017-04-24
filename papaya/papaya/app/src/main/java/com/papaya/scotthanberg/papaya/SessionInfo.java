@@ -39,6 +39,7 @@ public class SessionInfo extends AppCompatActivity {
     String locationDesription;
     String description, classid, sessionid;
     Button post;
+    int role;
     InputMethodManager mgr;
     EditText commentText;
     RelativeLayout scrollableText;
@@ -230,12 +231,44 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void viewCommentsButton(View view) {
+        commentPostsArray.clear();
         setContentView(R.layout.comments_board);
         commentText = (EditText) findViewById(R.id.commentText);
         scrollableText = (RelativeLayout) findViewById(R.id.scrollableText);
         ListView lv = (ListView) findViewById(R.id.commentsBoardView);
         adapter = new commentsAdapter(this, commentPostsArray);
         lv.setAdapter(adapter);
+        Thread run = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts/"
+                        + "?user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&authentication_key=12345123451234512345123451234512345123451234512345"
+                        + "&service_user_id=12345123451234512345123451234512345123451234512345";
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                JSONObject newJSONStudySession = new JSONObject();
+                JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
+                        (Request.Method.GET, url, newJSONStudySession, future, future);
+                // Access the RequestQueue through your singleton class.
+                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequestGET);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);  // This will block
+                    JSONArray posts = response.getJSONArray("posts");
+                    for (int i =0;i<posts.length();i++) {
+                        JSONObject jsonobject = (JSONObject) posts.get(i);
+                        commentPostsArray.add(new commentPost(jsonobject.optString("username"), jsonobject.optString("message")));
+                    }
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                } catch (ExecutionException e) {
+                } catch (InterruptedException e) {
+                } catch (TimeoutException e) {
+                    System.out.println(e.toString());
+                }
+            }
+        });
+        run.start();
     }
 
     public void postComment(View view) {
@@ -246,7 +279,7 @@ public class SessionInfo extends AppCompatActivity {
     }
 
     public void addComment(final String comment) { // Access determines if they are a student(0), TA(1), or prof(2)
-        commentPostsArray.add(new commentPost(comment));
+        commentPostsArray.add(new commentPost(AccountData.getUsername(), comment));
         if (commentPostsArray.size()>5) {
             scrollableText.setVisibility(View.VISIBLE);
         }
