@@ -1,11 +1,14 @@
 package com.papaya.scotthanberg.papaya;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -235,9 +238,73 @@ public class SessionInfo extends AppCompatActivity {
         setContentView(R.layout.comments_board);
         commentText = (EditText) findViewById(R.id.commentText);
         scrollableText = (RelativeLayout) findViewById(R.id.scrollableText);
-        ListView lv = (ListView) findViewById(R.id.commentsBoardView);
+        final ListView lv = (ListView) findViewById(R.id.commentsBoardView);
         adapter = new commentsAdapter(this, commentPostsArray);
         lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final commentPost item = (commentPost) lv.getItemAtPosition(position);
+                for (int i = 0; i < AccountData.getClasses().size(); i++) {
+                    if (AccountData.getClasses().get(i).getClassID().equals(classid)) {
+                        if (AccountData.getClasses().get(i).getRole() == 1) {
+                            System.out.println("Do not have the permissins to delete a comment");
+                            return;
+                        } else {
+                            // Create a dialog
+                            AlertDialog alertDialog = new AlertDialog.Builder(SessionInfo.this).create();
+                            alertDialog.setTitle("Alert");
+                            alertDialog.setMessage("Delete this comment?");
+                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // HTTP Request call to delete it
+                                            JSONObject info = new JSONObject();
+                                            try {
+                                                info.put("user_id", AccountData.getUserID());
+                                                info.put("authentication_key",AccountData.getAuthKey());
+                                                info.put("service", AccountData.getService());
+                                                info.put("service_user_id", AccountData.getAuthKey());
+                                                info.put("visibility", 1);
+                                             /* info.put("post_id", item.getPostID); */
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/friends";
+                                            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                                                    (Request.Method.PUT, url, info, new Response.Listener<JSONObject>() {
+                                                        @Override
+                                                        public void onResponse(JSONObject response) {
+                                                            commentPostsArray.remove(item);
+                                                            adapter.notifyDataSetChanged();
+                                                        }
+                                                    }, new Response.ErrorListener() {
+
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            // TODO Auto-generated method stub
+
+                                                        }
+                                                    });
+                                            // Access the RequestQueue through your singleton class.
+                                            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+                                            System.out.println("DELETED");
+                                        }
+                                    });
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+                        }
+                    }
+                }
+            }
+        });
         Thread run = new Thread(new Runnable() {
             @Override
             public void run() {
