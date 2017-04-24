@@ -53,7 +53,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -671,7 +670,10 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
             public void run() {
                 final ArrayList<String> friends = new ArrayList<String>();
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
-                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "friends/" + "?authentication_key=" + AccountData.getAuthKey() + "&service_user_id=" + AccountData.getAuthKey() + "&user_id=" + AccountData.getUserID() + "&service=" + AccountData.getService();
+                String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/" + "friends/" + "?authentication_key=" + AccountData.getAuthKey()
+                        + "&service_user_id=" + AccountData.getAuthKey().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                        + "&service=" + AccountData.getService();
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, future, future);
                 MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
