@@ -422,7 +422,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                         locationB.setLongitude(current.getLocation().longitude);
                         float distance = locationA.distanceTo(locationB);
                         if (Sessions.get(i).getClassObject().getRole() == 1) {
-                            if (distance < 15) {
+                            if (distance < 100) {
                                 leaveWarning = false;
                             } else if (distance >= 15 && distance <= 30) {
                                 if (!leaveWarning) {
@@ -443,7 +443,7 @@ public class HomeScreen extends AppCompatActivity implements OnMapReadyCallback,
                                         }
                                     });
                                 }
-                            } else if (distance >= 30 && currentStudySession != null) {
+                            } else if (distance >= 200 && currentStudySession != null) {
                                 //String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
                                 final String url1 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/user/currentsession";
                                 //System.out.println(url1);
