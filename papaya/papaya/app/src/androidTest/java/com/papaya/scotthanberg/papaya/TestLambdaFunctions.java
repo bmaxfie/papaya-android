@@ -157,7 +157,7 @@ public class TestLambdaFunctions {
     }
     @Test
     public void testSessionDump() throws Exception {
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/website/sessions&professor_access_key=" + "12341236";
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/website/sessions?access_key=12341236";
 /*
         new Thread(new Runnable() {
             @Override
@@ -169,8 +169,16 @@ public class TestLambdaFunctions {
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println(response);
-                        assert(true);
+                        try {
+                            if (response.getInt("code") == 200) {
+                                assert(true);
+                            }
+                            else {
+                                Assert.fail();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
 
