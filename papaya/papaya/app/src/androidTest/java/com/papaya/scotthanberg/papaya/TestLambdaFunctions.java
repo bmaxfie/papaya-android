@@ -9,6 +9,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.RequestFuture;
+
+import junit.framework.Assert;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +37,7 @@ public class TestLambdaFunctions {
         /*
         Set the AccountData that the lambda function
          */
-        AccountData.setUserID("MO8Ls4UfgB2lk81HV4YBqg==");
+        AccountData.setUserID("wBkaf4TqQtnZClGCF5fqQ==");
         AccountData.setService("GOOGLE");
         AccountData.setAuthKey("0123456789012345678901234567890123456789");
         AccountData.setSponsored(false);
@@ -86,10 +89,10 @@ public class TestLambdaFunctions {
                                 // Confirm session_id and class_id in response probably.
                             }
                             else {
-                                assert(false);
+                                Assert.fail();
                             }
                         } catch (JSONException json) {
-                            assert(false);
+                            Assert.fail();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -97,7 +100,7 @@ public class TestLambdaFunctions {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("CREATE_NEW_SESSION", "onErrorResponse: " + error.getMessage());
-                        assert(false);
+                        Assert.fail();
                     }
                 });
 
@@ -111,14 +114,14 @@ public class TestLambdaFunctions {
 
     @Test
     public void testInviteFriends() throws Exception{
-        AccountData.setUserID("MO8Ls4UfgB2lk81HV4YBqg==");
+        AccountData.setUserID("wBkaf4TqQtnZClGCF5fqQ==");
         AccountData.setService("GOOGLE");
         AccountData.setAuthKey("0123456789012345678901234567890123456789");
 
         String classId = "value2";
         String sessionId = "Inhkfyrv0fEzH1te%2BySYXg==";
 
-        String studentid = "sFW27p447QDzKhHd7d7BvA==";
+        String studentid = "wBkaf4TqQtnZClGCF5fqQ==";
 
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + sessionId+"/invitations";
 
@@ -144,7 +147,7 @@ public class TestLambdaFunctions {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        assert(false);
+                        Assert.fail();
                     }
                 });
 
@@ -156,7 +159,7 @@ public class TestLambdaFunctions {
     }
     @Test
     public void testSessionDump() throws Exception {
-        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/website/sessions&professor_access_key=" + "12341236";
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/website/sessions?access_key=12341236";
 /*
         new Thread(new Runnable() {
             @Override
@@ -168,17 +171,121 @@ public class TestLambdaFunctions {
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println(response);
-                        assert(true);
+                        try {
+                            if (response.getInt("code") == 200) {
+                                assert(true);
+                            }
+                            else {
+                                Assert.fail();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        assert(false);
+                        Assert.fail();
                     }
                 });
 
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            //wait...
+        }
+    }
+
+    @Test
+    public void testHideComment() {
+        /*set variables*/
+        AccountData.setUserID("wBkaf4TqQtnZClGCF5fqQ==");
+        AccountData.setService("GOOGLE");
+        AccountData.setAuthKey("0123456789012345678901234567890123456789");
+        String classid = "value2";
+        String sessionid = "8qg7B7T3N0Mlan2llmq2Gw==";
+        classid = classid.replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+        sessionid = sessionid.replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+        String comment = "test comment";
+
+        String post_id = ""; //to be set in creating a post part
+
+
+        //create a comment to hide
+
+        String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+        final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts";
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JSONObject newJSONStudySession = new JSONObject();
+        try {
+            newJSONStudySession.put("service", AccountData.getService());
+            newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
+            newJSONStudySession.put("service_user_id", AccountData.getAuthKey());
+            newJSONStudySession.put("user_id", user_id);
+            newJSONStudySession.put("message", comment);
+        } catch (JSONException e) {}
+        JsonObjectRequest jsObjRequestPOST = new JsonObjectRequest
+                (Request.Method.POST, url, newJSONStudySession, future, future);
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequestPOST);
+        try {
+            JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
+            if (response.getInt("code") == 201)
+                post_id = response.getString("post_id");
+        } catch (ExecutionException e) {Assert.fail();
+        } catch (InterruptedException e) {Assert.fail();
+        } catch (TimeoutException e) {
+            System.out.println(e.toString());
+            Assert.fail();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+
+
+        /* Now Hide comment*/
+
+        // HTTP Request call to delete it
+        JSONObject info = new JSONObject();
+        try {
+            info.put("user_id", AccountData.getUserID());
+            info.put("authentication_key",AccountData.getAuthKey());
+            info.put("service", AccountData.getService());
+            info.put("service_user_id", AccountData.getAuthKey());
+            info.put("visibility", "1");
+            info.put("post_id", post_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+        final String url2 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts";
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.PUT, url2, info, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println("Deleted from the table");
+                        try {
+                            if (response.getInt("code") == 201) {
+                                assert(true);
+                            }
+                            else {
+                                Assert.fail();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Assert.fail();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        Assert.fail();
+
+                    }
+                });
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequest);
         while(!jsObjRequest.hasHadResponseDelivered()) {
