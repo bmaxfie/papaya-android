@@ -9,6 +9,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import junit.framework.Assert;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -29,7 +31,7 @@ public class TestLambdaFunctions {
         /*
         Set the AccountData that the lambda function
          */
-        AccountData.setUserID("MO8Ls4UfgB2lk81HV4YBqg==");
+        AccountData.setUserID("wBkaf4TqQtnZClGCF5fqQ==");
         AccountData.setService("GOOGLE");
         AccountData.setAuthKey("0123456789012345678901234567890123456789");
         AccountData.setSponsored(false);
@@ -81,10 +83,10 @@ public class TestLambdaFunctions {
                                 // Confirm session_id and class_id in response probably.
                             }
                             else {
-                                assert(false);
+                                Assert.fail();
                             }
                         } catch (JSONException json) {
-                            assert(false);
+                            Assert.fail();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -92,7 +94,7 @@ public class TestLambdaFunctions {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("CREATE_NEW_SESSION", "onErrorResponse: " + error.getMessage());
-                        assert(false);
+                        Assert.fail();
                     }
                 });
 
@@ -106,14 +108,14 @@ public class TestLambdaFunctions {
 
     @Test
     public void testInviteFriends() throws Exception{
-        AccountData.setUserID("MO8Ls4UfgB2lk81HV4YBqg==");
+        AccountData.setUserID("wBkaf4TqQtnZClGCF5fqQ==");
         AccountData.setService("GOOGLE");
         AccountData.setAuthKey("0123456789012345678901234567890123456789");
 
         String classId = "value2";
         String sessionId = "Inhkfyrv0fEzH1te%2BySYXg==";
 
-        String studentid = "sFW27p447QDzKhHd7d7BvA==";
+        String studentid = "wBkaf4TqQtnZClGCF5fqQ==";
 
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classId + "/sessions/" + sessionId+"/invitations";
 
@@ -139,7 +141,7 @@ public class TestLambdaFunctions {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        assert(false);
+                        Assert.fail();
                     }
                 });
 
@@ -170,7 +172,7 @@ public class TestLambdaFunctions {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        assert(false);
+                        Assert.fail();
                     }
                 });
 
