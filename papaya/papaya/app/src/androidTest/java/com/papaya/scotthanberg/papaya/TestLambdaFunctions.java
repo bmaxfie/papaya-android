@@ -331,12 +331,12 @@ public class TestLambdaFunctions {
                     fail();
                 }
     }
-
+    
     @Test
     public void testGetComments() throws Exception {
         String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/value2/sessions/kyQhhApeDo28MHjaqeqITQ==/posts/"
-                + "?user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
-                + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "?user_id=wBkaf4TqQtnZClGCF5fqQ=="
+                + "&service=GOOGLE"
                 + "&authentication_key=12345123451234512345123451234512345123451234512345"
                 + "&service_user_id=12345123451234512345123451234512345123451234512345";
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
