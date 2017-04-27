@@ -25,6 +25,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static junit.framework.Assert.fail;
+
 /**
  * Instrumentation test, which will execute on an Android device.
  *
@@ -89,10 +91,10 @@ public class TestLambdaFunctions {
                                 // Confirm session_id and class_id in response probably.
                             }
                             else {
-                                Assert.fail();
+                                fail();
                             }
                         } catch (JSONException json) {
-                            Assert.fail();
+                            fail();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -100,7 +102,7 @@ public class TestLambdaFunctions {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("CREATE_NEW_SESSION", "onErrorResponse: " + error.getMessage());
-                        Assert.fail();
+                        fail();
                     }
                 });
 
@@ -147,7 +149,7 @@ public class TestLambdaFunctions {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Assert.fail();
+                        fail();
                     }
                 });
 
@@ -176,7 +178,7 @@ public class TestLambdaFunctions {
                                 assert(true);
                             }
                             else {
-                                Assert.fail();
+                                fail();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -186,7 +188,7 @@ public class TestLambdaFunctions {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Assert.fail();
+                        fail();
                     }
                 });
 
@@ -233,14 +235,16 @@ public class TestLambdaFunctions {
             JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
             if (response.getInt("code") == 201)
                 post_id = response.getString("post_id");
-        } catch (ExecutionException e) {Assert.fail();
-        } catch (InterruptedException e) {Assert.fail();
+        } catch (ExecutionException e) {
+            fail();
+        } catch (InterruptedException e) {
+            fail();
         } catch (TimeoutException e) {
             System.out.println(e.toString());
-            Assert.fail();
+            fail();
         } catch (JSONException e) {
             e.printStackTrace();
-            Assert.fail();
+            fail();
         }
 
 
@@ -257,7 +261,7 @@ public class TestLambdaFunctions {
             info.put("post_id", post_id);
         } catch (JSONException e) {
             e.printStackTrace();
-            Assert.fail();
+            fail();
         }
         final String url2 = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/" + classid +"/sessions/"+ sessionid +"/posts";
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -270,11 +274,11 @@ public class TestLambdaFunctions {
                                 assert(true);
                             }
                             else {
-                                Assert.fail();
+                                fail();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Assert.fail();
+                            fail();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -282,7 +286,7 @@ public class TestLambdaFunctions {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-                        Assert.fail();
+                        fail();
 
                     }
                 });
@@ -313,18 +317,18 @@ public class TestLambdaFunctions {
                 try {
                     JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
                     if (response.getInt("code")!=201) {
-                        assert(false);
+                        fail();
                     } else {
                         assert(true);
                     }
                 } catch (ExecutionException e) {
-                    assert(false);
+                    fail();
                 } catch (InterruptedException e) {
-                    assert(false);
+                    fail();
                 } catch (TimeoutException e) {
-                    assert(false);
+                    fail();
                 } catch (JSONException e) {
-                    assert(false);
+                    fail();
                 }
     }
 
@@ -343,19 +347,60 @@ public class TestLambdaFunctions {
         MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequestGET);
         try {
             JSONObject response = future.get(10, TimeUnit.SECONDS);  // This will block
-            if (response.getInt("code") != 200) {
-                assert(false);
+            if (response.getInt("code") != 201) {
+                fail();
             } else {
                 assert(true);
             }
         } catch (JSONException e) {
-            assert(false);
+            fail();
         } catch (ExecutionException e) {
-            assert(false);
+            fail();
         } catch (InterruptedException e) {
-            assert(false);
+            fail();
         } catch (TimeoutException e) {
-            assert(false);
+            fail();
         }
     }
+
+    @Test
+    public void userSessionLogs() throws Exception {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/website/sessions/activity?access_key=12341236";
+/*
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }) */
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (response.getInt("code") == 200) {
+                                assert(true);
+                            }
+                            else {
+                                fail();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        fail();
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequest);
+        while(!jsObjRequest.hasHadResponseDelivered()) {
+            //wait...
+        }
+    }
+
 }
