@@ -8,7 +8,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -16,6 +18,9 @@ import org.junit.runner.RunWith;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -178,6 +183,72 @@ public class TestLambdaFunctions {
         MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequest);
         while(!jsObjRequest.hasHadResponseDelivered()) {
             //wait...
+        }
+    }
+
+    @Test
+    public void testPostComment() throws Exception {
+                String user_id = AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B");
+                final String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/value2/sessions/kyQhhApeDo28MHjaqeqITQ==/posts";
+                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+                JSONObject newJSONStudySession = new JSONObject();
+                try {
+                    newJSONStudySession.put("service", AccountData.getService());
+                    newJSONStudySession.put("authentication_key", AccountData.getAuthKey());
+                    newJSONStudySession.put("service_user_id", AccountData.getAuthKey());
+                    newJSONStudySession.put("user_id", user_id);
+                    newJSONStudySession.put("message", "test test test");
+                } catch (JSONException e) {}
+                JsonObjectRequest jsObjRequestPOST = new JsonObjectRequest
+                        (Request.Method.POST, url, newJSONStudySession, future, future);
+                // Access the RequestQueue through your singleton class.
+                MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequestPOST);
+                try {
+                    JSONObject response = future.get(10, TimeUnit.SECONDS);   // This will block
+                    if (response.getInt("code")!=201) {
+                        assert(false);
+                    } else {
+                        assert(true);
+                    }
+                } catch (ExecutionException e) {
+                    assert(false);
+                } catch (InterruptedException e) {
+                    assert(false);
+                } catch (TimeoutException e) {
+                    assert(false);
+                } catch (JSONException e) {
+                    assert(false);
+                }
+    }
+
+    @Test
+    public void testGetComments() throws Exception {
+        String url = "https://a1ii3mxcs8.execute-api.us-west-2.amazonaws.com/Beta/classes/value2/sessions/kyQhhApeDo28MHjaqeqITQ==/posts/"
+                + "?user_id=" + AccountData.getUserID().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&service=" + AccountData.getService().replaceAll("/", "%2F").replaceAll("\\+", "%2B")
+                + "&authentication_key=12345123451234512345123451234512345123451234512345"
+                + "&service_user_id=12345123451234512345123451234512345123451234512345";
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JSONObject newJSONStudySession = new JSONObject();
+        JsonObjectRequest jsObjRequestGET = new JsonObjectRequest
+                (Request.Method.GET, url, newJSONStudySession, future, future);
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequestGET);
+        try {
+            JSONObject response = future.get(10, TimeUnit.SECONDS);  // This will block
+            if (response.getInt("code") != 200) {
+                assert(false);
+            } else {
+                assert(true);
+            }
+        } catch (JSONException e) {
+            assert(false);
+        } catch (ExecutionException e) {
+            assert(false);
+        } catch (InterruptedException e) {
+            assert(false);
+        } catch (TimeoutException e) {
+            assert(false);
         }
     }
 }
