@@ -347,7 +347,7 @@ public class TestLambdaFunctions {
         MySingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsObjRequestGET);
         try {
             JSONObject response = future.get(10, TimeUnit.SECONDS);  // This will block
-            if (response.getInt("code") != 201) {
+            if (response.getInt("code") != 200) {
                 fail();
             } else {
                 assert(true);
